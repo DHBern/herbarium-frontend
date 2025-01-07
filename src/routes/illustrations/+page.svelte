@@ -15,6 +15,15 @@
 	import pdf12 from '$lib/assets/12_Otth_IconesFungorum_Imperfecti.pdf';
 	import pdf13 from '$lib/assets/13_Otth_IconesFungorum_Ustilagineen+Phykomyceten+Myxomyceten.pdf';
 	import pdf14 from '$lib/assets/01_Otth_IconesFungorum_Agaricineen.pdf';	
+	import pdf1 from '$lib/assets/2a_Studer_IconesFungorum_172-329.pdf';
+	import pdf1 from '$lib/assets/2b_Studer_IconesFungorum_330-447.pdf';
+	import pdf1 from '$lib/assets/3a_Studer_IconesFungorum_448-605.pdf';
+	import pdf1 from '$lib/assets/3b_Studer_IconesFungorum_606-748.pdf';
+	import pdf1 from '$lib/assets/3c_Studer_IconesFungorum_749-839.pdf';
+	import pdf1 from '$lib/assets/4a_Studer_IconesFungorum_840-983.pdf';
+	import pdf1 from '$lib/assets/4b_Studer_IconesFungorum_984-1090.pdf';
+	import pdf1 from '$lib/assets/4c_Studer_IconesFungorum_1091-1178.pdf';
+	import pdf1 from '$lib/assets/5_Studer_IconesFungorum.pdf';
 </script>
 
 <ContentContainer class="styled">
@@ -128,7 +137,7 @@
 	the Cantonal Pharmacists’ Association, the Swiss Pharmacists‘ Association, the Pharmacopoeia Commission
 	of the Swiss Pharmacists’ Association and treasurer of the Natural Science Society in Bern. In addition
 	to his job and all the offices he held, he found time for research in pharmacy (urinalysis and bacteriology)
-	and fungi. Studer's extensive work on hymenomycetes is scientifically sound and valuable. He learnt
+	and mycology. Studer's extensive work on hymenomycetes is scientifically sound and valuable. He learnt
 	watercolour painting and created impressive pictures which were donated to the Botanical Institute
 	in Bern in 1912. In addition to his theoretical studies, he was also involved in practical work, published
 	a book on edible mushrooms, held public mushroom courses and founded a mushroom inspection centre in
