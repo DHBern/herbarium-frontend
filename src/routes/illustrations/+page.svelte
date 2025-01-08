@@ -219,7 +219,8 @@
 	<p>
 		On the back of some of the pictures there are comments by a researcher friend from
 		French-speaking Switzerland. They are listed behind the annotated images. 
-	
+	</p>
+	<p>
 		His wife, Julie Luise Studer-Steinhäuslin, was a member of the advisory commission of the League of Nations and
 		campaigned for an international agreement on stricter laws against trafficking in women and children.
 	</p>
