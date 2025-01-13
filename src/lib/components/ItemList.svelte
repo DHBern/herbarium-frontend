@@ -1,16 +1,14 @@
 <script>
+	import { run } from 'svelte/legacy';
+
 	import { base } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
 	import { blur, fly } from 'svelte/transition';
-	/**
-	 * @type {any[]}
-	 */
-	export let items = [];
+	
 
-	/**
-	 * @type {Array<{label: string, key: string}>}
-	 */
-	export let structure = [];
+	
+	/** @type {{items?: any[], structure?: Array<{label: string, key: string}>}} */
+	let { items = $bindable([]), structure = [] } = $props();
 
 	/**
 	 * @type IntersectionObserver
@@ -116,41 +114,44 @@
 				}
 			}
 		};
-	let visibleNumber = 30;
-	$: visibleItems = items.slice(0, visibleNumber);
+	let visibleNumber = $state(30);
 
-	let showHelperElements = false;
-	let showHelperScrollbar = false;
-
-	/**
-	 * @type {HTMLDivElement}
-	 */
-	let table;
+	let showHelperElements = $state(false);
+	let showHelperScrollbar = $state(false);
 
 	/**
 	 * @type {HTMLDivElement}
 	 */
-	let helperScrollbar;
+	// @ts-ignore
+	let table = $state();
 
 	/**
 	 * @type {HTMLDivElement}
 	 */
-	let innerScrollbar;
+	// @ts-ignore
+	let helperScrollbar = $state();
 
-	$: {
-		if (helperScrollbar && innerScrollbar) {
-			setScrollbarSizes();
-		}
-	}
+	/**
+	 * @type {HTMLDivElement}
+	 */
+	// @ts-ignore
+	let innerScrollbar = $state();
+
 
 	const setScrollbarSizes = () => {
 		helperScrollbar.style.width = `${table.clientWidth}px`;
 		innerScrollbar.style.width = `${table.scrollWidth}px`;
 	};
+	let visibleItems = $derived(items.slice(0, visibleNumber));
+	run(() => {
+		if (helperScrollbar && innerScrollbar) {
+			setScrollbarSizes();
+		}
+	});
 </script>
 
 <svelte:window
-	on:resize={() => {
+	onresize={() => {
 		setScrollbarSizes();
 	}}
 />
@@ -159,15 +160,16 @@
 <div
 	class="table-container"
 	bind:this={table}
-	on:scroll={(e) => {
+	onscroll={(e) => {
 		// @ts-ignore
 		helperScrollbar.scrollLeft = e.target.scrollLeft;
 	}}
 >
 	{#if showHelperElements}
+		<!-- svelte-ignore a11y_consider_explicit_label -->
 		<button
 			class="btn-icon variant-ghost-primary fixed top-24 right-6 z-50"
-			on:click={() => {
+			onclick={() => {
 				table.scrollIntoView({ behavior: 'smooth' });
 			}}
 			in:fly={{ x: 100 }}
@@ -181,7 +183,7 @@
 			<tr>
 				<th class="table-cell-fit">Label Name</th>
 				{#each structure as { key, label }}
-					<th class="hover:cursor-pointer table-cell-fit" on:click={(e) => handleSort(e, key)}>
+					<th class="hover:cursor-pointer table-cell-fit" onclick={(e) => handleSort(e, key)}>
 						{label} <i class="fa-solid pointer-events-none fa-sort"></i>
 					</th>
 				{/each}
@@ -226,7 +228,7 @@
 	<div
 		class="helper-scrollbar fixed bottom-0 overflow-x-auto h-4"
 		bind:this={helperScrollbar}
-		on:scroll={(e) => {
+		onscroll={(e) => {
 			// @ts-ignore
 			table.scrollLeft = e.target.scrollLeft;
 		}}

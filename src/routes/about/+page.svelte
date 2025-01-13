@@ -34,10 +34,10 @@
 		src="$lib/assets/3E2A0219.jpg"
 		alt="herbarium"
 		class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
-		on:click={(e) => {
+		onclick={(e) => {
 			openLightbox(e.target);
 		}}
-		on:keypress={(e) => {
+		onkeypress={(e) => {
 			if (e.key === 'Enter' || e.key === ' ') {
 				openLightbox(e.target);
 			}
@@ -82,10 +82,10 @@
 		src="$lib/assets/3E2A0231.jpg"
 		alt="herbarium"
 		class="max-w-full md:max-w-96 md:float-right mx-auto mt-4 md:my-4 md:ml-6 border-8 border-primary-500 anchor cursor-pointer"
-		on:click={(e) => {
+		onclick={(e) => {
 			openLightbox(e.target);
 		}}
-		on:keypress={(e) => {
+		onkeypress={(e) => {
 			if (e.key === 'Enter' || e.key === ' ') {
 				openLightbox(e.target);
 			}

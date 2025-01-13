@@ -48,10 +48,10 @@
 		src="$lib/assets/FB_posts_pilzbuch_03.jpg"
 		alt="agaricus adiposus"
 		class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
-		on:click={(e) => {
+		onclick={(e) => {
 			openLightbox(e.target);
 		}}
-		on:keypress={(e) => {
+		onkeypress={(e) => {
 			if (e.key === 'Enter' || e.key === ' ') {
 				openLightbox(e.target);
 			}
@@ -152,10 +152,10 @@
 		src="$lib/assets/Studer-Steinhäuslin.jpg"
 		alt="Cortinarius traganus"
 		class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
-		on:click={(e) => {
+		onclick={(e) => {
 			openLightbox(e.target);
 		}}
-		on:keypress={(e) => {
+		onkeypress={(e) => {
 			if (e.key === 'Enter' || e.key === ' ') {
 				openLightbox(e.target);
 			}

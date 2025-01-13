@@ -4,10 +4,12 @@ import structure from '$lib/structure.json';
 /** @type {import('./$types').PageLoad} */
 export async function load() {
 	const returnitems = itemData
+		// @ts-ignore
 		.map((item) => {
 			const obj = {};
 			for (const key in item) {
 				if (key !== 'ImageGUID') {
+					// @ts-ignore
 					obj[key] = item[key];
 				}
 			}
@@ -16,6 +18,7 @@ export async function load() {
 			}
 			return obj;
 		})
+		// @ts-ignore
 		.sort((a, b) => {
 			if (a.genus < b.genus) return -1;
 			if (a.genus > b.genus) return 1;
@@ -25,6 +28,7 @@ export async function load() {
 		});
 
 	return {
+		// @ts-ignore
 		categories: Object.keys(itemData[0]),
 		itemstructure: structure,
 		items: returnitems

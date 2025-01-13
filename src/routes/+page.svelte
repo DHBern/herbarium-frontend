@@ -1,4 +1,8 @@
 <script>
+// @ts-nocheck
+
+	import { run } from 'svelte/legacy';
+
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import ItemList from '$lib/components/ItemList.svelte';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
@@ -9,7 +13,8 @@
 	import { page } from '$app/stores';
 	import { afterNavigate } from '$app/navigation';
 
-	export let data;
+	/** @type {{data: any}} */
+	let { data } = $props();
 
 	/** @type {import('./$types').Snapshot<{searchtext: string | import('minisearch').Query, advancedToggle: boolean, advancedFields: { [key: string]: string; }}>} */
 	export const snapshot = {
@@ -23,7 +28,7 @@
 		}
 	};
 
-	let allDocumentsAdded = Promise.resolve();
+	let allDocumentsAdded = $state(Promise.resolve());
 
 	onMount(() => {
 		if (!$miniSearch) {
@@ -79,10 +84,10 @@
 	/**
 	 * @type {string|import('minisearch').Query}
 	 */
-	let searchtext = '';
-	let advancedToggle = false;
+	let searchtext = $state('');
+	let advancedToggle = $state(false);
 	/** @type {{ [key: string]: string }} */
-	let advancedFields = {};
+	let advancedFields = $state({});
 
 	const asyncSearch = (
 		/** @type {import("minisearch").Query} */ query,
@@ -94,9 +99,9 @@
 		});
 	};
 
-	let filtereditems = data.items;
-	let searching = false;
-	$: {
+	let filtereditems = $state(data.items);
+	let searching = $state(false);
+	run(() => {
 		if (searchtext) {
 			//wait for all documents to be added to the index
 			searching = true;
@@ -110,9 +115,9 @@
 		} else {
 			filtereditems = data.items;
 		}
-	}
+	});
 
-	$: {
+	run(() => {
 		if (advancedToggle) {
 			if (Object.values(advancedFields).some((i) => !!i)) {
 				searchtext = {
@@ -136,17 +141,18 @@
 				searchtext = '';
 			}
 		}
-	}
+	});
 </script>
 
 <div class="px-8 pt-16 image-background h-[30vh]">
 	<div class="container mx-auto text-white backdrop-blur-md rounded w-fit p-2">
-		<h1 class="h1 font-bold tracking-wide drop-shadow-xl text-shadow">Herbarium Bernense</h1>
+		<h1 class="h1 font-bold tracking-wide drop-shadow-xl text-shadow">Herbarium Bernense </h1>
 		<p class="text-lg font-semibold text-shadow">
 			Herbarium of the Botanical Garden of the University of Bern
 		</p>
 	</div>
 </div>
+
 <ContentContainer>
 	<div class="flex flex-col lg:flex-row gap-4 justify-between">
 		<div class="lg:w-1/2 mb-4">
@@ -184,7 +190,7 @@
 				{#each data.itemstructure as item}
 					<label class="label" transition:slide|global>
 						<span>
-							{item.label}
+							{item.label} kdkdkdk 
 						</span>
 						<input
 							class="input p-6 placeholder-primary-600"

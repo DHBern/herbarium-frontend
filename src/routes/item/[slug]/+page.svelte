@@ -1,4 +1,6 @@
 <script>
+	import { run } from 'svelte/legacy';
+
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { onMount } from 'svelte';
 	import { assets, base } from '$app/paths';
@@ -9,10 +11,10 @@
 	 */
 	let OpenSeadragon;
 
-	/**
-	 * @type {import('openseadragon').Viewer}
-	 */
-	let viewer;
+	// /**
+	//  * @type {import('openseadragon').Viewer}
+	//  */
+	let viewer = $state();
 
 	onMount(async () => {
 		OpenSeadragon = (await import('openseadragon')).default;
@@ -80,13 +82,14 @@
 		});
 	});
 
-	/** @type {import('./$types').PageData} */
-	export let data;
-	$: {
+	
+	/** @type {{data: import('./$types').PageData}} */
+	let { data } = $props();
+	run(() => {
 		if (viewer && data.iiif) {
 			viewer.open(data.iiif);
 		}
-	}
+	});
 </script>
 
 <svelte:head>
@@ -94,7 +97,7 @@
 </svelte:head>
 
 <ContentContainer>
-	<div class="grid md:grid-cols-2 md:grid-rows-[auto_1fr] gap-4 lg:gap-6">
+	<div class="grid md:grid-cols-2 md:grid-rows-[auto_1fr] gap-4 lg:gap-6"> 
 		{#if data.metadata}
 			{@const d = data.metadata}
 			<div class="md:col-span-2 lg:col-span-1 lg:col-start-2">
@@ -125,6 +128,7 @@
 						<dt class="border-r-4 border-current pr-4 pt-4">
 							{label}
 						</dt>
+						
 						<dd class="pl-2 pt-4">
 							<a class="anchor" href={`${base}/?a=${JSON.stringify({ [key]: metadataVal })}`}>
 								{#if key === 'country'}

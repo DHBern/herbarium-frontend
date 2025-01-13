@@ -21,6 +21,8 @@
 	import unibe from '$lib/assets/unibe.svg';
 	import { biggerPicture } from '$lib/stores';
 	import BiggerPicture from 'bigger-picture/svelte';
+	/** @type {{children?: import('svelte').Snippet}} */
+	let { children } = $props();
 
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
@@ -35,8 +37,8 @@
 	initializeStores();
 	const drawerStore = getDrawerStore();
 
-	$: classesActive = (/** @type {string} */ href) =>
-		base + href === $page?.url?.pathname ? 'bg-primary-500' : '';
+	let classesActive = $derived((/** @type {string} */ href) =>
+		base + href === $page?.url?.pathname ? 'bg-primary-500' : '');
 
 	function drawerOpen() {
 		const /** @type {import('@skeletonlabs/skeleton').DrawerSettings} */ s = {
@@ -52,8 +54,8 @@
 		{ slug: 'about us', path: '/about' },
 		{ slug: 'impressum', path: '/impressum' }
 	];
-	let searchtext = '';
-	let otherSearchisVisible = false;
+	let searchtext = $state('');
+	let otherSearchisVisible = $state(false);
 	/**
 	 * @type {IntersectionObserver}
 	 */
@@ -120,72 +122,82 @@
 />
 <!-- App Shell -->
 <AppShell slotPageFooter="bg-surface-200-700-token p-4">
-	<svelte:fragment slot="header">
-		<!-- App Bar -->
-		<AppBar padding="px-4" background="bg-surface-100-900-token">
-			<nav class="flex-none items-center h-full hidden md:flex">
-				{#each pages as page}
-					<a
-						href={`${base}${page.path}`}
-						class="list-nav-item h-full p-4 bg-primary-hover-token {classesActive(page.path)}"
-						>{page.slug}</a
-					>
-				{/each}
-				{#if !otherSearchisVisible}
-					<label>
-						<input
-							class="input placeholder-primary-600 ml-2"
-							type="text"
-							placeholder="searchinput..."
-							bind:value={searchtext}
-							on:change={() => {
+	{#snippet header()}
+	
+			<!-- App Bar -->
+			<AppBar padding="px-4" background="bg-surface-100-900-token">
+				<nav class="flex-none items-center h-full hidden md:flex">
+					{#each pages as page}
+						<a
+							href={`${base}${page.path}`}
+							class="list-nav-item h-full p-4 bg-primary-hover-token {classesActive(page.path)}"
+							>{page.slug}</a
+						>
+					{/each}
+					{#if !otherSearchisVisible}
+						<label>
+							<input
+								class="input placeholder-primary-600 ml-2"
+								type="text"
+								placeholder="searchinput..."
+								bind:value={searchtext}
+								onchange={() => {
 								const to = searchtext;
 								searchtext = '';
 								goto(`${base}/?s=${to}`);
 							}}
-						/>
-					</label>
-					<a href={`${base}?s=${searchtext}`} class="btn-icon">
-						<i class="fa-solid fa-search"></i>
-					</a>
-				{/if}
-			</nav>
-			<svelte:fragment slot="lead">
-				<button class="md:!hidden btn-icon" on:click={drawerOpen}>
-					<i class="fa-solid fa-bars"></i>
-				</button>
-			</svelte:fragment>
-			<svelte:fragment slot="trail">
-				<a href="https://www.unibe.ch" target="_blank" rel="noopener">
-					<img
-						src={unibe}
-						alt="Logo of the University of Bern"
-						class="max-h-[80px] h-[43px] w-auto my-1"
-					/>
-				</a>
-				<a
-					href="https://www.boga.unibe.ch/wissenschaft/herbarium/index_ger.html"
-					target="_blank"
-					rel="noopener"
-				>
-					<img
-						src={boga}
-						alt="Logo of the botanical garden"
-						class="max-h-[80px] h-[43px] w-auto my-1"
-						height="43"
-						width="72"
-					/>
-				</a>
-			</svelte:fragment>
-		</AppBar>
-	</svelte:fragment>
+							/>
+						</label>
+						<!-- svelte-ignore a11y_consider_explicit_label -->
+						<a href={`${base}?s=${searchtext}`} class="btn-icon">
+							<i class="fa-solid fa-search"></i>
+						</a>
+					{/if}
+				</nav>
+				{#snippet lead()}
+					
+						<!-- svelte-ignore a11y_consider_explicit_label -->
+						<button class="md:!hidden btn-icon" onclick={drawerOpen}>
+							<i class="fa-solid fa-bars"></i>
+						</button>
+					
+					{/snippet}
+				{#snippet trail()}
+					
+						<a href="https://www.unibe.ch" target="_blank" rel="noopener">
+							<img
+								src={unibe}
+								alt="Logo of the University of Bern"
+								class="max-h-[80px] h-[43px] w-auto my-1"
+							/>
+						</a>
+						<a
+							href="https://www.boga.unibe.ch/wissenschaft/herbarium/index_ger.html"
+							target="_blank"
+							rel="noopener"
+						>
+							<img
+								src={boga}
+								alt="Logo of the botanical garden"
+								class="max-h-[80px] h-[43px] w-auto my-1"
+								height="43"
+								width="72"
+							/>
+						</a>
+					
+					{/snippet}
+			</AppBar>
+		
+	{/snippet}
 	<!-- Page Route Content -->
-	<slot />
-	<svelte:fragment slot="pageFooter">
-		<div class="grid grid-cols-2 lg:ml-10 lg:mr-10 gap-4">
-			<p class="h5 md:h6 lg:h5 col-span-2 justify-self-start">
-				A project of the Herbarium of the Botanical Garden of the University of Bern
-			</p>
-		</div>
-	</svelte:fragment>
+	{@render children?.()}
+	{#snippet pageFooter()}
+	
+			<div class="grid grid-cols-2 lg:ml-10 lg:mr-10 gap-4">
+				<p class="h5 md:h6 lg:h5 col-span-2 justify-self-start">
+					A project of the Herbarium of the Botanical Garden of the University of Bern
+				</p>
+			</div>
+		
+	{/snippet}
 </AppShell>
