@@ -106,13 +106,13 @@
 						{d.Accepted_Name}
 					{/if}
 
-					{#if d.typeStatus !== 'no'}
-						<span class="badge variant-filled-warning"> {d.typeStatus}</span>
+					{#if d.Type !== 'no'}
+						<span class="badge variant-filled-warning"> {d.Type}</span>
 					{/if}
 				</h1>
 			</div>
 			<div
-				class="lg:row-span-2 lg:row-start-1 w-full h-fit {d.typeStatus !== 'no'
+				class="lg:row-span-2 lg:row-start-1 w-full h-fit {d.Type !== 'no'
 					? 'bg-warning-300'
 					: 'bg-primary-900'}"
 			>

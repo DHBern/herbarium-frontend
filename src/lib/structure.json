@@ -4,6 +4,7 @@
 	{ "label": "Family", "key": "Family", "showInList": true },
 	{ "label": "Genus", "key": "Genus", "showInList": false },
 	{ "label": "Species", "key": "Species", "showInList": false },
+	{ "label": "Type", "key": "Type", "showInList": true },
 	{ "label": "Author", "key": "Author", "showInList": false },
 	{ "label": "Collector", "key": "Collector", "showInList": true },
 	{ "label": "Year", "key": "Year", "showInList": true },
