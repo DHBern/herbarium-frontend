@@ -11,16 +11,16 @@ export async function load() {
 					obj[key] = item[key];
 				}
 			}
-			if (!obj.genus) {
+			if (!obj.Genus) {
 				obj.genus = 'no genus';
 			}
 			return obj;
 		})
 		.sort((a, b) => {
-			if (a.genus < b.genus) return -1;
-			if (a.genus > b.genus) return 1;
-			if (a.specificEpithet < b.specificEpithet) return -1;
-			if (a.specificEpithet > b.specificEpithet) return 1;
+			if (a.Genus < b.Genus) return -1;
+			if (a.Genus > b.Genus) return 1;
+			if (a.Species < b.Species) return -1;
+			if (a.Species > b.Species) return 1;
 			return 0;
 		});
 
