@@ -193,7 +193,7 @@
 					use:viewport={i !== visibleItems.length - 1}
 				>
 					{#each structure as { key }, j}
-						<td class="table-cell-fit ${j === 0 ? 'italic' : ''}">
+						<td class="table-cell-fit {j === 0 ? 'italic' : ''}">
 							{#if j === 0}<i class="fa-solid fa-camera"></i>{/if}
 							{#if row[key]}
 								<a href={`${base}/item/${row.Catalog_Number}`}>
