@@ -1,19 +1,12 @@
 <script>
-	import { run } from 'svelte/legacy';
-
 	import { base } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
 	import { blur, fly } from 'svelte/transition';
-	
-
-	
-	/** @type {{items?: any[], structure?: Array<{label: string, key: string}>}} */
 	let { items = $bindable([]), structure = [] } = $props();
-
 	/**
-	 * @type IntersectionObserver
+	 * @type {IntersectionObserver}
 	 */
-	let intersectionObserver;
+	let intersectionObserver ;
 
 	function ensureIntersectionObserver() {
 		if (intersectionObserver) return;
@@ -118,23 +111,8 @@
 
 	let showHelperElements = $state(false);
 	let showHelperScrollbar = $state(false);
-
-	/**
-	 * @type {HTMLDivElement}
-	 */
-	// @ts-ignore
 	let table = $state();
-
-	/**
-	 * @type {HTMLDivElement}
-	 */
-	// @ts-ignore
 	let helperScrollbar = $state();
-
-	/**
-	 * @type {HTMLDivElement}
-	 */
-	// @ts-ignore
 	let innerScrollbar = $state();
 
 
@@ -143,7 +121,7 @@
 		innerScrollbar.style.width = `${table.scrollWidth}px`;
 	};
 	let visibleItems = $derived(items.slice(0, visibleNumber));
-	run(() => {
+	$effect(() => {
 		if (helperScrollbar && innerScrollbar) {
 			setScrollbarSizes();
 		}

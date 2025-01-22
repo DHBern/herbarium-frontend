@@ -1,9 +1,8 @@
 <script>
 // @ts-nocheck
 
-	import { run } from 'svelte/legacy';
-
-	import ContentContainer from '$lib/components/ContentContainer.svelte';
+	
+    import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import ItemList from '$lib/components/ItemList.svelte';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
 	import MiniSearch from 'minisearch';
@@ -13,10 +12,11 @@
 	import { page } from '$app/stores';
 	import { afterNavigate } from '$app/navigation';
 
-	/** @type {{data: any}} */
+	
 	let { data } = $props();
 
-	/** @type {import('./$types').Snapshot<{searchtext: string | import('minisearch').Query, advancedToggle: boolean, advancedFields: { [key: string]: string; }}>} */
+	
+	// @ts-ignore
 	export const snapshot = {
 		capture: () => {
 			return { searchtext, advancedToggle, advancedFields };
@@ -64,6 +64,7 @@
 	afterNavigate(() => {
 		if ($page.url.searchParams.get('s')) {
 			console.log('searchtext', $page.url.searchParams.get('s'));
+			
 			// @ts-ignore
 			searchtext = $page.url.searchParams.get('s');
 			//remove search query from url
@@ -72,6 +73,7 @@
 			history.replaceState(null, '', $page.url.toString());
 		} else if ($page.url.searchParams.get('a')) {
 			advancedToggle = true;
+		
 			// @ts-ignore
 			advancedFields = JSON.parse($page.url.searchParams.get('a'));
 			//remove search query from url
@@ -81,27 +83,23 @@
 		}
 	});
 
-	/**
-	 * @type {string|import('minisearch').Query}
-	 */
+	
 	let searchtext = $state('');
 	let advancedToggle = $state(false);
-	/** @type {{ [key: string]: string }} */
 	let advancedFields = $state({});
 
-	const asyncSearch = (
-		/** @type {import("minisearch").Query} */ query,
-		/** @type {import("minisearch").SearchOptions | undefined} */ config
-	) => {
+	const asyncSearch = (/** @type {string} */ query,/** @type {undefined} */ config) => {
 		return new Promise((resolve) => {
 			const searchresults = $miniSearch.search(query, config);
 			resolve(searchresults);
 		});
 	};
 
-	let filtereditems = $state(data.items);
+	//let filtereditems = $state(data.items);
+	let filtereditems = $state(data?.items || []);
+	//console.log(data.items);
 	let searching = $state(false);
-	run(() => {
+	$effect(() => {
 		if (searchtext) {
 			//wait for all documents to be added to the index
 			searching = true;
@@ -113,21 +111,24 @@
 				});
 			});
 		} else {
-			filtereditems = data.items;
+			filtereditems = data?.items;
 		}
 	});
 
-	run(() => {
+	$effect(() => {
 		if (advancedToggle) {
 			if (Object.values(advancedFields).some((i) => !!i)) {
+				// @ts-ignore
 				searchtext = {
 					combineWith: 'AND',
 					queries: [
-						...Object.keys(advancedFields).reduce(
-							(/** @type {import('minisearch').Query[]} */ acc, key) => {
+						...Object.keys(advancedFields).reduce((acc, key) => {
+								// @ts-ignore
 								if (advancedFields[key]) {
+									// @ts-ignore
 									acc.push({
 										fields: [key],
+										// @ts-ignore
 										queries: [advancedFields[key]]
 									});
 								}
@@ -170,7 +171,7 @@
 					active="bg-surface-300"
 					bind:checked={advancedToggle}
 					class="mb-3"
-					on:change={() => {
+					onChange={() => {
 						searchtext = '';
 					}}
 				>
@@ -190,7 +191,7 @@
 				{#each data.itemstructure as item}
 					<label class="label" transition:slide|global>
 						<span>
-							{item.label} kdkdkdk 
+							{item.label} 
 						</span>
 						<input
 							class="input p-6 placeholder-primary-600"
@@ -202,7 +203,7 @@
 			{/if}
 
 			<p class="mt-5">
-				Found {searching ? '...' : filtereditems.length} Result{filtereditems.length >= 1
+				Found {searching ? '...' : filtereditems?.length} Result{filtereditems?.length >= 1
 					? 's'
 					: ''}.
 			</p>
@@ -211,7 +212,7 @@
 </ContentContainer>
 <section class="mx-4">
 	<ItemList
-		structure={data.itemstructure.filter((item) => item.showInList)}
+		structure={data?.itemstructure.filter((item) => item.showInList)}
 		items={filtereditems}
 	/>
 </section>

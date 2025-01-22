@@ -1,5 +1,5 @@
-import { get } from 'svelte/store';
-import { biggerPicture } from './stores';
+import { get} from 'svelte/store';
+import { biggerPicture,selectedImagePath} from './stores';
 export const addFlagToCountry = (/** @type {string} */ country) => {
 	return `${country} <span style="background-image: url(https://github.com/stefangabos/world_countries/blob/master/data/flags/16x16/${country.toLowerCase()}.png?raw=true);" class="flag"></span>`;
 };
@@ -16,7 +16,6 @@ export const setGenusAndSpeciesItalic = (
 };
 export const openLightbox = (/** @type {any} */ target) => {
 	get(biggerPicture).open({
-		// @ts-ignore
 		items: {
 			img: target.src,
 			width: target.attributes.width.value,
@@ -24,3 +23,14 @@ export const openLightbox = (/** @type {any} */ target) => {
 		}
 	});
 };
+
+/**
+ * @param {any} src
+ */
+export const  openLightbox2=(/** @type {any} */ src)=> {
+	selectedImagePath.set(src);
+	 //alert(selectedImagePath);
+  }
+ export  const closeLightbox=()=> {
+	selectedImagePath.set("");
+  }

@@ -1,7 +1,6 @@
 import itemData from '$lib/data.json';
 import structure from '$lib/structure.json';
 
-/** @type {import('./$types').PageLoad} */
 export async function load({ params, fetch }) {
 	// @ts-ignore
 	const item = itemData.find((item) => item.materialEntityID === params.slug);
@@ -18,8 +17,6 @@ export async function load({ params, fetch }) {
 		structure
 	};
 }
-
-/** @type {import('./$types').EntryGenerator} */
 export function entries() {
 	// @ts-ignore
 	return itemData.map((item) => {

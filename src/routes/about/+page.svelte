@@ -1,4 +1,7 @@
 <script>
+// @ts-nocheck
+
+	import {openLightbox2} from '$lib/functions';
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import stiftung from '$lib/assets/stiftung_boga.svg';
 	import bgb from '$lib/assets/BGB_Logo_Office_M.svg';
@@ -35,11 +38,11 @@
 		alt="herbarium"
 		class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
 		onclick={(e) => {
-			openLightbox(e.target);
+			openLightbox2(e.target.src);
 		}}
 		onkeypress={(e) => {
 			if (e.key === 'Enter' || e.key === ' ') {
-				openLightbox(e.target);
+				openLightbox2(e.target.src);
 			}
 		}}
 		role="presentation"
@@ -83,11 +86,11 @@
 		alt="herbarium"
 		class="max-w-full md:max-w-96 md:float-right mx-auto mt-4 md:my-4 md:ml-6 border-8 border-primary-500 anchor cursor-pointer"
 		onclick={(e) => {
-			openLightbox(e.target);
+			openLightbox2(e.target.src);
 		}}
 		onkeypress={(e) => {
 			if (e.key === 'Enter' || e.key === ' ') {
-				openLightbox(e.target);
+				openLightbox2(e.target.src);
 			}
 		}}
 		role="presentation"

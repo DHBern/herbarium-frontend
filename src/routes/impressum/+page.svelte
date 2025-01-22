@@ -1,7 +1,10 @@
 <script>
+// @ts-nocheck
+
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { openLightbox } from '$lib/functions';
-</script>
+	import {openLightbox2} from '$lib/functions';
+ </script>
 
 <ContentContainer>
 	<h1 class="h1">Impressum</h1>
@@ -20,11 +23,11 @@
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e) => {
-				openLightbox(e.target);
+				openLightbox2(e.target.src);
 			}}
 			onkeypress={(e) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox(e.target);
+					openLightbox2(e.target.src);
 				}
 			}}
 			role="presentation"
@@ -43,11 +46,11 @@
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e) => {
-				openLightbox(e.target);
+				openLightbox2(e.target.src);
 			}}
 			onkeypress={(e) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox(e.target);
+					openLightbox(e.target.src);
 				}
 			}}
 			role="presentation"
@@ -75,11 +78,11 @@
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e) => {
-				openLightbox(e.target);
+				openLightbox2(e.target.src);
 			}}
 			onkeypress={(e) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox(e.target);
+					openLightbox2(e.target.src);
 				}
 			}}
 			role="presentation"

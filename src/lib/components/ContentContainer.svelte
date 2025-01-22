@@ -1,7 +1,4 @@
 <script>
-
-	
-	/** @type {{class?: string, dark?: boolean, children?: import('svelte').Snippet}} */
 	let { class: className = '', dark = false, children } = $props();
 </script>
 

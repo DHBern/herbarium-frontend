@@ -1,20 +1,14 @@
 <script>
-	import { run } from 'svelte/legacy';
+	
 
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { onMount } from 'svelte';
 	import { assets, base } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
-
-	/**
-	 * @type {import('openseadragon') | undefined}
-	 */
+	
 	let OpenSeadragon;
-
-	// /**
-	//  * @type {import('openseadragon').Viewer}
-	//  */
 	let viewer = $state();
+	let { data } = $props();
 
 	onMount(async () => {
 		OpenSeadragon = (await import('openseadragon')).default;
@@ -80,16 +74,14 @@
 			},
 			sequenceMode: false
 		});
+		if (data.iiif) {
+		viewer.open(data.iiif);
+		}
 	});
 
 	
-	/** @type {{data: import('./$types').PageData}} */
-	let { data } = $props();
-	run(() => {
-		if (viewer && data.iiif) {
-			viewer.open(data.iiif);
-		}
-	});
+	// $effect(() => {
+	// });
 </script>
 
 <svelte:head>

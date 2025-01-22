@@ -1,15 +1,13 @@
 <script>
+// @ts-nocheck
+
+	
+	
 	import { page } from '$app/stores';
 	import '../app.postcss';
 	import 'bigger-picture/css';
-	import {
-		AppShell,
-		AppBar,
-		getDrawerStore,
-		Drawer,
-		initializeStores,
-		Toast
-	} from '@skeletonlabs/skeleton';
+	import { AppShell,AppBar,getDrawerStore,Drawer,initializeStores,Toast} 
+	from '@skeletonlabs/skeleton';
 	import '@fortawesome/fontawesome-free/css/solid.min.css';
 	import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
 	import { base } from '$app/paths';
@@ -19,11 +17,16 @@
 	import { storePopup } from '@skeletonlabs/skeleton';
 	import boga from '$lib/assets/BOGA-Logo_Black.svg';
 	import unibe from '$lib/assets/unibe.svg';
-	import { biggerPicture } from '$lib/stores';
+	import { biggerPicture, selectedImagePath} from '$lib/stores';
+	import {closeLightbox} from '$lib/functions';
 	import BiggerPicture from 'bigger-picture/svelte';
 	/** @type {{children?: import('svelte').Snippet}} */
 	let { children } = $props();
+	
+	import { fade, slide } from 'svelte/transition';
 
+	import LightBox from '$lib/components/LightBox.svelte';
+	
 	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
 	afterNavigate((/** @type import('@sveltejs/kit').AfterNavigate */ params) => {
@@ -101,7 +104,9 @@
 			console.log('observer not defined');
 		}
 	});
+	
 </script>
+
 
 <Drawer height="h-auto">
 	<nav class="list-nav">
@@ -139,13 +144,13 @@
 							<input
 								class="input placeholder-primary-600 ml-2"
 								type="text"
-								placeholder="searchinput..."
+								placeholder="search"
 								bind:value={searchtext}
 								onchange={() => {
 								const to = searchtext;
 								searchtext = '';
-								goto(`${base}/?s=${to}`);
-							}}
+								goto(`${base}/?s=${to}`);}
+							}
 							/>
 						</label>
 						<!-- svelte-ignore a11y_consider_explicit_label -->
@@ -201,3 +206,5 @@
 		
 	{/snippet}
 </AppShell>
+
+<LightBox />
