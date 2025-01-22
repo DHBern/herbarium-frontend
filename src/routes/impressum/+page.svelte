@@ -2,7 +2,7 @@
 // @ts-nocheck
 
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
-	import { openLightbox } from '$lib/functions';
+	import { closeLightbox, openLightbox } from '$lib/functions';
 	import {openLightbox2} from '$lib/functions';
  </script>
 
@@ -27,7 +27,7 @@
 			}}
 			onkeypress={(e) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox2(e.target.src);
+					closeLightbox();
 				}
 			}}
 			role="presentation"
@@ -50,7 +50,7 @@
 			}}
 			onkeypress={(e) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox(e.target.src);
+				    closeLightbox();
 				}
 			}}
 			role="presentation"
@@ -82,7 +82,7 @@
 			}}
 			onkeypress={(e) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox2(e.target.src);
+					closeLightbox();
 				}
 			}}
 			role="presentation"

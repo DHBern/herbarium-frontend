@@ -18,15 +18,6 @@
 		import pdf14 from '$lib/assets/01_Otth_IconesFungorum_Agaricineen.pdf';
 
 	
-		// var selectedImagePath = $state({path:""});
-		
-		// function openLightbox2(src) {
-		//   selectedImagePath.path = src;
-		//    alert(selectedImagePath.path);
-		// }
-		// function closeLightbox() {
-		//   selectedImagePath.path = "";
-		// }
 	</script>
 	
 	
@@ -66,8 +57,8 @@
 			}}
 			onkeypress={(e) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-					//openLightbox(e.target);
-					closeLightbox();
+					openLightbox2(e.target.src);
+					
 				}
 			}}
 			role="presentation"
