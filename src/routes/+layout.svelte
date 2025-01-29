@@ -1,8 +1,5 @@
 <script>
 // @ts-nocheck
-
-	
-	
 	import { page } from '$app/stores';
 	import '../app.postcss';
 	import 'bigger-picture/css';
@@ -17,7 +14,7 @@
 	import { storePopup } from '@skeletonlabs/skeleton';
 	import boga from '$lib/assets/BOGA-Logo_Black.svg';
 	import unibe from '$lib/assets/unibe.svg';
-	import { biggerPicture, selectedImagePath} from '$lib/stores';
+	import { biggerPicture, selectedImagePath} from '$lib/stores.svelte';
 	import {closeLightbox} from '$lib/functions';
 	import BiggerPicture from 'bigger-picture/svelte';
 	/** @type {{children?: import('svelte').Snippet}} */

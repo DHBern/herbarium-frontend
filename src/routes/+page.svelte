@@ -8,7 +8,7 @@
 	import MiniSearch from 'minisearch';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
-	import { miniSearch } from '$lib/stores.js';
+	import { miniSearch } from '$lib/stores.svelte.js';
 	import { page } from '$app/stores';
 	import { afterNavigate } from '$app/navigation';
 

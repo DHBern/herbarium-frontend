@@ -23,6 +23,9 @@
 	];
 </script>
 
+
+
+
 <ContentContainer>
 	<h1 class="h1">About the project</h1>
 	<p>

@@ -2,11 +2,12 @@
 <script>
 // @ts-nocheck
 
-    import {selectedImagePath} from '$lib/stores';
+    import {selectedImagePath} from '$lib/stores.svelte';
     import {closeLightbox} from '$lib/functions';
     import { fade, slide } from 'svelte/transition';
 </script>
-{#if $selectedImagePath != ""}
+
+{#if selectedImagePath.path != ""}
 		<!-- <div class="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50 cursor-pointer " role="button" tabindex="0"  -->
 			<div class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 cursor-pointer -top-10" role="button" tabindex="0" 
 			  onclick={closeLightbox} 
@@ -22,7 +23,7 @@
 				<span class="text-xl font-bold">X</span>
 			  </button>
 			  <img
-			  src={$selectedImagePath}
+			  src={selectedImagePath.path}
 			  alt="Lightbox view"
 			  class="max-w-[90%] max-h-[90vh] h-auto rounded-lg object-contain"
 			  in:slide={{ x: 200, duration: 600 }}

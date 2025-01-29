@@ -1,9 +1,11 @@
+// @ts-ignore
 import { get} from 'svelte/store';
-import { biggerPicture,selectedImagePath} from './stores';
+import { biggerPicture} from './stores.svelte.js';
 export const addFlagToCountry = (/** @type {string} */ country) => {
 	return `${country} <span style="background-image: url(https://github.com/stefangabos/world_countries/blob/master/data/flags/16x16/${country.toLowerCase()}.png?raw=true);" class="flag"></span>`;
 };
 
+ import { selectedImagePath } from './stores.svelte.js';
 export const setGenusAndSpeciesItalic = (
 	/** @type {string} */ input,
 	/** @type {string} */ genus,
@@ -28,9 +30,11 @@ export const openLightbox = (/** @type {any} */ target) => {
  * @param {any} src
  */
 export const  openLightbox2=(/** @type {any} */ src)=> {
-	selectedImagePath.set(src);
-	 //alert(selectedImagePath);
+	// @ts-ignore
+	selectedImagePath.path = src;
+	
   }
  export  const closeLightbox=()=> {
-	selectedImagePath.set("");
+	// @ts-ignore
+	selectedImagePath.path="";
   }
