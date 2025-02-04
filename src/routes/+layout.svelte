@@ -2,7 +2,7 @@
 // @ts-nocheck
 	import { page } from '$app/stores';
 	import '../app.postcss';
-	import 'bigger-picture/css';
+	
 	import { AppShell,AppBar,getDrawerStore,Drawer,initializeStores,Toast} 
 	from '@skeletonlabs/skeleton';
 	import '@fortawesome/fontawesome-free/css/solid.min.css';
@@ -14,9 +14,9 @@
 	import { storePopup } from '@skeletonlabs/skeleton';
 	import boga from '$lib/assets/BOGA-Logo_Black.svg';
 	import unibe from '$lib/assets/unibe.svg';
-	import { biggerPicture, selectedImagePath} from '$lib/stores.svelte';
+	import { selectedImagePath} from '$lib/stores.svelte';
 	import {closeLightbox} from '$lib/functions';
-	import BiggerPicture from 'bigger-picture/svelte';
+	
 	/** @type {{children?: import('svelte').Snippet}} */
 	let { children } = $props();
 	
@@ -85,9 +85,9 @@
 		});
 
 		// initialize lightbox
-		$biggerPicture = BiggerPicture({
-			target: document.body
-		});
+		// $biggerPicture = BiggerPicture({
+		// 	target: document.body
+		// });
 	});
 
 	afterNavigate(() => {

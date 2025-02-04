@@ -2,8 +2,7 @@
 // @ts-nocheck
 
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
-	import { closeLightbox, openLightbox } from '$lib/functions';
-	import {openLightbox2} from '$lib/functions';
+	import {openLightbox2,closeLightbox} from '$lib/functions';
  </script>
 
 <ContentContainer>

@@ -10,7 +10,7 @@
 	import uws from '$lib/assets/uws.svg';
 	import swisslos from '$lib/assets/swisslos.svg';
 	import fjd from '$lib/assets/fjd.svg';
-	import { openLightbox } from '$lib/functions';
+	
 
 	const logos = [
 		{ src: stiftung, alt: 'Stiftung Boga' },
