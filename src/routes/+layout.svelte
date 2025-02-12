@@ -2,7 +2,6 @@
 // @ts-nocheck
 	import { page } from '$app/stores';
 	import '../app.postcss';
-	
 	import { AppShell,AppBar,getDrawerStore,Drawer,initializeStores,Toast} 
 	from '@skeletonlabs/skeleton';
 	import '@fortawesome/fontawesome-free/css/solid.min.css';
