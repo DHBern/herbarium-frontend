@@ -160,7 +160,7 @@
 			<p class="p lg:text-xl">
 				The Herbarium Bernense contains about 500,000 herbarium specimens, including type specimens
 				and valuable historical collections. Currently about 10% of our collection is digitized and
-				can be accessed heree.
+				can be accessed hereegit .
 			</p>
 		</div>
 		<div class="lg:w-1/2">

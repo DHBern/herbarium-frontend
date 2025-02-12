@@ -102,7 +102,7 @@
 					if (items[0].hasOwnProperty('score')) {
 						sort('score', 'desc');
 					} else {
-						sort('materialEntityID', 'desc');
+						sort('Catalog_Number', 'desc');
 					}
 				}
 			}
@@ -159,7 +159,6 @@
 	<table class="table table-interactive !bg-primary-100">
 		<thead use:viewport={false} class="!border-primary-800/20 !bg-primary-400">
 			<tr>
-				<th class="table-cell-fit">Label Name</th>
 				{#each structure as { key, label }}
 					<th class="hover:cursor-pointer table-cell-fit" onclick={(e) => handleSort(e, key)}>
 						{label} <i class="fa-solid pointer-events-none fa-sort"></i>
@@ -168,28 +167,22 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each visibleItems as row, i (row.materialEntityID)}
+			{#each visibleItems as row, i (row.Catalog_Number)}
 				<tr
 					class="!border-primary-800/20 even:!bg-primary-400/30"
 					use:viewport={i !== visibleItems.length - 1}
 				>
-					<td class="table-cell-fit italic">
-						<a href={`${base}/item/${row.materialEntityID}`}>
-							<i class="fa-solid fa-camera"></i>
-							{row.genus}
-							{row.specificEpithet}
-						</a>
-					</td>
-					{#each structure as { key }}
-						<td class="table-cell-fit">
+					{#each structure as { key }, j}
+						<td class="table-cell-fit {j === 0 ? 'italic' : ''}">
+							{#if j === 0}<i class="fa-solid fa-camera"></i>{/if}
 							{#if row[key]}
-								<a href={`${base}/item/${row.materialEntityID}`}>
-									{#if key === 'country'}
+								<a href={`${base}/item/${row.Catalog_Number}`}>
+									{#if key === 'Country'}
 										{@html addFlagToCountry(row[key])}
-									{:else if key === 'genus' || key === 'specificEpithet'}
+									{:else if key === 'Genus' || key === 'Species'}
 										<span class="italic">{row[key]}</span>
-									{:else if key === 'acceptedNameUsage'}
-										{@html setGenusAndSpeciesItalic(row[key], row.genus, row.specificEpithet)}
+									{:else if key === 'Accepted_Name'}
+										{@html setGenusAndSpeciesItalic(row[key], row.Genus, row.Species)}
 									{:else}
 										{row[key]}
 									{/if}

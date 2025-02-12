@@ -94,20 +94,20 @@
 			{@const d = data.metadata}
 			<div class="md:col-span-2 lg:col-span-1 lg:col-start-2">
 				<h1 class="h1 text-balance pb-2 md:pb-4 inline italic">
-					{#if d.genus.trim() || d.specificEpithet.trim()}
-						{d.genus}
-						{d.specificEpithet}
+					{#if d.Genus.trim() || d.Species.trim()}
+						{d.Genus}
+						{d.Species}
 					{:else}
-						{d.acceptedNameUsage}
+						{d.Accepted_Name}
 					{/if}
 
-					{#if d.typeStatus !== 'no'}
-						<span class="badge variant-filled-warning"> {d.typeStatus}</span>
+					{#if d.Type !== 'no'}
+						<span class="badge variant-filled-warning"> {d.Type}</span>
 					{/if}
 				</h1>
 			</div>
 			<div
-				class="lg:row-span-2 lg:row-start-1 w-full h-fit {d.typeStatus !== 'no'
+				class="lg:row-span-2 lg:row-start-1 w-full h-fit {d.Type !== 'no'
 					? 'bg-warning-300'
 					: 'bg-primary-900'}"
 			>
@@ -123,12 +123,12 @@
 						
 						<dd class="pl-2 pt-4">
 							<a class="anchor" href={`${base}/?a=${JSON.stringify({ [key]: metadataVal })}`}>
-								{#if key === 'country'}
+								{#if key === 'Country'}
 									{@html addFlagToCountry(metadataVal)}
-								{:else if key === 'genus' || key === 'specificEpithet'}
+								{:else if key === 'Genus' || key === 'Species'}
 									<span class="italic">{metadataVal}</span>
-								{:else if key === 'acceptedNameUsage'}
-									{@html setGenusAndSpeciesItalic(metadataVal, d.genus, d.specificEpithet)}
+								{:else if key === 'Accepted_Name'}
+									{@html setGenusAndSpeciesItalic(metadataVal, d.Genus, d.Species)}
 								{:else}
 									{metadataVal}
 								{/if}

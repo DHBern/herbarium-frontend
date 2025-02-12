@@ -11,8 +11,12 @@ export const setGenusAndSpeciesItalic = (
 	/** @type {string} */ species
 ) => {
 	return input.replace(
+<<<<<<< HEAD
 		// @ts-ignore
 		new RegExp(`${genus.replaceAll('?', '')}|${species.replaceAll('?', '')}`, 'g'),
+=======
+		new RegExp(`${genus.replaceAll('?', '')}|${species.replaceAll('?', '').trimEnd()}`, 'g'),
+>>>>>>> 092fe1e31ad6966192336577df4e48be0f412ca1
 		`<span class="italic">$&</span>`
 	);
 };
