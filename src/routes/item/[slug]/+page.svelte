@@ -1,7 +1,6 @@
 <script>
-	
-
-	import ContentContainer from '$lib/components/ContentContainer.svelte';
+// @ts-nocheck
+    import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { onMount } from 'svelte';
 	import { assets, base } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
@@ -11,6 +10,7 @@
 	let { data } = $props();
 
 	onMount(async () => {
+		console.log(assets);
 		OpenSeadragon = (await import('openseadragon')).default;
 		viewer = new OpenSeadragon.Viewer({
 			id: 'viewer',

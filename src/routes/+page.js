@@ -13,7 +13,7 @@ export async function load() {
 					obj[key] = item[key];
 				}
 			}
-			if (!obj.Genus) {
+			if (!obj.genus) {
 				obj.genus = 'no genus';
 			}
 			return obj;

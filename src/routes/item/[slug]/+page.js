@@ -2,13 +2,10 @@ import itemData from '$lib/data.json';
 import structure from '$lib/structure.json';
 
 export async function load({ params, fetch }) {
-<<<<<<< HEAD
 	// @ts-ignore
-	const item = itemData.find((item) => item.materialEntityID === params.slug);
-=======
 	const item = itemData.find((item) => item.Catalog_Number === params.slug);
->>>>>>> 092fe1e31ad6966192336577df4e48be0f412ca1
-
+// @ts-ignore
+console.log("itemee"+item?.['Catalog_Number']);
 	return {
 		key: params.slug,
 		metadata: item,

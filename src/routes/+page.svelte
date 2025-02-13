@@ -1,7 +1,5 @@
 <script>
 // @ts-nocheck
-
-	
     import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import ItemList from '$lib/components/ItemList.svelte';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
