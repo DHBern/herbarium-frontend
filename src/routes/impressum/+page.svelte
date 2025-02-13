@@ -1,7 +1,9 @@
 <script>
+// @ts-nocheck
+
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
-	import { openLightbox } from '$lib/functions';
-</script>
+	import {openLightbox2,closeLightbox} from '$lib/functions';
+ </script>
 
 <ContentContainer>
 	<h1 class="h1">Impressum</h1>
@@ -19,12 +21,12 @@
 			src="$lib/assets/IMG_8229.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
-			on:click={(e) => {
-				openLightbox(e.target);
+			onclick={(e) => {
+				openLightbox2(e.target.src);
 			}}
-			on:keypress={(e) => {
+			onkeypress={(e) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox(e.target);
+					closeLightbox();
 				}
 			}}
 			role="presentation"
@@ -42,12 +44,12 @@
 			src="$lib/assets/P1770528.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
-			on:click={(e) => {
-				openLightbox(e.target);
+			onclick={(e) => {
+				openLightbox2(e.target.src);
 			}}
-			on:keypress={(e) => {
+			onkeypress={(e) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox(e.target);
+				    closeLightbox();
 				}
 			}}
 			role="presentation"
@@ -74,12 +76,12 @@
 			src="$lib/assets/P1006420.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
-			on:click={(e) => {
-				openLightbox(e.target);
+			onclick={(e) => {
+				openLightbox2(e.target.src);
 			}}
-			on:keypress={(e) => {
+			onkeypress={(e) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox(e.target);
+					closeLightbox();
 				}
 			}}
 			role="presentation"

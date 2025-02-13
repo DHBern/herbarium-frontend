@@ -2,20 +2,11 @@
 	import { base } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
 	import { blur, fly } from 'svelte/transition';
+	let { items = $bindable([]), structure = [] } = $props();
 	/**
-	 * @type {any[]}
+	 * @type {IntersectionObserver}
 	 */
-	export let items = [];
-
-	/**
-	 * @type {Array<{label: string, key: string}>}
-	 */
-	export let structure = [];
-
-	/**
-	 * @type IntersectionObserver
-	 */
-	let intersectionObserver;
+	let intersectionObserver ;
 
 	function ensureIntersectionObserver() {
 		if (intersectionObserver) return;
@@ -116,41 +107,29 @@
 				}
 			}
 		};
-	let visibleNumber = 30;
-	$: visibleItems = items.slice(0, visibleNumber);
+	let visibleNumber = $state(30);
 
-	let showHelperElements = false;
-	let showHelperScrollbar = false;
+	let showHelperElements = $state(false);
+	let showHelperScrollbar = $state(false);
+	let table = $state();
+	let helperScrollbar = $state();
+	let innerScrollbar = $state();
 
-	/**
-	 * @type {HTMLDivElement}
-	 */
-	let table;
-
-	/**
-	 * @type {HTMLDivElement}
-	 */
-	let helperScrollbar;
-
-	/**
-	 * @type {HTMLDivElement}
-	 */
-	let innerScrollbar;
-
-	$: {
-		if (helperScrollbar && innerScrollbar) {
-			setScrollbarSizes();
-		}
-	}
 
 	const setScrollbarSizes = () => {
 		helperScrollbar.style.width = `${table.clientWidth}px`;
 		innerScrollbar.style.width = `${table.scrollWidth}px`;
 	};
+	let visibleItems = $derived(items.slice(0, visibleNumber));
+	$effect(() => {
+		if (helperScrollbar && innerScrollbar) {
+			setScrollbarSizes();
+		}
+	});
 </script>
 
 <svelte:window
-	on:resize={() => {
+	onresize={() => {
 		setScrollbarSizes();
 	}}
 />
@@ -159,15 +138,16 @@
 <div
 	class="table-container"
 	bind:this={table}
-	on:scroll={(e) => {
+	onscroll={(e) => {
 		// @ts-ignore
 		helperScrollbar.scrollLeft = e.target.scrollLeft;
 	}}
 >
 	{#if showHelperElements}
+		<!-- svelte-ignore a11y_consider_explicit_label -->
 		<button
 			class="btn-icon variant-ghost-primary fixed top-24 right-6 z-50"
-			on:click={() => {
+			onclick={() => {
 				table.scrollIntoView({ behavior: 'smooth' });
 			}}
 			in:fly={{ x: 100 }}
@@ -180,7 +160,7 @@
 		<thead use:viewport={false} class="!border-primary-800/20 !bg-primary-400">
 			<tr>
 				{#each structure as { key, label }}
-					<th class="hover:cursor-pointer table-cell-fit" on:click={(e) => handleSort(e, key)}>
+					<th class="hover:cursor-pointer table-cell-fit" onclick={(e) => handleSort(e, key)}>
 						{label} <i class="fa-solid pointer-events-none fa-sort"></i>
 					</th>
 				{/each}
@@ -219,7 +199,7 @@
 	<div
 		class="helper-scrollbar fixed bottom-0 overflow-x-auto h-4"
 		bind:this={helperScrollbar}
-		on:scroll={(e) => {
+		onscroll={(e) => {
 			// @ts-ignore
 			table.scrollLeft = e.target.scrollLeft;
 		}}

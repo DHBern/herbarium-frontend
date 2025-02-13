@@ -1,20 +1,16 @@
 <script>
-	import ContentContainer from '$lib/components/ContentContainer.svelte';
+// @ts-nocheck
+    import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { onMount } from 'svelte';
 	import { assets, base } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
-
-	/**
-	 * @type {import('openseadragon') | undefined}
-	 */
+	
 	let OpenSeadragon;
-
-	/**
-	 * @type {import('openseadragon').Viewer}
-	 */
-	let viewer;
+	let viewer = $state();
+	let { data } = $props();
 
 	onMount(async () => {
+		console.log(assets);
 		OpenSeadragon = (await import('openseadragon')).default;
 		viewer = new OpenSeadragon.Viewer({
 			id: 'viewer',
@@ -78,15 +74,14 @@
 			},
 			sequenceMode: false
 		});
+		if (data.iiif) {
+		viewer.open(data.iiif);
+		}
 	});
 
-	/** @type {import('./$types').PageData} */
-	export let data;
-	$: {
-		if (viewer && data.iiif) {
-			viewer.open(data.iiif);
-		}
-	}
+	
+	// $effect(() => {
+	// });
 </script>
 
 <svelte:head>
@@ -94,7 +89,7 @@
 </svelte:head>
 
 <ContentContainer>
-	<div class="grid md:grid-cols-2 md:grid-rows-[auto_1fr] gap-4 lg:gap-6">
+	<div class="grid md:grid-cols-2 md:grid-rows-[auto_1fr] gap-4 lg:gap-6"> 
 		{#if data.metadata}
 			{@const d = data.metadata}
 			<div class="md:col-span-2 lg:col-span-1 lg:col-start-2">
@@ -125,6 +120,7 @@
 						<dt class="border-r-4 border-current pr-4 pt-4">
 							{label}
 						</dt>
+						
 						<dd class="pl-2 pt-4">
 							<a class="anchor" href={`${base}/?a=${JSON.stringify({ [key]: metadataVal })}`}>
 								{#if key === 'Country'}

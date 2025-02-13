@@ -1,4 +1,7 @@
 <script>
+// @ts-nocheck
+
+	import {openLightbox2} from '$lib/functions';
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import stiftung from '$lib/assets/stiftung_boga.svg';
 	import bgb from '$lib/assets/BGB_Logo_Office_M.svg';
@@ -7,7 +10,7 @@
 	import uws from '$lib/assets/uws.svg';
 	import swisslos from '$lib/assets/swisslos.svg';
 	import fjd from '$lib/assets/fjd.svg';
-	import { openLightbox } from '$lib/functions';
+	
 
 	const logos = [
 		{ src: stiftung, alt: 'Stiftung Boga' },
@@ -19,6 +22,9 @@
 		{ src: fjd, alt: 'fondation johanna dürmüller-bol' }
 	];
 </script>
+
+
+
 
 <ContentContainer>
 	<h1 class="h1">About the project</h1>
@@ -34,12 +40,12 @@
 		src="$lib/assets/3E2A0219.jpg"
 		alt="herbarium"
 		class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
-		on:click={(e) => {
-			openLightbox(e.target);
+		onclick={(e) => {
+			openLightbox2(e.target.src);
 		}}
-		on:keypress={(e) => {
+		onkeypress={(e) => {
 			if (e.key === 'Enter' || e.key === ' ') {
-				openLightbox(e.target);
+				openLightbox2(e.target.src);
 			}
 		}}
 		role="presentation"
@@ -82,12 +88,12 @@
 		src="$lib/assets/3E2A0231.jpg"
 		alt="herbarium"
 		class="max-w-full md:max-w-96 md:float-right mx-auto mt-4 md:my-4 md:ml-6 border-8 border-primary-500 anchor cursor-pointer"
-		on:click={(e) => {
-			openLightbox(e.target);
+		onclick={(e) => {
+			openLightbox2(e.target.src);
 		}}
-		on:keypress={(e) => {
+		onkeypress={(e) => {
 			if (e.key === 'Enter' || e.key === ' ') {
-				openLightbox(e.target);
+				openLightbox2(e.target.src);
 			}
 		}}
 		role="presentation"
