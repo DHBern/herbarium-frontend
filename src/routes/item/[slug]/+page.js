@@ -1,10 +1,11 @@
 import itemData from '$lib/data.json';
 import structure from '$lib/structure.json';
 
-/** @type {import('./$types').PageLoad} */
 export async function load({ params, fetch }) {
+	// @ts-ignore
 	const item = itemData.find((item) => item.Catalog_Number === params.slug);
-
+// @ts-ignore
+console.log("itemee"+item?.['Catalog_Number']);
 	return {
 		key: params.slug,
 		metadata: item,
@@ -17,9 +18,8 @@ export async function load({ params, fetch }) {
 		structure
 	};
 }
-
-/** @type {import('./$types').EntryGenerator} */
 export function entries() {
+	// @ts-ignore
 	return itemData.map((item) => {
 		return { slug: item.Catalog_Number.replace('/', '') };
 	});

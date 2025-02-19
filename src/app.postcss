@@ -3,17 +3,11 @@
 @tailwind utilities;
 @tailwind variants;
 
-html,
-body {
-	@apply h-full overflow-hidden;
-}
-
 @font-face {
 	font-family: 'Inter';
 	src: url('/fonts/Inter-VariableFont_slnt,wght.ttf');
 	font-display: swap;
 }
-
 
 @layer base {
 	h1 {
@@ -24,10 +18,10 @@ body {
 		@apply space-y-4;
 	}
 
-	.flag{
+	.flag {
 		@apply inline-block relative bg-contain bg-center bg-no-repeat w-4 leading-4;
 		&:before {
-			content: " ";
+			content: ' ';
 		}
 	}
 	.styled {

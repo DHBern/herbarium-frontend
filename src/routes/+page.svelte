@@ -1,17 +1,20 @@
 <script>
-	import ContentContainer from '$lib/components/ContentContainer.svelte';
+// @ts-nocheck
+    import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import ItemList from '$lib/components/ItemList.svelte';
 	import { SlideToggle } from '@skeletonlabs/skeleton';
 	import MiniSearch from 'minisearch';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
-	import { miniSearch } from '$lib/stores.js';
+	import { miniSearch } from '$lib/stores.svelte.js';
 	import { page } from '$app/stores';
 	import { afterNavigate } from '$app/navigation';
 
-	export let data;
+	
+	let { data } = $props();
 
-	/** @type {import('./$types').Snapshot<{searchtext: string | import('minisearch').Query, advancedToggle: boolean, advancedFields: { [key: string]: string; }}>} */
+	
+	// @ts-ignore
 	export const snapshot = {
 		capture: () => {
 			return { searchtext, advancedToggle, advancedFields };
@@ -23,7 +26,7 @@
 		}
 	};
 
-	let allDocumentsAdded = Promise.resolve();
+	let allDocumentsAdded = $state(Promise.resolve());
 
 	onMount(() => {
 		if (!$miniSearch) {
@@ -59,6 +62,7 @@
 	afterNavigate(() => {
 		if ($page.url.searchParams.get('s')) {
 			console.log('searchtext', $page.url.searchParams.get('s'));
+			
 			// @ts-ignore
 			searchtext = $page.url.searchParams.get('s');
 			//remove search query from url
@@ -67,6 +71,7 @@
 			history.replaceState(null, '', $page.url.toString());
 		} else if ($page.url.searchParams.get('a')) {
 			advancedToggle = true;
+		
 			// @ts-ignore
 			advancedFields = JSON.parse($page.url.searchParams.get('a'));
 			//remove search query from url
@@ -76,27 +81,23 @@
 		}
 	});
 
-	/**
-	 * @type {string|import('minisearch').Query}
-	 */
-	let searchtext = '';
-	let advancedToggle = false;
-	/** @type {{ [key: string]: string }} */
-	let advancedFields = {};
+	
+	let searchtext = $state('');
+	let advancedToggle = $state(false);
+	let advancedFields = $state({});
 
-	const asyncSearch = (
-		/** @type {import("minisearch").Query} */ query,
-		/** @type {import("minisearch").SearchOptions | undefined} */ config
-	) => {
+	const asyncSearch = (/** @type {string} */ query,/** @type {undefined} */ config) => {
 		return new Promise((resolve) => {
 			const searchresults = $miniSearch.search(query, config);
 			resolve(searchresults);
 		});
 	};
 
-	let filtereditems = data.items;
-	let searching = false;
-	$: {
+	//let filtereditems = $state(data.items);
+	let filtereditems = $state(data?.items || []);
+	//console.log(data.items);
+	let searching = $state(false);
+	$effect(() => {
 		if (searchtext) {
 			//wait for all documents to be added to the index
 			searching = true;
@@ -108,21 +109,24 @@
 				});
 			});
 		} else {
-			filtereditems = data.items;
+			filtereditems = data?.items;
 		}
-	}
+	});
 
-	$: {
+	$effect(() => {
 		if (advancedToggle) {
 			if (Object.values(advancedFields).some((i) => !!i)) {
+				// @ts-ignore
 				searchtext = {
 					combineWith: 'AND',
 					queries: [
-						...Object.keys(advancedFields).reduce(
-							(/** @type {import('minisearch').Query[]} */ acc, key) => {
+						...Object.keys(advancedFields).reduce((acc, key) => {
+								// @ts-ignore
 								if (advancedFields[key]) {
+									// @ts-ignore
 									acc.push({
 										fields: [key],
+										// @ts-ignore
 										queries: [advancedFields[key]]
 									});
 								}
@@ -136,24 +140,25 @@
 				searchtext = '';
 			}
 		}
-	}
+	});
 </script>
 
 <div class="px-8 pt-16 image-background h-[30vh]">
 	<div class="container mx-auto text-white backdrop-blur-md rounded w-fit p-2">
-		<h1 class="h1 font-bold tracking-wide drop-shadow-xl text-shadow">Herbarium Bernense</h1>
+		<h1 class="h1 font-bold tracking-wide drop-shadow-xl text-shadow">Herbarium Bernense </h1>
 		<p class="text-lg font-semibold text-shadow">
 			Herbarium of the Botanical Garden of the University of Bern
 		</p>
 	</div>
 </div>
+
 <ContentContainer>
 	<div class="flex flex-col lg:flex-row gap-4 justify-between">
 		<div class="lg:w-1/2 mb-4">
 			<p class="p lg:text-xl">
 				The Herbarium Bernense contains about 500,000 herbarium specimens, including type specimens
 				and valuable historical collections. Currently about 10% of our collection is digitized and
-				can be accessed here.
+				can be accessed hereegit .
 			</p>
 		</div>
 		<div class="lg:w-1/2">
@@ -164,7 +169,7 @@
 					active="bg-surface-300"
 					bind:checked={advancedToggle}
 					class="mb-3"
-					on:change={() => {
+					onChange={() => {
 						searchtext = '';
 					}}
 				>
@@ -184,7 +189,7 @@
 				{#each data.itemstructure as item}
 					<label class="label" transition:slide|global>
 						<span>
-							{item.label}
+							{item.label} 
 						</span>
 						<input
 							class="input p-6 placeholder-primary-600"
@@ -196,7 +201,7 @@
 			{/if}
 
 			<p class="mt-5">
-				Found {searching ? '...' : filtereditems.length} Result{filtereditems.length >= 1
+				Found {searching ? '...' : filtereditems?.length} Result{filtereditems?.length >= 1
 					? 's'
 					: ''}.
 			</p>
@@ -205,7 +210,7 @@
 </ContentContainer>
 <section class="mx-4">
 	<ItemList
-		structure={data.itemstructure.filter((item) => item.showInList)}
+		structure={data?.itemstructure.filter((item) => item.showInList)}
 		items={filtereditems}
 	/>
 </section>
