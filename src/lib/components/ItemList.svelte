@@ -25,10 +25,10 @@
 							visibleNumber += 30;
 							intersectionObserver.unobserve(entry.target);
 						} else {
-							showHelperScrollbar = false;
+							//showHelperScrollbar = false;
 						}
 					} else {
-						showHelperScrollbar = true;
+						//showHelperScrollbar = true;
 					}
 				}
 			});
@@ -195,15 +195,4 @@
 		</tbody>
 	</table>
 </div>
-{#if showHelperScrollbar}
-	<div
-		class="helper-scrollbar fixed bottom-0 overflow-x-auto h-4"
-		bind:this={helperScrollbar}
-		onscroll={(e) => {
-			// @ts-ignore
-			table.scrollLeft = e.target.scrollLeft;
-		}}
-	>
-		<div class="inner-scrollbar h-px" bind:this={innerScrollbar}></div>
-	</div>
-{/if}
+
