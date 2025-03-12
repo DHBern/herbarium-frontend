@@ -10,7 +10,6 @@
 
 	function ensureIntersectionObserver() {
 		if (intersectionObserver) return;
-
 		intersectionObserver = new IntersectionObserver((entries) => {
 			entries.forEach((entry) => {
 				if (entry.target.tagName === 'THEAD') {
@@ -24,11 +23,7 @@
 						if (visibleNumber < items.length) {
 							visibleNumber += 30;
 							intersectionObserver.unobserve(entry.target);
-						} else {
-							//showHelperScrollbar = false;
 						}
-					} else {
-						//showHelperScrollbar = true;
 					}
 				}
 			});
@@ -110,38 +105,20 @@
 	let visibleNumber = $state(30);
 
 	let showHelperElements = $state(false);
-	let showHelperScrollbar = $state(false);
 	let table = $state();
-	let helperScrollbar = $state();
-	let innerScrollbar = $state();
 
 
-	const setScrollbarSizes = () => {
-		helperScrollbar.style.width = `${table.clientWidth}px`;
-		innerScrollbar.style.width = `${table.scrollWidth}px`;
-	};
+
+
 	let visibleItems = $derived(items.slice(0, visibleNumber));
-	$effect(() => {
-		if (helperScrollbar && innerScrollbar) {
-			setScrollbarSizes();
-		}
-	});
+
 </script>
 
-<svelte:window
-	onresize={() => {
-		setScrollbarSizes();
-	}}
-/>
 
 <!-- Responsive Container (recommended) -->
 <div
 	class="table-container"
 	bind:this={table}
-	onscroll={(e) => {
-		// @ts-ignore
-		helperScrollbar.scrollLeft = e.target.scrollLeft;
-	}}
 >
 	{#if showHelperElements}
 		<!-- svelte-ignore a11y_consider_explicit_label -->

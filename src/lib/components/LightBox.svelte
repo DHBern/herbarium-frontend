@@ -1,4 +1,4 @@
-<!-- //<---------------------- ightBox start -------------------------------> -->
+
 <script>
 // @ts-nocheck
 
@@ -8,7 +8,7 @@
 </script>
 
 {#if selectedImagePath.path != ""}
-		<!-- <div class="fixed inset-0 bg-black bg-opacity-90 flex justify-center items-center z-50 cursor-pointer " role="button" tabindex="0"  -->
+		
 			<div class="fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 cursor-pointer -top-10" role="button" tabindex="0" 
 			  onclick={closeLightbox} 
 			   onkeydown={(e) => { 
@@ -33,4 +33,3 @@
 			 </div>	 
 	
 		{/if}
-<!-- //<---------------------- ightBox start -------------------------------> -->		

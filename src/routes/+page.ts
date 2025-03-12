@@ -1,24 +1,23 @@
-import itemData from '$lib/data.json';
+import itemDataRaw from '$lib/data.json';
 import structure from '$lib/structure.json';
 
 /** @type {import('./$types').PageLoad} */
 export async function load() {
+	const itemData: Array<{ [key: string]: any }> = Array.isArray(itemDataRaw) ? itemDataRaw : [];
+
 	const returnitems = itemData
-		// @ts-ignore
 		.map((item) => {
-			const obj = {};
+			const obj: { [key: string]: any } = {};
 			for (const key in item) {
 				if (key !== 'ImageGUID') {
-					// @ts-ignore
 					obj[key] = item[key];
 				}
 			}
-			if (!obj.genus) {
-				obj.genus = 'no genus';
+			if (!obj.Genus) {
+				obj.Genus = 'no genus';
 			}
 			return obj;
 		})
-		// @ts-ignore
 		.sort((a, b) => {
 			if (a.Genus < b.Genus) return -1;
 			if (a.Genus > b.Genus) return 1;
@@ -28,8 +27,7 @@ export async function load() {
 		});
 
 	return {
-		// @ts-ignore
-		categories: Object.keys(itemData[0]),
+		categories: itemData.length > 0 ? Object.keys(itemData[0]) : [],
 		itemstructure: structure,
 		items: returnitems
 	};
