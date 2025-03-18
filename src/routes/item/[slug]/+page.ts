@@ -3,6 +3,10 @@ import structure from '$lib/structure.json';
 
 export async function load({ params, fetch }) {
 	interface Item {
+		Genus: string;
+		Species:string;
+		Accepted_Name:string;
+		Type:string;
 		Catalog_Number: string;
 	}
   

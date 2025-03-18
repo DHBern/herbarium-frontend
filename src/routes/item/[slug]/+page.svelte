@@ -1,14 +1,12 @@
 <script lang="ts">
-// @ts-nocheck
     import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { onMount } from 'svelte';
 	import { assets, base } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
-	
+	import type { Viewer } from 'openseadragon'
 	let OpenSeadragon;
-	let viewer = $state();
+	let viewer: Viewer | undefined = $state();
 	let { data } = $props();
-
 	onMount(async () => {
 		console.log(assets);
 		OpenSeadragon = (await import('openseadragon')).default;
@@ -79,9 +77,6 @@
 		}
 	});
 
-	
-	// $effect(() => {
-	// });
 </script>
 
 <svelte:head>
@@ -115,7 +110,7 @@
 			</div>
 			<dl class="grid grid-cols-[1fr_3fr] justify-between h-fit">
 				{#each data.structure as { label, key }}
-					{@const metadataVal = d[key]}
+				{@const metadataVal = (d as Record<string, any>)[key]}
 					{#if metadataVal}
 						<dt class="border-r-4 border-current pr-4 pt-4">
 							{label}

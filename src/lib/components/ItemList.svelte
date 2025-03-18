@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { base } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
 	import { blur, fly } from 'svelte/transition';
@@ -6,7 +6,7 @@
 	/**
 	 * @type {IntersectionObserver}
 	 */
-	let intersectionObserver ;
+	let intersectionObserver:any ;
 
 	function ensureIntersectionObserver() {
 		if (intersectionObserver) return;
@@ -37,7 +37,7 @@
 	 * @param element {HTMLElement}
 	 * @param abort {boolean}
 	 */
-	function viewport(element, abort) {
+	function viewport(element: any, abort: any) {
 		// we only want the observer on the last Element, so we abort all but the last one i !== visibleItems.length - 1
 		if (abort) return;
 		ensureIntersectionObserver();
@@ -56,11 +56,10 @@
 		 * @param {MouseEvent} event
 		 * @param {string} key
 		 */
-		(event, key) => {
-			// @ts-ignore
+		(event:any, key:any) => {
 			const i = event.target?.querySelector('i');
 
-			const sort = (/** @type {string} */ key, /** @type {string} */ order) => {
+			const sort = (/** @type {string} */ key:any, /** @type {string} */ order:any) => {
 				items = items.sort((a, b) => {
 					if (order === 'asc') {
 						if (a[key] < b[key]) return -1;
@@ -105,7 +104,7 @@
 	let visibleNumber = $state(30);
 
 	let showHelperElements = $state(false);
-	let table = $state();
+	let table:any = $state();
 
 
 
@@ -121,6 +120,7 @@
 	bind:this={table}
 >
 	{#if showHelperElements}
+		
 		<!-- svelte-ignore a11y_consider_explicit_label -->
 		<button
 			class="btn-icon variant-ghost-primary fixed top-24 right-6 z-50"
