@@ -1,6 +1,6 @@
-<script>
-	// @ts-nocheck
-	    import {openLightbox2} from '$lib/functions';
+<script lang="ts">
+
+	    import {openLightbox2,closeLightbox} from '$lib/functions';
 		import ContentContainer from '$lib/components/ContentContainer.svelte';
 		import pdf1 from '$lib/assets/1a_Studer_IconesFungorum_001-171.pdf';
 		import pdf2 from '$lib/assets/02_Otth_IconesFungorum_Agaricineen.pdf';
@@ -52,10 +52,10 @@
 			src="$lib/assets/FB_posts_pilzbuch_03.jpg"
 			alt="agaricus adiposus"
 			class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
-			onclick={(e) => {
+			onclick={(e:any) => {
 				openLightbox2(e.target.src);
 			}}
-			onkeypress={(e) => {
+			onkeypress={(e:any) => {
 				if (e.key === 'Enter' || e.key === ' ') {
 					openLightbox2(e.target.src);
 					
@@ -159,13 +159,11 @@
 			src="$lib/assets/Studer-Steinhäuslin.jpg"
 			alt="Cortinarius traganus"
 			class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
-			onclick={(e) => {
-				//openLightbox(e.target);
+			onclick={(e:any) => {
 				openLightbox2(e.target.src);
 			}}
-			onkeypress={(e) => {
+			onkeypress={(e:any) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-					//openLightbox(e.target);
 					closeLightbox();
 				}
 			}}

@@ -1,6 +1,4 @@
-<script>
-// @ts-nocheck
-
+<script lang="ts">
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import {openLightbox2,closeLightbox} from '$lib/functions';
  </script>
@@ -21,10 +19,10 @@
 			src="$lib/assets/IMG_8229.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
-			onclick={(e) => {
+			onclick={(e: any) => {
 				openLightbox2(e.target.src);
 			}}
-			onkeypress={(e) => {
+			onkeypress={(e: any) => {
 				if (e.key === 'Enter' || e.key === ' ') {
 					closeLightbox();
 				}
@@ -44,10 +42,10 @@
 			src="$lib/assets/P1770528.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
-			onclick={(e) => {
+			onclick={(e: any) => {
 				openLightbox2(e.target.src);
 			}}
-			onkeypress={(e) => {
+			onkeypress={(e: any) => {
 				if (e.key === 'Enter' || e.key === ' ') {
 				    closeLightbox();
 				}
@@ -76,10 +74,10 @@
 			src="$lib/assets/P1006420.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
-			onclick={(e) => {
+			onclick={(e : any) => {
 				openLightbox2(e.target.src);
 			}}
-			onkeypress={(e) => {
+			onkeypress={(e: any) => {
 				if (e.key === 'Enter' || e.key === ' ') {
 					closeLightbox();
 				}

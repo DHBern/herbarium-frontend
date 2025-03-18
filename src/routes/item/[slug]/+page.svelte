@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 // @ts-nocheck
     import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { onMount } from 'svelte';

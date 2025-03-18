@@ -1,5 +1,3 @@
-
-import { get} from 'svelte/store';
 export const addFlagToCountry = (/** @type {string} */ country) => {
 	return `${country} <span style="background-image: url(https://github.com/stefangabos/world_countries/blob/master/data/flags/16x16/${country.toLowerCase()}.png?raw=true);" class="flag"></span>`;
 };
@@ -11,7 +9,7 @@ export const setGenusAndSpeciesItalic = (
 	/** @type {string} */ species
 ) => {
 	return input.replace(
-		// @ts-ignore
+	
 		new RegExp(`${genus.replaceAll('?', '')}|${species.replaceAll('?', '')}`, 'g'),
 		`<span class="italic">$&</span>`
 	);
@@ -22,11 +20,8 @@ export const setGenusAndSpeciesItalic = (
  * @param {any} src
  */
 export const  openLightbox2=(/** @type {any} */ src)=> {
-	// @ts-ignore
-	selectedImagePath.path = src;
-	
+	selectedImagePath.path = src;	
   }
  export  const closeLightbox=()=> {
-	// @ts-ignore
 	selectedImagePath.path="";
   }
