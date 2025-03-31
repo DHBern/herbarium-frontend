@@ -1,12 +1,12 @@
-export const addFlagToCountry = (/** @type {string} */ country) => {
+export const addFlagToCountry = (/** @type {string} */ country: string) => {
 	return `${country} <span style="background-image: url(https://github.com/stefangabos/world_countries/blob/master/data/flags/16x16/${country.toLowerCase()}.png?raw=true);" class="flag"></span>`;
 };
 
  import { selectedImagePath } from './stores.svelte.js';
 export const setGenusAndSpeciesItalic = (
-	/** @type {string} */ input,
-	/** @type {string} */ genus,
-	/** @type {string} */ species
+	/** @type {string} */ input: string,
+	/** @type {string} */ genus: string,
+	/** @type {string} */ species: string
 ) => {
 	return input.replace(
 	
@@ -19,7 +19,7 @@ export const setGenusAndSpeciesItalic = (
 /**
  * @param {any} src
  */
-export const  openLightbox2=(/** @type {any} */ src)=> {
+export const  openLightbox2=(/** @type {any} */ src: any)=> {
 	selectedImagePath.path = src;	
   }
  export  const closeLightbox=()=> {
