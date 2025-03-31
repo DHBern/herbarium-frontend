@@ -6,7 +6,7 @@
 	/**
 	 * @type {IntersectionObserver}
 	 */
-	let intersectionObserver:any ;
+	let intersectionObserver: any;
 
 	function ensureIntersectionObserver() {
 		if (intersectionObserver) return;
@@ -56,10 +56,10 @@
 		 * @param {MouseEvent} event
 		 * @param {string} key
 		 */
-		(event:any, key:any) => {
+		(event: any, key: any) => {
 			const i = event.target?.querySelector('i');
 
-			const sort = (/** @type {string} */ key:any, /** @type {string} */ order:any) => {
+			const sort = (/** @type {string} */ key: any, /** @type {string} */ order: any) => {
 				items = items.sort((a, b) => {
 					if (order === 'asc') {
 						if (a[key] < b[key]) return -1;
@@ -104,23 +104,14 @@
 	let visibleNumber = $state(30);
 
 	let showHelperElements = $state(false);
-	let table:any = $state();
-
-
-
+	let table: any = $state();
 
 	let visibleItems = $derived(items.slice(0, visibleNumber));
-
 </script>
 
-
 <!-- Responsive Container (recommended) -->
-<div
-	class="table-container"
-	bind:this={table}
->
+<div class="table-container" bind:this={table}>
 	{#if showHelperElements}
-		
 		<!-- svelte-ignore a11y_consider_explicit_label -->
 		<button
 			class="btn-icon variant-ghost-primary fixed top-24 right-6 z-50"
@@ -172,4 +163,3 @@
 		</tbody>
 	</table>
 </div>
-

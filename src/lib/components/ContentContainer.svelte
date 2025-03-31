@@ -6,5 +6,4 @@
 	<div class="container py-4 mx-auto {className}">
 		{@render children?.()}
 	</div>
-
 </section>

@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
-	import {openLightbox2,closeLightbox} from '$lib/functions';
- </script>
+	import { openLightbox, closeLightbox } from '$lib/functions';
+</script>
 
 <ContentContainer>
 	<h1 class="h1">Impressum</h1>
@@ -20,7 +20,7 @@
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e: any) => {
-				openLightbox2(e.target.src);
+				openLightbox(e.target.src);
 			}}
 			onkeypress={(e: any) => {
 				if (e.key === 'Enter' || e.key === ' ') {
@@ -43,11 +43,11 @@
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e: any) => {
-				openLightbox2(e.target.src);
+				openLightbox(e.target.src);
 			}}
 			onkeypress={(e: any) => {
 				if (e.key === 'Enter' || e.key === ' ') {
-				    closeLightbox();
+					closeLightbox();
 				}
 			}}
 			role="presentation"
@@ -74,8 +74,8 @@
 			src="$lib/assets/P1006420.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
-			onclick={(e : any) => {
-				openLightbox2(e.target.src);
+			onclick={(e: any) => {
+				openLightbox(e.target.src);
 			}}
 			onkeypress={(e: any) => {
 				if (e.key === 'Enter' || e.key === ' ') {

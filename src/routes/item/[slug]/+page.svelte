@@ -1,14 +1,13 @@
 <script lang="ts">
-    import ContentContainer from '$lib/components/ContentContainer.svelte';
+	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { onMount } from 'svelte';
 	import { assets, base } from '$app/paths';
-	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
-	import type { Viewer } from 'openseadragon'
+	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions.js';
+	import type { Viewer } from 'openseadragon';
 	let OpenSeadragon;
 	let viewer: Viewer | undefined = $state();
 	let { data } = $props();
 	onMount(async () => {
-		console.log(assets);
 		OpenSeadragon = (await import('openseadragon')).default;
 		viewer = new OpenSeadragon.Viewer({
 			id: 'viewer',
@@ -73,10 +72,9 @@
 			sequenceMode: false
 		});
 		if (data.iiif) {
-		viewer.open(data.iiif);
+			viewer.open(data.iiif);
 		}
 	});
-
 </script>
 
 <svelte:head>
@@ -84,7 +82,7 @@
 </svelte:head>
 
 <ContentContainer>
-	<div class="grid md:grid-cols-2 md:grid-rows-[auto_1fr] gap-4 lg:gap-6"> 
+	<div class="grid md:grid-cols-2 md:grid-rows-[auto_1fr] gap-4 lg:gap-6">
 		{#if data.metadata}
 			{@const d = data.metadata}
 			<div class="md:col-span-2 lg:col-span-1 lg:col-start-2">
@@ -110,12 +108,12 @@
 			</div>
 			<dl class="grid grid-cols-[1fr_3fr] justify-between h-fit">
 				{#each data.structure as { label, key }}
-				{@const metadataVal = (d as Record<string, any>)[key]}
+					{@const metadataVal = (d as Record<string, any>)[key]}
 					{#if metadataVal}
 						<dt class="border-r-4 border-current pr-4 pt-4">
 							{label}
 						</dt>
-						
+
 						<dd class="pl-2 pt-4">
 							<a class="anchor" href={`${base}/?a=${JSON.stringify({ [key]: metadataVal })}`}>
 								{#if key === 'Country'}
