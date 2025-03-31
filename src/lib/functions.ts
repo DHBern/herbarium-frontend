@@ -21,6 +21,5 @@ export const openLightbox = (/** @type {any} */ src: string) => {
 	selectedImagePath.path = src;
 };
 export const closeLightbox = (): void => {
-    selectedImagePath.path = '';
+	selectedImagePath.path = '';
 };
-

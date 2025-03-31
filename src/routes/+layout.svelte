@@ -140,15 +140,13 @@
 							}}
 						/>
 					</label>
-					
+
 					<a href={`${base}?s=${searchtext}`} class="btn-icon" aria-label="Search">
 						<i class="fa-solid fa-search"></i>
 					</a>
-					
 				{/if}
 			</nav>
 			{#snippet lead()}
-		
 				<button class="md:!hidden btn-icon" onclick={drawerOpen} aria-label="Open menu">
 					<i class="fa-solid fa-bars"></i>
 				</button>

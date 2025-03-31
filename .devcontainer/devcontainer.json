@@ -1,20 +1,16 @@
 {
-  "image": "mcr.microsoft.com/devcontainers/javascript-node",
-  "customizations": {
-    "vscode": {
-      "extensions": [
-        "svelte.svelte-vscode"
-      ]
-    }
-  },
-  "forwardPorts": [
-    5173
-  ],
-  "portsAttributes": {
-    "5173": {
-      "label": "Application",
-      "onAutoForward": "openBrowser"
-    }
-  },
-  "postCreateCommand": "npm install && npm run dev"
+	"image": "mcr.microsoft.com/devcontainers/javascript-node",
+	"customizations": {
+		"vscode": {
+			"extensions": ["svelte.svelte-vscode"]
+		}
+	},
+	"forwardPorts": [5173],
+	"portsAttributes": {
+		"5173": {
+			"label": "Application",
+			"onAutoForward": "openBrowser"
+		}
+	},
+	"postCreateCommand": "npm install && npm run dev"
 }
