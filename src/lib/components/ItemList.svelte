@@ -3,9 +3,7 @@
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
 	import { blur, fly } from 'svelte/transition';
 	let { items = $bindable([]), structure = [] } = $props();
-	/**
-	 * @type {IntersectionObserver}
-	 */
+	
 	let intersectionObserver: any;
 
 	function ensureIntersectionObserver() {
@@ -30,13 +28,7 @@
 		});
 	}
 
-	/**
-	 *
-	 * Function that creates an IntersectionObserver instance and observes the element
-	 *
-	 * @param element {HTMLElement}
-	 * @param abort {boolean}
-	 */
+	
 	function viewport(element: any, abort: any) {
 		// we only want the observer on the last Element, so we abort all but the last one i !== visibleItems.length - 1
 		if (abort) return;
@@ -52,10 +44,7 @@
 	}
 
 	const handleSort =
-		/**
-		 * @param {MouseEvent} event
-		 * @param {string} key
-		 */
+	
 		(event: any, key: any) => {
 			const i = event.target?.querySelector('i');
 
@@ -109,19 +98,21 @@
 	let visibleItems = $derived(items.slice(0, visibleNumber));
 </script>
 
-<!-- Responsive Container (recommended) -->
+
 <div class="table-container" bind:this={table}>
 	{#if showHelperElements}
-		<!-- svelte-ignore a11y_consider_explicit_label -->
+	
 		<button
-			class="btn-icon variant-ghost-primary fixed top-24 right-6 z-50"
+			class="btn-icon variant-ghost-primary fixed top-24 right-6 z-50" 
 			onclick={() => {
 				table.scrollIntoView({ behavior: 'smooth' });
 			}}
+			 aria-label="Scroll to top of table"
 			in:fly={{ x: 100 }}
 			out:blur
 		>
-			<i class="fa-solid fa-arrows-up-to-line"></i>
+		<i class="fa-solid fa-arrows-up-to-line" aria-hidden="true"></i>
+
 		</button>
 	{/if}
 	<table class="table table-interactive !bg-primary-100">
