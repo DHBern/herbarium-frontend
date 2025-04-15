@@ -106,7 +106,7 @@
 			in:fly={{ x: 100 }}
 			out:blur
 		>
-			<i class="fa-solid fa-arrows-up-to-line" aria-hidden="true"></i>
+			<i class="fa-solid fa-arrows-up-to-line"></i>
 		</button>
 	{/if}
 	<table class="table table-interactive !bg-primary-100">

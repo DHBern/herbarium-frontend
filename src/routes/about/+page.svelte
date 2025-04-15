@@ -37,11 +37,6 @@
 		onclick={(e: any) => {
 			openLightbox(e.target.src);
 		}}
-		onkeypress={(e: any) => {
-			if (e.key === 'Enter' || e.key === ' ') {
-				openLightbox(e.target.src);
-			}
-		}}
 		role="presentation"
 	/>
 	<ul class="list-disc list-inside *:-indent-4 *:ml-4">
@@ -84,11 +79,6 @@
 		class="max-w-full md:max-w-96 md:float-right mx-auto mt-4 md:my-4 md:ml-6 border-8 border-primary-500 anchor cursor-pointer"
 		onclick={(e: any) => {
 			openLightbox(e.target.src);
-		}}
-		onkeypress={(e: any) => {
-			if (e.key === 'Enter' || e.key === ' ') {
-				openLightbox(e.target.src);
-			}
 		}}
 		role="presentation"
 	/>

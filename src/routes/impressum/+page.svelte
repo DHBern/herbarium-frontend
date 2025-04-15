@@ -1,6 +1,6 @@
 <script lang="ts">
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
-	import { openLightbox, closeLightbox } from '$lib/functions';
+	import { openLightbox } from '$lib/functions';
 </script>
 
 <ContentContainer>
@@ -22,11 +22,6 @@
 			onclick={(e: any) => {
 				openLightbox(e.target.src);
 			}}
-			onkeypress={(e: any) => {
-				if (e.key === 'Enter' || e.key === ' ') {
-					closeLightbox();
-				}
-			}}
 			role="presentation"
 		/>
 		<div>
@@ -44,11 +39,6 @@
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e: any) => {
 				openLightbox(e.target.src);
-			}}
-			onkeypress={(e: any) => {
-				if (e.key === 'Enter' || e.key === ' ') {
-					closeLightbox();
-				}
 			}}
 			role="presentation"
 		/>
@@ -76,11 +66,6 @@
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e: any) => {
 				openLightbox(e.target.src);
-			}}
-			onkeypress={(e: any) => {
-				if (e.key === 'Enter' || e.key === ' ') {
-					closeLightbox();
-				}
 			}}
 			role="presentation"
 		/>
