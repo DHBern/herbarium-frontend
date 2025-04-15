@@ -3,17 +3,12 @@ export const addFlagToCountry = (/** @type {string} */ country: string) => {
 };
 
 import { selectedImagePath } from './stores.svelte.js';
-export const setGenusAndSpeciesItalic = (
-	 input: string,
-	 genus: string,
-	 species: string
-) => {
+export const setGenusAndSpeciesItalic = (input: string, genus: string, species: string) => {
 	return input.replace(
 		new RegExp(`${genus.replaceAll('?', '')}|${species.replaceAll('?', '')}`, 'g'),
 		`<span class="italic">$&</span>`
 	);
 };
-
 
 export const openLightbox = (/** @type {any} */ src: string) => {
 	selectedImagePath.path = src;

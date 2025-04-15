@@ -6,7 +6,7 @@ import dsv from '@rollup/plugin-dsv';
 
 export default defineConfig({
 	plugins: [enhancedImages(), dsv(), sveltekit(), purgeCss()],
-	
+
 	build: {
 		target: 'esnext',
 		minify: true,
