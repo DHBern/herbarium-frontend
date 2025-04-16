@@ -1,18 +1,20 @@
-import itemData from '$lib/data.json';
+import itemDataRaw from '$lib/data.json';
 import structure from '$lib/structure.json';
 
 /** @type {import('./$types').PageLoad} */
 export async function load() {
+	const itemData: Array<{ [key: string]: any }> = Array.isArray(itemDataRaw) ? itemDataRaw : [];
+
 	const returnitems = itemData
 		.map((item) => {
-			const obj = {};
+			const obj: { [key: string]: any } = {};
 			for (const key in item) {
 				if (key !== 'ImageGUID') {
 					obj[key] = item[key];
 				}
 			}
 			if (!obj.Genus) {
-				obj.genus = 'no genus';
+				obj.Genus = 'no genus';
 			}
 			return obj;
 		})
@@ -25,7 +27,7 @@ export async function load() {
 		});
 
 	return {
-		categories: Object.keys(itemData[0]),
+		categories: itemData.length > 0 ? Object.keys(itemData[0]) : [],
 		itemstructure: structure,
 		items: returnitems
 	};

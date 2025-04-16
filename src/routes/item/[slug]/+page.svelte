@@ -1,19 +1,12 @@
-<script>
+<script lang="ts">
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { onMount } from 'svelte';
 	import { assets, base } from '$app/paths';
-	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
-
-	/**
-	 * @type {import('openseadragon') | undefined}
-	 */
+	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions.js';
+	import type { Viewer } from 'openseadragon';
 	let OpenSeadragon;
-
-	/**
-	 * @type {import('openseadragon').Viewer}
-	 */
-	let viewer;
-
+	let viewer: Viewer | undefined = $state();
+	let { data } = $props();
 	onMount(async () => {
 		OpenSeadragon = (await import('openseadragon')).default;
 		viewer = new OpenSeadragon.Viewer({
@@ -78,15 +71,10 @@
 			},
 			sequenceMode: false
 		});
-	});
-
-	/** @type {import('./$types').PageData} */
-	export let data;
-	$: {
-		if (viewer && data.iiif) {
+		if (data.iiif) {
 			viewer.open(data.iiif);
 		}
-	}
+	});
 </script>
 
 <svelte:head>
@@ -120,11 +108,12 @@
 			</div>
 			<dl class="grid grid-cols-[1fr_3fr] justify-between h-fit">
 				{#each data.structure as { label, key }}
-					{@const metadataVal = d[key]}
+					{@const metadataVal = (d as Record<string, any>)[key]}
 					{#if metadataVal}
 						<dt class="border-r-4 border-current pr-4 pt-4">
 							{label}
 						</dt>
+
 						<dd class="pl-2 pt-4">
 							<a class="anchor" href={`${base}/?a=${JSON.stringify({ [key]: metadataVal })}`}>
 								{#if key === 'Country'}

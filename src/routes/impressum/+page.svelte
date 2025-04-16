@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { openLightbox } from '$lib/functions';
 </script>
@@ -19,13 +19,8 @@
 			src="$lib/assets/IMG_8229.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
-			on:click={(e) => {
-				openLightbox(e.target);
-			}}
-			on:keypress={(e) => {
-				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox(e.target);
-				}
+			onclick={(e: any) => {
+				openLightbox(e.target.src);
 			}}
 			role="presentation"
 		/>
@@ -42,13 +37,8 @@
 			src="$lib/assets/P1770528.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
-			on:click={(e) => {
-				openLightbox(e.target);
-			}}
-			on:keypress={(e) => {
-				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox(e.target);
-				}
+			onclick={(e: any) => {
+				openLightbox(e.target.src);
 			}}
 			role="presentation"
 		/>
@@ -74,13 +64,8 @@
 			src="$lib/assets/P1006420.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
-			on:click={(e) => {
-				openLightbox(e.target);
-			}}
-			on:keypress={(e) => {
-				if (e.key === 'Enter' || e.key === ' ') {
-					openLightbox(e.target);
-				}
+			onclick={(e: any) => {
+				openLightbox(e.target.src);
 			}}
 			role="presentation"
 		/>

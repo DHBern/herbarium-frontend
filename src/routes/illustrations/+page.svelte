@@ -1,6 +1,6 @@
 <script>
-	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { openLightbox } from '$lib/functions';
+	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import pdf1 from '$lib/assets/1a_Studer_IconesFungorum_001-171.pdf';
 	import pdf2 from '$lib/assets/02_Otth_IconesFungorum_Agaricineen.pdf';
 	import pdf3 from '$lib/assets/03_Otth_IconesFungorum_Agaricineen.pdf';
@@ -14,7 +14,7 @@
 	import pdf11 from '$lib/assets/11_Otth_IconesFungorum_Tubericineen+Pyrenomyceten.pdf';
 	import pdf12 from '$lib/assets/12_Otth_IconesFungorum_Imperfecti.pdf';
 	import pdf13 from '$lib/assets/13_Otth_IconesFungorum_Ustilagineen+Phykomyceten+Myxomyceten.pdf';
-	import pdf14 from '$lib/assets/01_Otth_IconesFungorum_Agaricineen.pdf';	
+	import pdf14 from '$lib/assets/01_Otth_IconesFungorum_Agaricineen.pdf';
 	import pdf15 from '$lib/assets/2a_Studer_IconesFungorum_172-329.pdf';
 	import pdf16 from '$lib/assets/2b_Studer_IconesFungorum_330-447.pdf';
 	import pdf17 from '$lib/assets/3a_Studer_IconesFungorum_448-605.pdf';
@@ -40,7 +40,7 @@
 	<h1 class="h1">Gustav Otth</h1>
 	Gustav Heinrich Otth (02.06.1806 – 08.11.1874) was a Swiss mycologist and military officer. He described
 	several new fungi species and the genus Pucciniastrum within the family Pucciniastraceae. Detailed
-	information about the life and works of Gustav Otth can be found in Eduard Fischer: <a
+	information about the life and works of Gustav Otth can be found in Eduard Fischer:<a
 		href="https://boris.unibe.ch/159775/1/1909_E.Fischer.pdf"
 		target="_blank"
 	>
@@ -57,13 +57,8 @@
 		src="$lib/assets/FB_posts_pilzbuch_03.jpg"
 		alt="agaricus adiposus"
 		class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
-		on:click={(e) => {
-			openLightbox(e.target);
-		}}
-		on:keypress={(e) => {
-			if (e.key === 'Enter' || e.key === ' ') {
-				openLightbox(e.target);
-			}
+		onclick={(e) => {
+			openLightbox(e.target.src);
 		}}
 		role="presentation"
 	/>
@@ -161,67 +156,67 @@
 		src="$lib/assets/Studer-Steinhäuslin.jpg"
 		alt="Cortinarius traganus"
 		class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
-		on:click={(e) => {
-			openLightbox(e.target);
-		}}
-		on:keypress={(e) => {
-			if (e.key === 'Enter' || e.key === ' ') {
-				openLightbox(e.target);
-			}
+		onclick={(e) => {
+			openLightbox(e.target.src);
 		}}
 		role="presentation"
 	/>
 
 	<ul class="list-disc list-inside *:-indent-4 *:ml-4">
 		<li>
-			<a class="anchor" href={pdf1} target="_blank">1a_Studer_IconesFungorum_001-171</a> - 9 Tremellineen (1-9), 11 Telephoren (10‐20), 
-			38 Clavariaceen (21‐58), 10 Hydnaceen (59‐68), 27 Polyporaceen (69‐95), 75 Boletaceen (96‐171)
+			<a class="anchor" href={pdf1} target="_blank">1a_Studer_IconesFungorum_001-171</a> - 9 Tremellineen
+			(1-9), 11 Telephoren (10‐20), 38 Clavariaceen (21‐58), 10 Hydnaceen (59‐68), 27 Polyporaceen (69‐95),
+			75 Boletaceen (96‐171)
 		</li>
 		<li>
-			<a class="anchor" href={pdf15} target="_blank">2a_Studer_IconesFungorum_172-329</a> - 7 Cantharellus (172‐178), 5 Paxillus (179‐183),
-			4 Bolbitius (184‐187), 24 Coprinus (188‐211), 7 Gomphidius (212‐218), 24 Limacium (219‐242), 14 Hygrocybe (243‐256), 12 Camarophyllus
-			(257‐268), 62 Lactarius (269‐329)
+			<a class="anchor" href={pdf15} target="_blank">2a_Studer_IconesFungorum_172-329</a> - 7 Cantharellus
+			(172‐178), 5 Paxillus (179‐183), 4 Bolbitius (184‐187), 24 Coprinus (188‐211), 7 Gomphidius (212‐218),
+			24 Limacium (219‐242), 14 Hygrocybe (243‐256), 12 Camarophyllus (257‐268), 62 Lactarius (269‐329)
 		</li>
 		<li>
-			<a class="anchor" href={pdf16} target="_blank">2b_Studer_IconesFungorum_330-447</a> - 62 Rufsula (330‐390b), 24 Russula (391‐414), 
-			1 Schizophyllum (415), 3 Leutinuns (416‐418), 29 Marasmius (419‐447)
+			<a class="anchor" href={pdf16} target="_blank">2b_Studer_IconesFungorum_330-447</a> - 62 Rufsula
+			(330‐390b), 24 Russula (391‐414), 1 Schizophyllum (415), 3 Leutinuns (416‐418), 29 Marasmius (419‐447)
 		</li>
 		<li>
-			<a class="anchor" href={pdf17} target="_blank">3a_Studer_IconesFungorum_448-605</a> - 16 Coprinarius (448‐464), 6 Chalymatta (465‐470), 
-			12 PratellaPsilocybe (471‐482), 24 Hypholoma (483‐506), 29 Psalliota (507‐535), 30 Derminus (537‐566), 39 Inocybe (567‐605)
+			<a class="anchor" href={pdf17} target="_blank">3a_Studer_IconesFungorum_448-605</a> - 16 Coprinarius
+			(448‐464), 6 Chalymatta (465‐470), 12 PratellaPsilocybe (471‐482), 24 Hypholoma (483‐506), 29 Psalliota
+			(507‐535), 30 Derminus (537‐566), 39 Inocybe (567‐605)
 		</li>
 		<li>
-			<a class="anchor" href={pdf18} target="_blank">3b_Studer_IconesFungorum_606-748</a> - 17 Cortinarius‐Hydrocybe (606‐622), 12 
-			Cortinarius‐Telamonia (623‐634), 30 Cortinarius‐Dermocybe (635‐664), 29 Cortinarius‐Inoloma (665‐692), 11 Cortinarius‐Myxacium 
-			(693‐703), 45 Cortinarius‐Phlegmacium (704‐748)
+			<a class="anchor" href={pdf18} target="_blank">3b_Studer_IconesFungorum_606-748</a> - 17 Cortinarius‐Hydrocybe
+			(606‐622), 12 Cortinarius‐Telamonia (623‐634), 30 Cortinarius‐Dermocybe (635‐664), 29 Cortinarius‐Inoloma
+			(665‐692), 11 Cortinarius‐Myxacium (693‐703), 45 Cortinarius‐Phlegmacium (704‐748)
 		</li>
 		<li>
-			<a class="anchor" href={pdf19} target="_blank">3c_Studer_IconesFungorum_749-839</a> - 34 Naucaria (749‐781), 23 Pholiota (782‐804), 
-			3 Rozites (805‐807), 30 Hyporhodius (Entoloma) (808‐836), 3 Volvaria (837‐839)
+			<a class="anchor" href={pdf19} target="_blank">3c_Studer_IconesFungorum_749-839</a> - 34 Naucaria
+			(749‐781), 23 Pholiota (782‐804), 3 Rozites (805‐807), 30 Hyporhodius (Entoloma) (808‐836), 3 Volvaria
+			(837‐839)
 		</li>
 		<li>
-			<a class="anchor" href={pdf20} target="_blank">4a_Studer_IconesFungorum_840-983</a> - 2 Pleurotus (840‐841), 10 Omphalia (842‐851), 
-			32 Mycena (852‐893), 27 Collybia (884‐910), 74 Citocybe (911‐983)
+			<a class="anchor" href={pdf20} target="_blank">4a_Studer_IconesFungorum_840-983</a> - 2 Pleurotus
+			(840‐841), 10 Omphalia (842‐851), 32 Mycena (852‐893), 27 Collybia (884‐910), 74 Citocybe (911‐983)
 		</li>
 		<li>
-			<a class="anchor" href={pdf21} target="_blank">4b_Studer_IconesFungorum_984-1090</a> - 107 Tricholoma (984‐1090)
+			<a class="anchor" href={pdf21} target="_blank">4b_Studer_IconesFungorum_984-1090</a> - 107 Tricholoma
+			(984‐1090)
 		</li>
 		<li>
-			<a class="anchor" href={pdf22} target="_blank">4c_Studer_IconesFungorum_1091-1178</a> - 3 Cortinellus (1091‐1093), 
-			10 Armillaria (1094‐1103), 33 Lepiota (1104‐1136), 42 Amanita (1137‐1178)
+			<a class="anchor" href={pdf22} target="_blank">4c_Studer_IconesFungorum_1091-1178</a> - 3 Cortinellus
+			(1091‐1093), 10 Armillaria (1094‐1103), 33 Lepiota (1104‐1136), 42 Amanita (1137‐1178)
 		</li>
 		<li>
-			<a class="anchor" href={pdf23} target="_blank">5_Studer_IconesFungorum</a> - 36 Ascomyceten, 11 Myxomyceten, 26 Gastromyceten
+			<a class="anchor" href={pdf23} target="_blank">5_Studer_IconesFungorum</a> - 36 Ascomyceten, 11
+			Myxomyceten, 26 Gastromyceten
 		</li>
-		
 	</ul>
 
 	<p>
 		On the back of some of the pictures there are comments by a researcher friend from
-		French-speaking Switzerland. They are listed behind the annotated images. 
+		French-speaking Switzerland. They are listed behind the annotated images.
 	</p>
 	<p>
-		His wife, Julie Luise Studer-Steinhäuslin, was a member of the advisory commission of the League of Nations and
-		campaigned for an international agreement on stricter laws against trafficking in women and children.
+		His wife, Julie Luise Studer-Steinhäuslin, was a member of the advisory commission of the League
+		of Nations and campaigned for an international agreement on stricter laws against trafficking in
+		women and children.
 	</p>
 </ContentContainer>

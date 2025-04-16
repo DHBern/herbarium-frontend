@@ -1,25 +1,13 @@
-<script>
+<script lang="ts">
 	import { base } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
 	import { blur, fly } from 'svelte/transition';
-	/**
-	 * @type {any[]}
-	 */
-	export let items = [];
+	let { items = $bindable([]), structure = [] } = $props();
 
-	/**
-	 * @type {Array<{label: string, key: string}>}
-	 */
-	export let structure = [];
-
-	/**
-	 * @type IntersectionObserver
-	 */
-	let intersectionObserver;
+	let intersectionObserver: any;
 
 	function ensureIntersectionObserver() {
 		if (intersectionObserver) return;
-
 		intersectionObserver = new IntersectionObserver((entries) => {
 			entries.forEach((entry) => {
 				if (entry.target.tagName === 'THEAD') {
@@ -33,25 +21,14 @@
 						if (visibleNumber < items.length) {
 							visibleNumber += 30;
 							intersectionObserver.unobserve(entry.target);
-						} else {
-							showHelperScrollbar = false;
 						}
-					} else {
-						showHelperScrollbar = true;
 					}
 				}
 			});
 		});
 	}
 
-	/**
-	 *
-	 * Function that creates an IntersectionObserver instance and observes the element
-	 *
-	 * @param element {HTMLElement}
-	 * @param abort {boolean}
-	 */
-	function viewport(element, abort) {
+	function viewport(element: any, abort: any) {
 		// we only want the observer on the last Element, so we abort all but the last one i !== visibleItems.length - 1
 		if (abort) return;
 		ensureIntersectionObserver();
@@ -65,111 +42,67 @@
 		};
 	}
 
-	const handleSort =
-		/**
-		 * @param {MouseEvent} event
-		 * @param {string} key
-		 */
-		(event, key) => {
-			// @ts-ignore
-			const i = event.target?.querySelector('i');
+	const handleSort = (event: any, key: any) => {
+		const i = event.target?.querySelector('i');
 
-			const sort = (/** @type {string} */ key, /** @type {string} */ order) => {
-				items = items.sort((a, b) => {
-					if (order === 'asc') {
-						if (a[key] < b[key]) return -1;
-						if (a[key] > b[key]) return 1;
-						return 0;
-					} else {
-						if (a[key] > b[key]) return -1;
-						if (a[key] < b[key]) return 1;
-						return 0;
+		const sort = (/** @type {string} */ key: any, /** @type {string} */ order: any) => {
+			items = items.sort((a, b) => {
+				if (order === 'asc') {
+					if (a[key] < b[key]) return -1;
+					if (a[key] > b[key]) return 1;
+					return 0;
+				} else {
+					if (a[key] > b[key]) return -1;
+					if (a[key] < b[key]) return 1;
+					return 0;
+				}
+			});
+		};
+
+		if (i) {
+			if (i.classList.contains('fa-sort')) {
+				i.classList.remove('fa-sort');
+				i.classList.add('fa-sort-up');
+				// set 'fa-sort' to all other i
+				const otherElements = document.querySelectorAll('.fa-sort-up, .fa-sort-down');
+				otherElements.forEach((element) => {
+					if (element !== i) {
+						element.classList.remove('fa-sort-up', 'fa-sort-down');
+						element.classList.add('fa-sort');
 					}
 				});
-			};
-
-			if (i) {
-				if (i.classList.contains('fa-sort')) {
-					i.classList.remove('fa-sort');
-					i.classList.add('fa-sort-up');
-					// set 'fa-sort' to all other i
-					const otherElements = document.querySelectorAll('.fa-sort-up, .fa-sort-down');
-					otherElements.forEach((element) => {
-						if (element !== i) {
-							element.classList.remove('fa-sort-up', 'fa-sort-down');
-							element.classList.add('fa-sort');
-						}
-					});
-					sort(key, 'asc');
-				} else if (i.classList.contains('fa-sort-up')) {
-					i.classList.remove('fa-sort-up');
-					i.classList.add('fa-sort-down');
-					sort(key, 'desc');
+				sort(key, 'asc');
+			} else if (i.classList.contains('fa-sort-up')) {
+				i.classList.remove('fa-sort-up');
+				i.classList.add('fa-sort-down');
+				sort(key, 'desc');
+			} else {
+				i.classList.remove('fa-sort-down');
+				i.classList.add('fa-sort');
+				if (items[0].hasOwnProperty('score')) {
+					sort('score', 'desc');
 				} else {
-					i.classList.remove('fa-sort-down');
-					i.classList.add('fa-sort');
-					if (items[0].hasOwnProperty('score')) {
-						sort('score', 'desc');
-					} else {
-						sort('Catalog_Number', 'desc');
-					}
+					sort('Catalog_Number', 'desc');
 				}
 			}
-		};
-	let visibleNumber = 30;
-	$: visibleItems = items.slice(0, visibleNumber);
-
-	let showHelperElements = false;
-	let showHelperScrollbar = false;
-
-	/**
-	 * @type {HTMLDivElement}
-	 */
-	let table;
-
-	/**
-	 * @type {HTMLDivElement}
-	 */
-	let helperScrollbar;
-
-	/**
-	 * @type {HTMLDivElement}
-	 */
-	let innerScrollbar;
-
-	$: {
-		if (helperScrollbar && innerScrollbar) {
-			setScrollbarSizes();
 		}
-	}
-
-	const setScrollbarSizes = () => {
-		helperScrollbar.style.width = `${table.clientWidth}px`;
-		innerScrollbar.style.width = `${table.scrollWidth}px`;
 	};
+	let visibleNumber = $state(30);
+
+	let showHelperElements = $state(false);
+	let table: any = $state();
+
+	let visibleItems = $derived(items.slice(0, visibleNumber));
 </script>
 
-<svelte:window
-	on:resize={() => {
-		setScrollbarSizes();
-	}}
-/>
-
-<!-- Responsive Container (recommended) -->
-<div
-	class="table-container"
-	bind:this={table}
-	on:scroll={(e) => {
-		// @ts-ignore
-		helperScrollbar.scrollLeft = e.target.scrollLeft;
-	}}
->
+<div class="table-container" bind:this={table}>
 	{#if showHelperElements}
 		<button
 			class="btn-icon variant-ghost-primary fixed top-24 right-6 z-50"
-			on:click={() => {
+			onclick={() => {
 				table.scrollIntoView({ behavior: 'smooth' });
 			}}
+			aria-label="Scroll to top of table"
 			in:fly={{ x: 100 }}
 			out:blur
 		>
@@ -180,7 +113,7 @@
 		<thead use:viewport={false} class="!border-primary-800/20 !bg-primary-400">
 			<tr>
 				{#each structure as { key, label }}
-					<th class="hover:cursor-pointer table-cell-fit" on:click={(e) => handleSort(e, key)}>
+					<th class="hover:cursor-pointer table-cell-fit" onclick={(e) => handleSort(e, key)}>
 						{label} <i class="fa-solid pointer-events-none fa-sort"></i>
 					</th>
 				{/each}
@@ -215,15 +148,3 @@
 		</tbody>
 	</table>
 </div>
-{#if showHelperScrollbar}
-	<div
-		class="helper-scrollbar fixed bottom-0 overflow-x-auto h-4"
-		bind:this={helperScrollbar}
-		on:scroll={(e) => {
-			// @ts-ignore
-			table.scrollLeft = e.target.scrollLeft;
-		}}
-	>
-		<div class="inner-scrollbar h-px" bind:this={innerScrollbar}></div>
-	</div>
-{/if}
