@@ -26,10 +26,10 @@ export async function load({ params, fetch }) {
 	};
 }
 
-export function entries() {
-	return Array.isArray(itemDataRaw)
-		? itemDataRaw.map((item) => ({
-				slug: item.Catalog_Number.replace('/', '')
-			}))
-		: [];
-}
+// export function entries() {
+// 	return Array.isArray(itemDataRaw)
+// 		? itemDataRaw.map((item) => ({
+// 				slug: item.Catalog_Number.replace('/', '')
+// 			}))
+// 		: [];
+// }
