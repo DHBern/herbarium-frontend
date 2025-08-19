@@ -164,8 +164,7 @@
 		The images for the website are made available via the International Image Interoperability Framework
 		(IIIF), see <a class="anchor" href="https://iiif.io/" target="_blank">https://iiif.io/</a>. We
 		use the IIIF service of the University Library Bern for this purpose, see
-		<a class="anchor" href="hhttps://bib.unibe.ch/iiif" target="_blank">https://bib.unibe.ch/iiif</a
-		>
+		<a class="anchor" href="https://bib.unibe.ch/iiif" target="_blank">https://bib.unibe.ch/iiif</a>
 	</p>
 	<p>Cover picture by Andrea Bordoli</p>
 </ContentContainer>
