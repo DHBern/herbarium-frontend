@@ -16,7 +16,7 @@
 			</p>
 		</div>
 		<enhanced:img
-			src="$lib/assets/IMG_8229.jpg"
+			src="$lib/assets/IMG_5263.JPG"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e: any) => {
@@ -34,7 +34,7 @@
 			</p>
 		</div>
 		<enhanced:img
-			src="$lib/assets/P1770528.jpg"
+			src="$lib/assets/wittwenmacher.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e: any) => {
@@ -42,6 +42,7 @@
 			}}
 			role="presentation"
 		/>
+
 		<div>
 			<h2 class="h2">Contact</h2>
 			<p>
@@ -79,5 +80,14 @@
 				>
 			</p>
 		</div>
+		<enhanced:img
+			src="$lib/assets/P1770528.jpg"
+			alt="herbarium"
+			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
+			onclick={(e: any) => {
+				openLightbox(e.target.src);
+			}}
+			role="presentation"
+		/>
 	</div>
 </ContentContainer>
