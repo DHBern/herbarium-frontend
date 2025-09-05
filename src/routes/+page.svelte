@@ -129,6 +129,8 @@
 			} else {
 				searchtext = '';
 			}
+		} else {
+			searchtext = '';
 		}
 	});
 </script>
