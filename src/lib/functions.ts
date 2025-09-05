@@ -5,7 +5,7 @@ export const addFlagToCountry = (/** @type {string} */ country: string) => {
 import { selectedImagePath } from './stores.svelte.js';
 export const setGenusAndSpeciesItalic = (input: string, genus: string, species: string) => {
 	return input.replace(
-		new RegExp(`${genus.replaceAll('?', '')}|${species.replaceAll('?', '')}`, 'g'),
+		new RegExp(`${genus.trim().replaceAll('?', '')}|${species.trim().replaceAll('?', '')}`, 'g'),
 		`<span class="italic">$&</span>`
 	);
 };
