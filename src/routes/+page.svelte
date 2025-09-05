@@ -48,7 +48,8 @@
 				tokenize: (text: string) => text.split(CUSTOM_SPACE_OR_PUNCT),
 				searchOptions: {
 					fuzzy: false,
-					prefix: true
+					prefix: true,
+					combineWith: 'AND'
 				}
 			});
 
@@ -99,7 +100,11 @@
 		if (searchtext) {
 			searching = true;
 			allDocumentsAdded.then(async () => {
-				const results = await asyncSearch(searchtext, {});
+				const results = await asyncSearch(searchtext, {
+					fuzzy: false,
+					prefix: true,
+					combineWith: 'AND'
+				});
 				filtereditems = results;
 				searching = false;
 			});
