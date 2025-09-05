@@ -27,7 +27,7 @@ export async function load() {
 		});
 
 	return {
-		categories: itemData.length > 0 ? Object.keys(itemData[0]) : [],
+		categories: structure.map((cat) => cat.key),
 		itemstructure: structure,
 		items: returnitems
 	};
