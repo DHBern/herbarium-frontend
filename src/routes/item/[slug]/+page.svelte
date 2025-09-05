@@ -120,7 +120,7 @@
 									{@html addFlagToCountry(metadataVal)}
 								{:else if key === 'Genus' || key === 'Species'}
 									<span class="italic">{metadataVal}</span>
-								{:else if key === 'Accepted_Name'}
+								{:else if key === 'Accepted_Name' || key === 'Label_Name'}
 									{@html setGenusAndSpeciesItalic(metadataVal, d.Genus, d.Species)}
 								{:else}
 									{metadataVal}
