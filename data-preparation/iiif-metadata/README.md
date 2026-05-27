@@ -12,4 +12,4 @@ Usage:
 * `python3 generate-metadata-csv-for-ubiiif.py`; this generates a csv file containing the metadata
 * `head -n 30 herbarium-iiif-metadata.csv > metadata-import-10.csv`; this creates a file with some entries to test the import (substitute `30` and `10` for a higher value, if needed)
 * (optionally) split output into smaller files: `split -d -l 15000 --additional-suffix=.csv herbarium-iiif-metadata.csv herbarium-iiif-metadata-chunk-` (adjust `l` flag as needed)
-* start a metadata import task supplying the csv file (test file is quick, full file takes a few minutes, ca 15 sec/entry)
+* start a metadata import task supplying the csv file (test file is quick, full file takes a few hours, ca 15 sec/entry)
