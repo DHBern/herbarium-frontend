@@ -2,7 +2,8 @@ import { join } from 'path';
 
 import forms from '@tailwindcss/forms';
 import { skeleton } from '@skeletonlabs/tw-plugin';
-import { herbarium } from './src/herbarium';
+import { herbarium } from './src/herbarium.css';
+
 /** @type {import('tailwindcss').Config} */
 export default {
 	darkMode: 'class',

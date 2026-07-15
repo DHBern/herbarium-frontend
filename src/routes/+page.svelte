@@ -141,12 +141,12 @@
 </script>
 
 <div class="px-8 pt-16 image-background h-[30vh]">
-	<div class="container mx-auto text-white backdrop-blur-md rounded w-fit p-2">
+	<!-- <div class="container mx-auto text-white backdrop-blur-md rounded w-fit p-2">
 		<h1 class="h1 font-bold tracking-wide drop-shadow-xl text-shadow">Herbarium Bernense</h1>
 		<p class="text-lg font-semibold text-shadow">
 			Herbarium of the Botanical Garden of the University of Bern
 		</p>
-	</div>
+	</div> -->
 </div>
 
 <ContentContainer>
