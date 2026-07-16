@@ -113,7 +113,10 @@
 		<thead use:viewport={false} class="border-primary-800/20! bg-primary-400!">
 			<tr>
 				{#each structure as { key, label }}
-					<th class="hover:cursor-pointer w-0 whitespace-nowrap" onclick={(e) => handleSort(e, key)}>
+					<th
+						class="hover:cursor-pointer w-0 whitespace-nowrap"
+						onclick={(e) => handleSort(e, key)}
+					>
 						{label} <i class="fa-solid pointer-events-none fa-sort"></i>
 					</th>
 				{/each}

@@ -94,19 +94,20 @@
 			</button>
 
 			<!-- Desktop navigation -->
-			<nav class="hidden h-full flex-none items-center md:flex">
+			<nav class="hidden h-full flex-none items-center md:flex gap-1">
 				{#each pages as page}
 					<a
 						href={`${base}${page.path}`}
-						class="flex h-full items-center p-4 hover:preset-tonal-primary {classesActive(page.path)}"
-						>{page.slug}</a
+						class="flex h-full items-center p-4 hover:preset-tonal-primary {classesActive(
+							page.path
+						)}">{page.slug}</a
 					>
 				{/each}
 
 				{#if !otherSearchisVisible}
 					<label>
 						<input
-							class="input placeholder-primary-600 ml-2"
+							class="input placeholder-primary-600 bg-surface-200 rounded-full ml-2"
 							type="text"
 							placeholder="search"
 							bind:value={searchtext}
@@ -159,7 +160,9 @@
 						<li>
 							<a
 								href={`${base}${page.path}`}
-								class="block rounded px-4 py-2 hover:preset-tonal-primary {classesActive(page.path)}"
+								class="block rounded px-4 py-2 hover:preset-tonal-primary {classesActive(
+									page.path
+								)}"
 								onclick={() => (mobileMenuOpen = false)}
 							>
 								{page.slug}

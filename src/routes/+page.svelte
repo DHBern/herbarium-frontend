@@ -168,19 +168,21 @@
 						advancedToggle = e.checked;
 						searchtext = '';
 					}}
-					class="mb-3"
+					class="mb-3 h-8"
 				>
-					<Switch.Control>
+					<Switch.Control class="h-full w-16 bg-surface-400 data-[state=checked]:bg-surface-300">
 						<Switch.Thumb />
 					</Switch.Control>
-					<Switch.Label>{advancedToggle ? 'Simple' : 'Advanced'}</Switch.Label>
+					<Switch.Label class="text-base font-light"
+						>{advancedToggle ? 'Simple' : 'Advanced'}</Switch.Label
+					>
 					<Switch.HiddenInput />
 				</Switch>
 			</div>
 			{#if !advancedToggle}
 				<label transition:slide>
 					<input
-						class="input p-6 placeholder-primary-600"
+						class="input p-6 placeholder-primary-600 bg-surface-200 preset-outlined-surface-400-600 rounded-full"
 						type="text"
 						placeholder="searchinput..."
 						bind:value={searchtext}
@@ -191,7 +193,7 @@
 					<label class="label" transition:slide|global>
 						<span>{item.label}</span>
 						<input
-							class="input p-6 placeholder-primary-600"
+							class="input p-6 placeholder-primary-600 bg-surface-200 preset-outlined-surface-400-600 rounded-full"
 							type="text"
 							bind:value={advancedFields[item.key]}
 						/>
