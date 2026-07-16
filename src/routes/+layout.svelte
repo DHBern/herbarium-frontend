@@ -4,7 +4,7 @@
 
 	import '@fortawesome/fontawesome-free/css/solid.min.css';
 	import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { afterNavigate, goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
@@ -25,9 +25,7 @@
 
 	let mobileMenuOpen = $state(false);
 
-	let classesActive = $derived((href: string) =>
-		base + href === page?.url?.pathname ? 'bg-primary-500' : ''
-	);
+	let classesActive = $derived((href: string) => (href === page.route.id ? 'bg-primary-500' : ''));
 
 	const pages = [
 		{ slug: 'home', path: '/' },
@@ -93,7 +91,7 @@
 			<nav class="hidden h-full flex-none items-center md:flex gap-1">
 				{#each pages as page}
 					<a
-						href={`${base}${page.path}`}
+						href={resolve(page.path, {})}
 						class="flex h-full items-center p-4 hover:preset-tonal-primary {classesActive(
 							page.path
 						)}">{page.slug}</a
@@ -111,12 +109,12 @@
 								const to = searchtext;
 
 								searchtext = '';
-								goto(`${base}/?s=${to}`);
+								goto(resolve(`/?s=${to}`, {}));
 							}}
 						/>
 					</label>
 
-					<a href={`${base}?s=${searchtext}`} class="btn-icon" aria-label="Search"
+					<a href={resolve(`/?s=${searchtext}`, {})} class="btn-icon" aria-label="Search"
 						><i class="fa-solid fa-search"></i></a
 					>
 				{/if}
@@ -128,7 +126,7 @@
 					<img
 						src={unibe}
 						alt="Logo of the University of Bern"
-						class="my-1 h-[43px] max-h-[80px] w-auto"
+						class="my-1 h-[43px] max-h-20 w-auto"
 					/>
 				</a>
 
@@ -140,7 +138,7 @@
 					<img
 						src={boga}
 						alt="Logo of the botanical garden"
-						class="my-1 h-[43px] max-h-[80px] w-auto"
+						class="my-1 h-[43px] max-h-20 w-auto"
 						height="43"
 						width="72"
 					/>
@@ -155,7 +153,7 @@
 					{#each pages as page}
 						<li>
 							<a
-								href={`${base}${page.path}`}
+								href={resolve(page.path, {})}
 								class="block rounded px-4 py-2 hover:preset-tonal-primary {classesActive(
 									page.path
 								)}"

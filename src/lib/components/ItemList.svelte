@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { base } from '$app/paths';
+	import { resolve } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
 	import { blur, fly } from 'svelte/transition';
 	let { items = $bindable([]), structure = [] } = $props();
@@ -132,7 +132,7 @@
 						<td class="w-0 whitespace-nowrap {j === 0 ? 'italic' : ''}">
 							{#if j === 0}<i class="fa-solid fa-camera"></i>{/if}
 							{#if row[key]}
-								<a href={`${base}/item/${row.Catalog_Number}`}>
+								<a href={resolve('/item/[slug]', { slug: row.Catalog_Number })}>
 									{#if key === 'Country'}
 										{@html addFlagToCountry(row[key])}
 									{:else if key === 'Genus' || key === 'Species'}
