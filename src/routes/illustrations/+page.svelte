@@ -39,8 +39,8 @@
 
 	<h1 class="h1">Gustav Otth</h1>
 	Gustav Heinrich Otth (02.06.1806 – 08.11.1874) was a Swiss mycologist and military officer. He described
-	several new fungi species and the genus Pucciniastrum within the family Pucciniastraceae. Detailed
-	information about the life and works of Gustav Otth can be found in Eduard Fischer:<a
+	several new fungi species and the genus Pucciniastrum within the family Pucciniastraceae. Detailed information
+	about the life and works of Gustav Otth can be found in Eduard Fischer:<a
 		href="https://boris.unibe.ch/159775/1/1909_E.Fischer.pdf"
 		target="_blank"
 	>
@@ -72,8 +72,8 @@
 			Agaricineen, Agaricus, Leucosporus 2 - ordered according to Fries, 1874
 		</li>
 		<li>
-			<a class="anchor" href={pdf3} target="_blank">Otth - Icones Fungorum III (Nr. 219 - 359)</a> -
-			Hymenocetes, Agaricineen, Agaricus exclusive Leucosporus - ordered according to Fries, 1874
+			<a class="anchor" href={pdf3} target="_blank">Otth - Icones Fungorum III (Nr. 219 - 359)</a> - Hymenocetes,
+			Agaricineen, Agaricus exclusive Leucosporus - ordered according to Fries, 1874
 		</li>
 		<li>
 			<a class="anchor" href={pdf4} target="_blank">Otth - Icones Fungorum IV (Nr. 360 - 472)</a> - Hymenocetes,
@@ -88,18 +88,16 @@
 			Polyporeen, Boletus until Polyporus 1 - ordered according to Fries, 1874
 		</li>
 		<li>
-			<a class="anchor" href={pdf7} target="_blank">Otth - Icones Fungorum VII (Nr. 652 - 754)</a> -
-			Hymenocetes, Polyporeen, Polyporus 2 until Solenia - ordered according to Fries, 1874
+			<a class="anchor" href={pdf7} target="_blank">Otth - Icones Fungorum VII (Nr. 652 - 754)</a> - Hymenocetes,
+			Polyporeen, Polyporus 2 until Solenia - ordered according to Fries, 1874
 		</li>
 		<li>
 			<a class="anchor" href={pdf8} target="_blank">Otth - Icones Fungorum VIII (Nr. 755 - 891)</a> -
-			Hymenocetes, Hydneen, Telephoreen, Clavariaceen and Tremellineen - ordered according to Fries,
-			1874
+			Hymenocetes, Hydneen, Telephoreen, Clavariaceen and Tremellineen - ordered according to Fries, 1874
 		</li>
 		<li>
-			<a class="anchor" href={pdf9} target="_blank">Otth - Icones Fungorum IX (Nr. 891 - 1026)</a> -
-			Gastromyceten and Uredineen - ordered according to Winter: Die Pilze in Rabenhorst Krypt. Flora,
-			Ed. II
+			<a class="anchor" href={pdf9} target="_blank">Otth - Icones Fungorum IX (Nr. 891 - 1026)</a> - Gastromyceten
+			and Uredineen - ordered according to Winter: Die Pilze in Rabenhorst Krypt. Flora, Ed. II
 		</li>
 		<li>
 			<a class="anchor" href={pdf10} target="_blank">Otth - Icones Fungorum X (Nr. 1027 - 1188)</a> -
@@ -123,22 +121,22 @@
 	</ul>
 
 	<h1 class="h1">Bernhard Studer-Steinhäuslin</h1>
-	Bernhard Emil Studer-Steinhäuslin (23. May 1847 - 28. March 1910) was born in Bern as the son of a
-	pharmacist. In 1860, he suffered a serious accident and was left with a lifelong paralysis of his left
-	hand. In 1865, he entered the pharmaceutical profession and studied at the University of Bern and at
-	the Remigius Fresenius Institute in Wiesbaden (Germany). After educational trips to Paris, England
-	and Scotland, he took over his father's pharmacy in the Spitalgasse in Bern, which he ran for 33 years
-	together with his brother Wilhelm. He was a long-standing board member of the City Pharmacists‘ Association,
-	the Cantonal Pharmacists’ Association, the Swiss Pharmacists‘ Association, the Pharmacopoeia Commission
-	of the Swiss Pharmacists’ Association and treasurer of the Natural Science Society in Bern. In addition
-	to his job and all the offices he held, he found time for research in pharmacy (urinalysis and bacteriology)
-	and mycology. Studer's extensive work on hymenomycetes is scientifically sound and valuable. He learnt
-	watercolour painting and created impressive pictures which were donated to the Botanical Institute
-	in Bern in 1912. In addition to his theoretical studies, he was also involved in practical work, published
-	a book on edible mushrooms, held public mushroom courses and founded a mushroom inspection centre in
-	Bern to promote edible mushrooms and dispel prejudices. The author abbreviation of Bernhard Studer-Steinhäuslin
-	is Stud.-Steinh. (Clitocybe aurantiaca, Pourretia mexicana var. argentea). His numerous publications
-	are listed in the obituary:
+	Bernhard Emil Studer-Steinhäuslin (23. May 1847 - 28. March 1910) was born in Bern as the son of a pharmacist.
+	In 1860, he suffered a serious accident and was left with a lifelong paralysis of his left hand. In
+	1865, he entered the pharmaceutical profession and studied at the University of Bern and at the Remigius
+	Fresenius Institute in Wiesbaden (Germany). After educational trips to Paris, England and Scotland,
+	he took over his father's pharmacy in the Spitalgasse in Bern, which he ran for 33 years together with
+	his brother Wilhelm. He was a long-standing board member of the City Pharmacists‘ Association, the Cantonal
+	Pharmacists’ Association, the Swiss Pharmacists‘ Association, the Pharmacopoeia Commission of the Swiss
+	Pharmacists’ Association and treasurer of the Natural Science Society in Bern. In addition to his job
+	and all the offices he held, he found time for research in pharmacy (urinalysis and bacteriology) and
+	mycology. Studer's extensive work on hymenomycetes is scientifically sound and valuable. He learnt watercolour
+	painting and created impressive pictures which were donated to the Botanical Institute in Bern in 1912.
+	In addition to his theoretical studies, he was also involved in practical work, published a book on
+	edible mushrooms, held public mushroom courses and founded a mushroom inspection centre in Bern to promote
+	edible mushrooms and dispel prejudices. The author abbreviation of Bernhard Studer-Steinhäuslin is Stud.-Steinh.
+	(Clitocybe aurantiaca, Pourretia mexicana var. argentea). His numerous publications are listed in the
+	obituary:
 	<a href="https://www.e-periodica.ch/cntmng?pid=sng-005%3A1910%3A93%3A%3A905" target="_blank">
 		A. Tschirch: Bernhard Studer-Steinhäuslin, Apotheker in Verhandlungen der Schweizerischen
 		Naturforschenden Gesellschaft, 93, 1910, S. 36-42

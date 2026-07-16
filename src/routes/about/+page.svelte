@@ -41,17 +41,17 @@
 	/>
 	<ul class="list-disc list-inside *:-indent-4 *:ml-4">
 		<li>
-			<strong>Herbarium specimens:</strong> The largest collection of the Herbarium Bernense are the
-			herbarium specimens, pressed and mounted on herbarium sheets. The oldest of the estimated 500,000
-			specimens dates back to the year 1753.
+			<strong>Herbarium specimens:</strong> The largest collection of the Herbarium Bernense are the herbarium
+			specimens, pressed and mounted on herbarium sheets. The oldest of the estimated 500,000 specimens
+			dates back to the year 1753.
 		</li>
 		<li>
 			<strong>Wet collection:</strong> The wet collection, preserved in an 75% ethanol solution, is probably
 			the largest historical wet collection of plants and fungi in Switzerland and comprises 1,142 specimens.
 		</li>
 		<li>
-			<strong>Dry bulk collection:</strong> This collection comprises about 3000 specimens of seeds,
-			woody fruits, tree cross sections and fungi fruit bodies.
+			<strong>Dry bulk collection:</strong> This collection comprises about 3000 specimens of seeds, woody
+			fruits, tree cross sections and fungi fruit bodies.
 		</li>
 		<li>
 			<strong>Fossil collection:</strong> About 3000 specimens of fossilized plants and archaeological
