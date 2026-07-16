@@ -95,7 +95,7 @@
 					{/if}
 
 					{#if d.Type !== 'no'}
-						<span class="badge variant-filled-warning"> {d.Type}</span>
+						<span class="badge preset-filled-warning-500"> {d.Type}</span>
 					{/if}
 				</h1>
 			</div>

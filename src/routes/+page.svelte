@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import ItemList from '$lib/components/ItemList.svelte';
-	import { SlideToggle } from '@skeletonlabs/skeleton';
+	import { Switch } from '@skeletonlabs/skeleton-svelte';
 	import MiniSearch from 'minisearch';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
@@ -161,17 +161,21 @@
 		<div class="lg:w-1/2">
 			<div class="flex justify-between">
 				<h2 class="h3 mb-3">Search and Filter</h2>
-				<SlideToggle
+				<Switch
 					name="advanced-mode"
-					active="bg-surface-300"
-					bind:checked={advancedToggle}
-					class="mb-3"
-					onChange={() => {
+					checked={advancedToggle}
+					onCheckedChange={(e) => {
+						advancedToggle = e.checked;
 						searchtext = '';
 					}}
+					class="mb-3"
 				>
-					{advancedToggle ? 'Simple' : 'Advanced'}
-				</SlideToggle>
+					<Switch.Control>
+						<Switch.Thumb />
+					</Switch.Control>
+					<Switch.Label>{advancedToggle ? 'Simple' : 'Advanced'}</Switch.Label>
+					<Switch.HiddenInput />
+				</Switch>
 			</div>
 			{#if !advancedToggle}
 				<label transition:slide>

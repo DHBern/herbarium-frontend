@@ -95,10 +95,10 @@
 	let visibleItems = $derived(items.slice(0, visibleNumber));
 </script>
 
-<div class="table-container" bind:this={table}>
+<div class="table-wrap" bind:this={table}>
 	{#if showHelperElements}
 		<button
-			class="btn-icon variant-ghost-primary fixed top-24 right-6 z-50"
+			class="btn-icon preset-tonal-primary fixed top-24 right-6 z-50"
 			onclick={() => {
 				table.scrollIntoView({ behavior: 'smooth' });
 			}}
@@ -109,11 +109,11 @@
 			<i class="fa-solid fa-arrows-up-to-line"></i>
 		</button>
 	{/if}
-	<table class="table table-interactive !bg-primary-100">
-		<thead use:viewport={false} class="!border-primary-800/20 !bg-primary-400">
+	<table class="table bg-primary-100!">
+		<thead use:viewport={false} class="border-primary-800/20! bg-primary-400!">
 			<tr>
 				{#each structure as { key, label }}
-					<th class="hover:cursor-pointer table-cell-fit" onclick={(e) => handleSort(e, key)}>
+					<th class="hover:cursor-pointer w-0 whitespace-nowrap" onclick={(e) => handleSort(e, key)}>
 						{label} <i class="fa-solid pointer-events-none fa-sort"></i>
 					</th>
 				{/each}
@@ -122,11 +122,11 @@
 		<tbody>
 			{#each visibleItems as row, i (row.Catalog_Number)}
 				<tr
-					class="!border-primary-800/20 even:!bg-primary-400/30"
+					class="border-primary-800/20! even:bg-primary-400/30!"
 					use:viewport={i !== visibleItems.length - 1}
 				>
 					{#each structure as { key }, j}
-						<td class="table-cell-fit {j === 0 ? 'italic' : ''}">
+						<td class="w-0 whitespace-nowrap {j === 0 ? 'italic' : ''}">
 							{#if j === 0}<i class="fa-solid fa-camera"></i>{/if}
 							{#if row[key]}
 								<a href={`${base}/item/${row.Catalog_Number}`}>

@@ -136,7 +136,7 @@
 		institutions:
 	</p>
 	<div
-		class="logo-cloud grid-cols-1 md:!grid-cols-3 sm:!grid-cols-2 gap-1 items-middle justify-items-center"
+		class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-1 items-center justify-items-center"
 	>
 		{#each logos as { src, alt }}
 			<img {src} {alt} width="180px" />

@@ -41,7 +41,6 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@floating-ui/dom": "^1.8.0",
 		"@fortawesome/fontawesome-free": "^7.3.0",
 		"minisearch": "^7.2.0",
 		"openseadragon": "^6.0.2",

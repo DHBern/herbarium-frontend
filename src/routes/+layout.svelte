@@ -2,31 +2,18 @@
 	import './layout.css';
 	import { page } from '$app/state';
 
-	import {
-		AppShell,
-		AppBar,
-		getDrawerStore,
-		Drawer,
-		initializeStores,
-		Toast
-	} from '@skeletonlabs/skeleton';
-
 	import '@fortawesome/fontawesome-free/css/solid.min.css';
 	import '@fortawesome/fontawesome-free/css/fontawesome.min.css';
 	import { base } from '$app/paths';
 	import { afterNavigate, goto } from '$app/navigation';
 	import { onMount } from 'svelte';
-	import { computePosition, autoUpdate, offset, shift, flip, arrow } from '@floating-ui/dom';
-	import { storePopup } from '@skeletonlabs/skeleton';
+	import { slide } from 'svelte/transition';
 	import boga from '$lib/assets/BOGA-Logo_Black.svg';
 	import unibe from '$lib/assets/unibe.svg';
+	import LightBox from '$lib/components/LightBox.svelte';
 
 	/** @type {{children?: import('svelte').Snippet}} */
 	let { children } = $props();
-
-	import LightBox from '$lib/components/LightBox.svelte';
-
-	storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
 	afterNavigate((/** @type import('@sveltejs/kit').AfterNavigate */ params) => {
 		const isNewPage = params.from?.url?.pathname !== params.to?.url?.pathname;
@@ -37,21 +24,11 @@
 		}
 	});
 
-	initializeStores();
+	let mobileMenuOpen = $state(false);
 
-	const drawerStore = getDrawerStore();
 	let classesActive = $derived((/** @type {string} */ href) =>
 		base + href === page?.url?.pathname ? 'bg-primary-500' : ''
 	);
-
-	function drawerOpen() {
-		const /** @type {import('@skeletonlabs/skeleton').DrawerSettings} */ s = {
-				id: 'topnav',
-				position: 'top'
-			};
-
-		drawerStore.open(s);
-	}
 
 	const pages = [
 		{ slug: 'home', path: '/' },
@@ -102,33 +79,26 @@
 	});
 </script>
 
-<Drawer height="h-auto">
-	<nav class="list-nav">
-		<ul>
-			{#each pages as page}
-				<li><a href={`${base}${page.path}`}><span class="flex-auto">{page.slug}</span></a></li>
-			{/each}
-		</ul>
-	</nav>
-</Drawer>
+<div class="flex h-full flex-col">
+	<!-- Header / App Bar -->
+	<header class="flex-none bg-surface-100-900 px-4">
+		<div class="flex h-full items-center justify-between gap-4">
+			<!-- Lead: mobile menu toggle -->
+			<button
+				class="btn-icon md:hidden"
+				onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
+				aria-label="Open menu"
+				aria-expanded={mobileMenuOpen}
+			>
+				<i class="fa-solid fa-bars"></i>
+			</button>
 
-<Toast
-	buttonAction="btn btn-icon-sm variant-ghost"
-	buttonDismiss="btn-icon btn-icon-md variant-ghost"
-/>
-
-<!-- App Shell -->
-
-<AppShell slotPageFooter="bg-surface-200-700-token p-4">
-	{#snippet header()}
-		<!-- App Bar -->
-
-		<AppBar padding="px-4" background="bg-surface-100-900-token">
-			<nav class="flex-none items-center h-full hidden md:flex">
+			<!-- Desktop navigation -->
+			<nav class="hidden h-full flex-none items-center md:flex">
 				{#each pages as page}
 					<a
 						href={`${base}${page.path}`}
-						class="list-nav-item h-full p-4 bg-primary-hover-token {classesActive(page.path)}"
+						class="flex h-full items-center p-4 hover:preset-tonal-primary {classesActive(page.path)}"
 						>{page.slug}</a
 					>
 				{/each}
@@ -155,18 +125,13 @@
 				{/if}
 			</nav>
 
-			{#snippet lead()}
-				<button class="md:!hidden btn-icon" onclick={drawerOpen} aria-label="Open menu"
-					><i class="fa-solid fa-bars"></i></button
-				>
-			{/snippet}
-
-			{#snippet trail()}
+			<!-- Trail: logos -->
+			<div class="flex items-center gap-2">
 				<a href="https://www.unibe.ch" target="_blank" rel="noopener">
 					<img
 						src={unibe}
 						alt="Logo of the University of Bern"
-						class="max-h-[80px] h-[43px] w-auto my-1"
+						class="my-1 h-[43px] max-h-[80px] w-auto"
 					/>
 				</a>
 
@@ -178,25 +143,47 @@
 					<img
 						src={boga}
 						alt="Logo of the botanical garden"
-						class="max-h-[80px] h-[43px] w-auto my-1"
+						class="my-1 h-[43px] max-h-[80px] w-auto"
 						height="43"
 						width="72"
 					/>
 				</a>
-			{/snippet}
-		</AppBar>
-	{/snippet}
+			</div>
+		</div>
+
+		<!-- Mobile navigation drawer -->
+		{#if mobileMenuOpen}
+			<nav class="md:hidden" transition:slide>
+				<ul class="pb-2">
+					{#each pages as page}
+						<li>
+							<a
+								href={`${base}${page.path}`}
+								class="block rounded px-4 py-2 hover:preset-tonal-primary {classesActive(page.path)}"
+								onclick={() => (mobileMenuOpen = false)}
+							>
+								{page.slug}
+							</a>
+						</li>
+					{/each}
+				</ul>
+			</nav>
+		{/if}
+	</header>
 
 	<!-- Page Route Content -->
-	{@render children?.()}
+	<main id="page" class="flex-auto overflow-y-auto">
+		{@render children?.()}
 
-	{#snippet pageFooter()}
-		<div class="grid grid-cols-2 lg:ml-10 lg:mr-10 gap-4">
-			<p class="h5 md:h6 lg:h5 col-span-2 justify-self-start">
-				A project of the Herbarium of the Botanical Garden of the University of Bern
-			</p>
-		</div>
-	{/snippet}
-</AppShell>
+		<!-- Page Footer -->
+		<footer class="bg-surface-200-800 p-4">
+			<div class="grid grid-cols-2 gap-4 lg:mr-10 lg:ml-10">
+				<p class="h5 md:h6 lg:h5 col-span-2 justify-self-start">
+					A project of the Herbarium of the Botanical Garden of the University of Bern
+				</p>
+			</div>
+		</footer>
+	</main>
+</div>
 
 <LightBox />
