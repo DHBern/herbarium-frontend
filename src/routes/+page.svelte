@@ -5,7 +5,7 @@
 	import MiniSearch from 'minisearch';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
-	import { miniSearch } from '$lib/stores.svelte.js';
+	import { miniSearch } from '$lib/stores.svelte';
 	import { page } from '$app/state';
 	import { afterNavigate } from '$app/navigation';
 	import type { PageData, AdvancedSearch, Item, SearchQuery } from './types';

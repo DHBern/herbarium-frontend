@@ -45,7 +45,7 @@
 	const handleSort = (event: any, key: any) => {
 		const i = event.target?.querySelector('i');
 
-		const sort = (/** @type {string} */ key: any, /** @type {string} */ order: any) => {
+		const sort = (key: string, order: string) => {
 			items = items.sort((a, b) => {
 				if (order === 'asc') {
 					if (a[key] < b[key]) return -1;

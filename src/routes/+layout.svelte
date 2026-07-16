@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import './layout.css';
 	import { page } from '$app/state';
 
@@ -12,10 +12,9 @@
 	import unibe from '$lib/assets/unibe.svg';
 	import LightBox from '$lib/components/LightBox.svelte';
 
-	/** @type {{children?: import('svelte').Snippet}} */
-	let { children } = $props();
+	let { children }: { children?: import('svelte').Snippet } = $props();
 
-	afterNavigate((/** @type import('@sveltejs/kit').AfterNavigate */ params) => {
+	afterNavigate((params) => {
 		const isNewPage = params.from?.url?.pathname !== params.to?.url?.pathname;
 		const elemPage = document.querySelector('#page');
 
@@ -26,7 +25,7 @@
 
 	let mobileMenuOpen = $state(false);
 
-	let classesActive = $derived((/** @type {string} */ href) =>
+	let classesActive = $derived((href: string) =>
 		base + href === page?.url?.pathname ? 'bg-primary-500' : ''
 	);
 
@@ -40,10 +39,7 @@
 	let searchtext = $state('');
 	let otherSearchisVisible = $state(false);
 
-	/**
-	 * @type {IntersectionObserver}
-	 */
-	let observer;
+	let observer: IntersectionObserver;
 
 	onMount(() => {
 		const inputElements = document.querySelectorAll('main .input');

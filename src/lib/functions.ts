@@ -1,8 +1,8 @@
-export const addFlagToCountry = (/** @type {string} */ country: string) => {
+export const addFlagToCountry = (country: string) => {
 	return `${country} <span style="background-image: url(https://raw.githubusercontent.com/stefangabos/world_countries/refs/heads/master/data/flags/flat/16x12/${country.toLowerCase()}.png?raw=true);" class="flag"></span>`;
 };
 
-import { selectedImagePath } from './stores.svelte.js';
+import { selectedImagePath } from './stores.svelte';
 export const setGenusAndSpeciesItalic = (input: string, genus: string, species: string) => {
 	return input.replace(
 		new RegExp(`${genus.trim().replaceAll('?', '')}|${species.trim().replaceAll('?', '')}`, 'g'),
@@ -10,7 +10,7 @@ export const setGenusAndSpeciesItalic = (input: string, genus: string, species: 
 	);
 };
 
-export const openLightbox = (/** @type {any} */ src: string) => {
+export const openLightbox = (src: string) => {
 	selectedImagePath.path = src;
 };
 export const closeLightbox = (): void => {

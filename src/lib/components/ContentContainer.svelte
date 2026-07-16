@@ -1,5 +1,9 @@
-<script>
-	let { class: className = '', dark = false, children } = $props();
+<script lang="ts">
+	let {
+		class: className = '',
+		dark = false,
+		children
+	}: { class?: string; dark?: boolean; children?: import('svelte').Snippet } = $props();
 </script>
 
 <section class="w-full px-8 my-8 {dark ? 'bg-tertiary-500 text-black' : ''}">

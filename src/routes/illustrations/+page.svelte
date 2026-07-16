@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
 	import { openLightbox } from '$lib/functions';
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import pdf1 from '$lib/assets/1a_Studer_IconesFungorum_001-171.pdf';
@@ -57,8 +57,8 @@
 		src="$lib/assets/FB_posts_pilzbuch_03.jpg"
 		alt="agaricus adiposus"
 		class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
-		onclick={(e) => {
-			openLightbox(e.target.src);
+		onclick={(e: Event & { currentTarget: HTMLImageElement }) => {
+			openLightbox(e.currentTarget.src);
 		}}
 		role="presentation"
 	/>
@@ -154,8 +154,8 @@
 		src="$lib/assets/Studer-Steinhäuslin.jpg"
 		alt="Cortinarius traganus"
 		class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
-		onclick={(e) => {
-			openLightbox(e.target.src);
+		onclick={(e: Event & { currentTarget: HTMLImageElement }) => {
+			openLightbox(e.currentTarget.src);
 		}}
 		role="presentation"
 	/>

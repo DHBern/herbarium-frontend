@@ -1,8 +1,8 @@
 import itemDataRaw from '$lib/data.json';
 import structure from '$lib/structure.json';
+import type { PageLoad } from './$types';
 
-/** @type {import('./$types').PageLoad} */
-export async function load() {
+export const load: PageLoad = async () => {
 	const itemData: Array<{ [key: string]: any }> = Array.isArray(itemDataRaw) ? itemDataRaw : [];
 
 	const returnitems = itemData
@@ -31,4 +31,4 @@ export async function load() {
 		itemstructure: structure,
 		items: returnitems
 	};
-}
+};

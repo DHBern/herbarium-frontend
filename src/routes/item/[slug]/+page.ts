@@ -1,7 +1,8 @@
 import itemDataRaw from '$lib/data.json';
 import structure from '$lib/structure.json';
+import type { PageLoad } from './$types';
 
-export async function load({ params, fetch }) {
+export const load: PageLoad = async ({ params, fetch }) => {
 	interface Item {
 		Genus: string;
 		Species: string;
@@ -24,7 +25,7 @@ export async function load({ params, fetch }) {
 			).then((res) => (res.ok ? res.json() : false))) ?? false,
 		structure
 	};
-}
+};
 
 // export function entries() {
 // 	return Array.isArray(itemDataRaw)
