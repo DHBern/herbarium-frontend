@@ -38,3 +38,11 @@ export interface MiniSearchOptions {
 		prefix: boolean;
 	};
 }
+
+export interface CollectionPageData {
+	slug: string;
+	structure: ItemStructure[];
+	items: Item[];
+	categories: string[];
+	Content: typeof import('*.md').default;
+}
