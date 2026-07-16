@@ -228,8 +228,4 @@
 		background-attachment: fixed;
 		background-repeat: no-repeat;
 	}
-
-	.text-shadow {
-		text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-	}
 </style>

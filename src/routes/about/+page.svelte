@@ -160,6 +160,7 @@
 			src="$lib/assets/International_Image_Interoperability_Framework_logo.png"
 			width="180px"
 			class="float-right"
+			alt="Logo of the International Image Interoperability Framework"
 		/>
 		The images for the website are made available via the International Image Interoperability Framework
 		(IIIF), see <a class="anchor" href="https://iiif.io/" target="_blank">https://iiif.io/</a>. We
