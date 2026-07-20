@@ -93,7 +93,7 @@
 	<table class="table bg-primary-100!">
 		<thead class="border-primary-800/20! bg-primary-400!">
 			<tr>
-				{#each structure as { key, label }}
+				{#each structure as { key, label } (key)}
 					<th class="hover:cursor-pointer w-0 whitespace-nowrap" onclick={() => handleSort(key)}>
 						{label} <i class="fa-solid pointer-events-none {sortIcon(key)}"></i>
 					</th>
@@ -106,7 +106,7 @@
 					class="border-primary-800/20! even:bg-primary-400/30!"
 					use:viewport={i === visibleItems.length - 1}
 				>
-					{#each structure as { key }, j}
+					{#each structure as { key }, j (key + j)}
 						{@const content = cellContent(row, key)}
 						<td class="w-0 whitespace-nowrap {j === 0 ? 'italic' : ''}">
 							{#if j === 0}<i class="fa-solid fa-camera"></i>{/if}

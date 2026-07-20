@@ -1,6 +1,6 @@
 <script lang="ts">
 	import CollectionGrid from './CollectionGrid.svelte';
-	import type { CollectionPageData, Item } from '../../routes/types';
+	import type { CollectionPageData } from '../../routes/types';
 
 	interface Props {
 		data: CollectionPageData;
@@ -16,14 +16,17 @@
 	const filterOptions = $derived.by(() => {
 		const options: Record<string, string[]> = {};
 		for (const { key } of filterableStructure) {
-			const values = new Set<string>();
+			const values: string[] = [];
 			for (const item of data.items) {
 				const value = item[key];
 				if (value !== undefined && value !== null && String(value).trim() !== '') {
-					values.add(String(value));
+					const str = String(value);
+					if (!values.includes(str)) {
+						values.push(str);
+					}
 				}
 			}
-			options[key] = Array.from(values).sort((a, b) => a.localeCompare(b));
+			options[key] = values.sort((a, b) => a.localeCompare(b));
 		}
 		return options;
 	});
