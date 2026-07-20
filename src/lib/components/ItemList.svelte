@@ -114,7 +114,7 @@
 			<tr>
 				{#each structure as { key, label }}
 					<th
-						class="hover:cursor-pointer w-0 whitespace-nowrap"
+						class="hover:cursor-pointer w-0 whitespace-nowrap text-surface-950"
 						onclick={(e) => handleSort(e, key)}
 					>
 						{label} <i class="fa-solid pointer-events-none fa-sort"></i>
