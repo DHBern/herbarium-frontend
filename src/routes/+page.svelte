@@ -33,6 +33,7 @@
 	let searchtext = $state<string | AdvancedSearch>('');
 	let advancedToggle = $state(false);
 	let advancedFields = $state<Record<string, string>>({});
+	// svelte-ignore state_referenced_locally
 	let filtereditems = $state<Item[]>(data?.items || []);
 	let searching = $state(false);
 
