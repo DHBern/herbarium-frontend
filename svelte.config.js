@@ -10,8 +10,11 @@ const markdownLayout = path.join(__dirname, 'src/lib/components/MarkdownLayout.s
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
 	extensions: ['.svelte', '.md'],
-	// Consult https://kit.svelte.dev/docs/integrations#preprocessors
-	// for more information about preprocessors
+	compilerOptions: {
+		experimental: {
+			async: true
+		}
+	},
 	preprocess: [
 		vitePreprocess(),
 		mdsvex({
@@ -29,9 +32,6 @@ const config = {
 		}),
 		paths: {
 			base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
-		},
-		prerender: {
-			handleHttpError: 'warn' //remove this for production
 		}
 	}
 };

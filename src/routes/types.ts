@@ -44,5 +44,6 @@ export interface CollectionPageData {
 	structure: ItemStructure[];
 	items: Item[];
 	categories: string[];
+	featured?: string;
 	Content: typeof import('*.md').default;
 }

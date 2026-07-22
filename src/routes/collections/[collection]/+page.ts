@@ -27,10 +27,26 @@ export const load: PageLoad = async ({ params }) => {
 		const structure: ItemStructure[] = (
 			await import(`$lib/collections/${collection}/structure.json`)
 		).default;
-		const Content = (await import(`$lib/collections/${collection}/content.md`)).default;
+		const mdsvexComponent = await import(`$lib/collections/${collection}/content.md`);
 		const items: unknown[] = (await import(`$lib/collections/${collection}/data.json`)).default;
 
-		return { ...loadCollection(structure, items), Content } as CollectionPageData;
+		const enhancedImages = import.meta.glob<{ default: string }>(
+			'$lib/assets/*.{avif,gif,heif,jpeg,jpg,png,tiff,webp}',
+			{ query: '?enhanced' }
+		);
+		let featured: string | undefined;
+		if (mdsvexComponent?.metadata?.featured) {
+			const entry = Object.entries(enhancedImages).find(([path]) =>
+				path.endsWith(`/${mdsvexComponent?.metadata?.featured}`)
+			);
+			featured = entry ? (await entry[1]()).default : undefined;
+		}
+
+		return {
+			...loadCollection(structure, items),
+			Content: mdsvexComponent.default,
+			featured
+		} as CollectionPageData;
 	} catch (err) {
 		console.error(`Failed to load collection "${collection}":`, err);
 		error(404, `Collection "${collection}" not found.`);

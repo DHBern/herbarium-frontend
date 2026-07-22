@@ -1,14 +1,15 @@
 <script lang="ts">
 	import CollectionGrid from '$lib/components/CollectionGrid.svelte';
 	import type { CollectionPageData } from '../../types';
+	import { openLightbox } from '$lib/functions';
 
 	interface Props {
 		data: CollectionPageData;
-		children?: import('svelte').Snippet;
 	}
 
 	let { data }: Props = $props();
 	const Content = $derived(data.Content);
+	const featured = $derived(data.featured);
 
 	let selectedValues = $state<Record<string, string>>({});
 
@@ -45,10 +46,19 @@
 	}
 </script>
 
-<section class="w-full px-8 my-8">
-	<div class="container py-4 mx-auto">
-		<Content />
-	</div>
+<section class="w-full px-8 my-8 container py-4 mx-auto">
+	{#if featured}
+		<enhanced:img
+			src={featured}
+			alt="featured"
+			class="max-w-full md:max-w-96 mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
+			onclick={(e: Event & { currentTarget: HTMLImageElement }) => {
+				openLightbox(e.currentTarget.src);
+			}}
+			role="presentation"
+		/>
+	{/if}
+	<Content />
 </section>
 
 <section class="mx-4">
