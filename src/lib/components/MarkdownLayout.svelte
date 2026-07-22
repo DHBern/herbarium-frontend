@@ -4,4 +4,6 @@
 	export { MarkdownImage as img };
 </script>
 
-<slot />
+<div class="prose lg:prose-lg max-w-none">
+	<slot />
+</div>
