@@ -19,7 +19,8 @@ export interface Item {
 export interface ItemStructure {
 	key: string;
 	label: string;
-	showInList: boolean;
+	showInList?: boolean;
+	id?: boolean;
 }
 
 export interface PageData {

@@ -2,6 +2,7 @@
 	import CollectionGrid from '$lib/components/CollectionGrid.svelte';
 	import type { CollectionPageData } from '../../types';
 	import { openLightbox } from '$lib/functions';
+	import ItemList from '$lib/components/ItemList.svelte';
 
 	interface Props {
 		data: CollectionPageData;
@@ -89,6 +90,9 @@
 			</p>
 		</div>
 	</div>
-
-	<CollectionGrid structure={data.structure.filter((s) => s.showInList)} items={filteredItems} />
+	<ItemList structure={data.structure.filter((s) => s.showInList || s.id)} items={filteredItems} />
+	<CollectionGrid
+		structure={data.structure.filter((s) => s.showInList || s.id)}
+		items={filteredItems}
+	/>
 </section>

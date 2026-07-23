@@ -213,7 +213,7 @@
 
 <section class="mx-4">
 	<ItemList
-		structure={data?.itemstructure.filter((item: any) => item.showInList)}
+		structure={data?.itemstructure.filter((item: any) => item.showInList || item.id)}
 		items={filtereditems}
 	/>
 </section>
