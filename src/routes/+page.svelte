@@ -1,7 +1,14 @@
 <script lang="ts">
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import ItemList from '$lib/components/ItemList.svelte';
-	import { Switch, ToggleGroup } from '@skeletonlabs/skeleton-svelte';
+	import {
+		Switch,
+		ToggleGroup,
+		Combobox,
+		Portal,
+		type ComboboxRootProps,
+		useListCollection
+	} from '@skeletonlabs/skeleton-svelte';
 	import MiniSearch from 'minisearch';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
@@ -210,26 +217,94 @@
 					/>
 				</label>
 			{:else}
-				<ToggleGroup
-					value={filters['collectionType']}
-					onValueChange={(v) => (filters['collectionType'] = v.value)}
-					multiple
-				>
-					{#each Array.from(new Set(data.items.map((i) => i.collectionType))) as type}
-						<ToggleGroup.Item value={type}>
-							{type}
-						</ToggleGroup.Item>
-					{/each}
-				</ToggleGroup>
 				{#each data.itemstructure as item}
-					<label class="label" transition:slide|global>
-						<span>{item.label}</span>
-						<input
-							class="input p-6 placeholder-primary-600 bg-surface-200 preset-outlined-surface-400-600 rounded-full"
-							type="text"
-							bind:value={advancedFields[item.key]}
-						/>
-					</label>
+					{#if filters[item.key]}
+						<div class="label" transition:slide|global>
+							<span>{item.label}</span>
+							{const filterValues = Array.from(new Set(data.items.map((i) => i[item.key]))).filter(
+								(i) => i
+							)}
+							{#if filterValues.length <= 4}
+								<div class="block">
+									<ToggleGroup
+										value={filters[item.key]}
+										onValueChange={(v) => (filters[item.key] = v.value)}
+										multiple
+									>
+										{#each filterValues as type}
+											<ToggleGroup.Item value={type}>
+												{type}
+											</ToggleGroup.Item>
+										{/each}
+									</ToggleGroup>
+								</div>
+							{:else}
+								{let filteredFilterValues = $state(filterValues)}
+								{const collection = $derived(
+									useListCollection({
+										items: filteredFilterValues,
+										itemToString: (item) => item,
+										itemToValue: (item) => item
+									})
+								)}
+								<Combobox
+									value={filters[item.key]}
+									{collection}
+									onValueChange={(v) => (filters[item.key] = v.value)}
+									onInputValueChange={(e) => {
+										const filtered = filterValues.filter((i) =>
+											i.toLowerCase().includes(e.inputValue.toLowerCase())
+										);
+										if (filtered.length > 0) {
+											filteredFilterValues = filtered;
+										} else {
+											filteredFilterValues = Array.from(
+												new Set(data.items.map((i) => i[item.key]))
+											).filter((i) => i);
+										}
+									}}
+									onOpenChange={() => {
+										filteredFilterValues = filterValues;
+									}}
+									placeholder={`Filter by ${item?.label ?? item.key}`}
+									multiple
+								>
+									<Combobox.Control>
+										<Combobox.Input />
+										<Combobox.Trigger />
+									</Combobox.Control>
+									<Portal>
+										<Combobox.Positioner>
+											<Combobox.Content>
+												{#each filteredFilterValues as comboItem (comboItem)}
+													<Combobox.Item item={comboItem}>
+														<Combobox.ItemText>{comboItem}</Combobox.ItemText>
+														<Combobox.ItemIndicator />
+													</Combobox.Item>
+												{/each}
+											</Combobox.Content>
+										</Combobox.Positioner>
+									</Portal>
+								</Combobox>
+								<div class="flex flex-wrap gap-2 mt-1">
+									{#each filters[item.key] as selected (selected)}
+										<span class="badge preset-filled">
+											{selected}
+										</span>
+									{/each}
+								</div>
+							{/if}
+						</div>
+					{:else}
+						<label class="label" transition:slide|global>
+							<span>{item.label}</span>
+							<input
+								class="input p-6 placeholder-primary-600 bg-surface-200 preset-outlined-surface-400-600 rounded-full"
+								type="text"
+								bind:value={advancedFields[item.key]}
+							/>
+						</label>
+					{/if}
 				{/each}
 			{/if}
 			{filters['collectionType']}
