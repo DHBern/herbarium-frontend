@@ -41,7 +41,7 @@ export interface MiniSearchOptions {
 }
 
 export interface CollectionPageData {
-	slug: string;
+	collection: string;
 	structure: ItemStructure[];
 	items: Item[];
 	categories: string[];

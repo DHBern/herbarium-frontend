@@ -45,7 +45,8 @@ export const load: PageLoad = async ({ params }) => {
 		return {
 			...loadCollection(structure, items),
 			Content: mdsvexComponent.default,
-			featured
+			featured,
+			collection
 		} as CollectionPageData;
 	} catch (err) {
 		console.error(`Failed to load collection "${collection}":`, err);

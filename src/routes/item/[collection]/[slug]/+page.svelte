@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { onMount } from 'svelte';
-	import { assets, base } from '$app/paths';
+	import { asset, resolve } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions.js';
 	import type { Viewer } from 'openseadragon';
 	let OpenSeadragon;
@@ -11,7 +11,7 @@
 		OpenSeadragon = (await import('openseadragon')).default;
 		viewer = new OpenSeadragon.Viewer({
 			id: 'viewer',
-			prefixUrl: `${assets}/openseadragon-svg-icons/icons/`,
+			prefixUrl: asset('/openseadragon-svg-icons/icons/'),
 			showNavigator: true,
 			navImages: {
 				zoomIn: {
@@ -87,14 +87,16 @@
 			{@const d = data.metadata}
 			<div class="md:col-span-2 lg:col-span-1 lg:col-start-2">
 				<h1 class="h1 text-balance pb-2 md:pb-4 inline italic">
-					{#if d.Genus.trim() || d.Species.trim()}
+					{#if d?.Genus?.trim() || d?.Species?.trim()}
 						{d.Genus}
 						{d.Species}
-					{:else}
+					{:else if d?.Accepted_Name?.trim()}
 						{d.Accepted_Name}
+					{:else}
+						{d['Label Name']}
 					{/if}
 
-					{#if d.Type !== 'no'}
+					{#if d.Type && d.Type !== 'no'}
 						<span class="badge preset-filled-warning-500"> {d.Type}</span>
 					{/if}
 				</h1>
@@ -115,7 +117,7 @@
 						</dt>
 
 						<dd class="pl-2 pt-4">
-							<a class="anchor" href={`${base}/?a=${JSON.stringify({ [key]: metadataVal })}`}>
+							<a class="anchor" href={resolve(`/?a=${JSON.stringify({ [key]: metadataVal })}`, {})}>
 								{#if key === 'Country'}
 									{@html addFlagToCountry(metadataVal)}
 								{:else if key === 'Genus' || key === 'Species'}

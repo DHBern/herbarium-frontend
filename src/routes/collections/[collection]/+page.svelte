@@ -1,5 +1,4 @@
 <script lang="ts">
-	import CollectionGrid from '$lib/components/CollectionGrid.svelte';
 	import type { CollectionPageData } from '../../types';
 	import { openLightbox } from '$lib/functions';
 	import ItemList from '$lib/components/ItemList.svelte';
@@ -90,8 +89,8 @@
 			</p>
 		</div>
 	</div>
-	<ItemList structure={data.structure.filter((s) => s.showInList || s.id)} items={filteredItems} />
-	<CollectionGrid
+	<ItemList
+		collection={data.collection}
 		structure={data.structure.filter((s) => s.showInList || s.id)}
 		items={filteredItems}
 	/>
