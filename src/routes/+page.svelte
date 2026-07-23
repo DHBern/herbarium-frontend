@@ -8,9 +8,10 @@
 	import { miniSearch } from '$lib/stores.svelte';
 	import { page } from '$app/state';
 	import { afterNavigate } from '$app/navigation';
-	import type { PageData, AdvancedSearch, Item, SearchQuery } from './types';
+	import type { AdvancedSearch, Item, SearchQuery } from './types';
+	import type { PageProps } from './$types.js';
 
-	let { data } = $props<{ data: PageData }>();
+	let { data }: PageProps = $props();
 
 	export const snapshot = {
 		capture: () => ({
@@ -45,7 +46,7 @@
 			$miniSearch = new MiniSearch({
 				fields: data.categories,
 				storeFields: data.categories,
-				idField: data.categories.find((item) => item.id)?.key ?? 'Catalog_Number',
+				idField: data.itemstructure.find((item) => item.id)?.key ?? 'Catalog_Number',
 				tokenize: (text: string) => text.split(CUSTOM_SPACE_OR_PUNCT),
 				searchOptions: {
 					fuzzy: false,
