@@ -8,7 +8,6 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	} else {
 		console.log('fetching ', params.collection);
 		structure = (await import(`$lib/collections/${params.collection}/structure.json`)).default;
-		// structure = (await import(`$lib/collections/display-herbarium/structure.json`)).default;
 	}
 	let itemDataRaw: Item[] = [];
 	if (params.collection === 'main') {
