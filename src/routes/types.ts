@@ -19,7 +19,8 @@ export interface Item {
 export interface ItemStructure {
 	key: string;
 	label: string;
-	showInList: boolean;
+	showInList?: boolean;
+	id?: boolean;
 }
 
 export interface PageData {
@@ -37,4 +38,13 @@ export interface MiniSearchOptions {
 		fuzzy: boolean;
 		prefix: boolean;
 	};
+}
+
+export interface CollectionPageData {
+	collection: string;
+	structure: ItemStructure[];
+	items: Item[];
+	categories: string[];
+	featured?: string;
+	Content: typeof import('*.md').default;
 }

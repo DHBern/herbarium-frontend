@@ -1,0 +1,11 @@
+[
+	{ "label": "Panel No", "key": "Panel No", "showInList": true },
+	{ "label": "Panel side", "key": "Panel side", "showInList": true },
+	{ "label": "Specimen No", "key": "Specimen No", "showInList": true },
+	{ "label": "old Catalog Number", "key": "old Catalog Number", "showInList": false, "id": true },
+	{ "label": "Catalog Number", "key": "Catalog_Number", "showInList": false },
+	{ "label": "Old Family", "key": "Old Family", "showInList": true },
+	{ "label": "Label Name", "key": "Label Name", "showInList": false },
+	{ "label": "Accepted Name", "key": "Accepted Name", "showInList": true },
+	{ "label": "Accepted Family", "key": "Accepted Family", "showInList": true }
+]

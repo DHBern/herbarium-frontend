@@ -33,6 +33,7 @@
 	let searchtext = $state<string | AdvancedSearch>('');
 	let advancedToggle = $state(false);
 	let advancedFields = $state<Record<string, string>>({});
+	// svelte-ignore state_referenced_locally
 	let filtereditems = $state<Item[]>(data?.items || []);
 	let searching = $state(false);
 
@@ -44,7 +45,7 @@
 			$miniSearch = new MiniSearch({
 				fields: data.categories,
 				storeFields: data.categories,
-				idField: data.categories[data.categories.length - 1],
+				idField: data.categories.find((item) => item.id)?.key ?? 'Catalog_Number',
 				tokenize: (text: string) => text.split(CUSTOM_SPACE_OR_PUNCT),
 				searchOptions: {
 					fuzzy: false,
@@ -141,12 +142,12 @@
 </script>
 
 <div class="px-8 pt-16 image-background h-[30vh]">
-	<!-- <div class="container mx-auto text-white backdrop-blur-md rounded w-fit p-2">
+	<div class="container mx-auto text-white backdrop-blur-md rounded w-fit p-2">
 		<h1 class="h1 font-bold tracking-wide drop-shadow-xl text-shadow">Herbarium Bernense</h1>
 		<p class="text-lg font-semibold text-shadow">
 			Herbarium of the Botanical Garden of the University of Bern
 		</p>
-	</div> -->
+	</div>
 </div>
 
 <ContentContainer>
@@ -212,7 +213,7 @@
 
 <section class="mx-4">
 	<ItemList
-		structure={data?.itemstructure.filter((item: any) => item.showInList)}
+		structure={data?.itemstructure.filter((item: any) => item.showInList || item.id)}
 		items={filtereditems}
 	/>
 </section>

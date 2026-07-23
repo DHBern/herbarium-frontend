@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
 	import { blur, fly } from 'svelte/transition';
-	let { items = $bindable([]), structure = [] } = $props();
+	let { items = $bindable([]), structure = [], collection = '' } = $props();
 
 	let intersectionObserver: any;
 
@@ -92,6 +92,8 @@
 	let showHelperElements = $state(false);
 	let table: any = $state();
 
+	let idKey = $derived(structure.find((s) => s.id)?.key ?? null);
+	let visibleCategories = $derived(structure.filter((s) => s.showInList));
 	let visibleItems = $derived(items.slice(0, visibleNumber));
 </script>
 
@@ -112,9 +114,9 @@
 	<table class="table bg-primary-100!">
 		<thead use:viewport={false} class="border-primary-800/20! bg-primary-400!">
 			<tr>
-				{#each structure as { key, label }}
+				{#each visibleCategories as { key, label }}
 					<th
-						class="hover:cursor-pointer w-0 whitespace-nowrap"
+						class="hover:cursor-pointer w-0 whitespace-nowrap text-surface-950"
 						onclick={(e) => handleSort(e, key)}
 					>
 						{label} <i class="fa-solid pointer-events-none fa-sort"></i>
@@ -123,16 +125,21 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each visibleItems as row, i (row.Catalog_Number)}
+			{#each visibleItems as row, i (row[idKey])}
 				<tr
 					class="border-primary-800/20! even:bg-primary-400/30!"
 					use:viewport={i !== visibleItems.length - 1}
 				>
-					{#each structure as { key }, j}
+					{#each visibleCategories as { key }, j}
 						<td class="w-0 whitespace-nowrap {j === 0 ? 'italic' : ''}">
 							{#if j === 0}<i class="fa-solid fa-camera"></i>{/if}
 							{#if row[key]}
-								<a href={resolve('/item/[slug]', { slug: row.Catalog_Number })}>
+								<a
+									href={resolve('/item/[collection]/[slug]', {
+										collection: collection || 'main',
+										slug: row[idKey]
+									})}
+								>
 									{#if key === 'Country'}
 										{@html addFlagToCountry(row[key])}
 									{:else if key === 'Genus' || key === 'Species'}
