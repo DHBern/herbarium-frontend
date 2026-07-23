@@ -11,5 +11,7 @@
 	{ "label": "Country", "key": "Country", "showInList": true },
 	{ "label": "State", "key": "State", "showInList": true },
 	{ "label": "Locality", "key": "Locality" },
-	{ "label": "Catalog Number", "key": "Catalog_Number", "id": true }
+	{ "label": "Catalog Number", "key": "Catalog_Number", "id": true },
+	{ "label": "Collection Type", "key": "collectionType", "showInList": true },
+	{ "label": "Taxonomic Group", "key": "TaxonomicGroup", "showInList": true }
 ]

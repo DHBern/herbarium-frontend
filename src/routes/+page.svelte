@@ -45,7 +45,7 @@
 			$miniSearch = new MiniSearch({
 				fields: data.categories,
 				storeFields: data.categories,
-				idField: data.categories[data.categories.length - 1],
+				idField: data.categories.find((item) => item.id)?.key ?? 'Catalog_Number',
 				tokenize: (text: string) => text.split(CUSTOM_SPACE_OR_PUNCT),
 				searchOptions: {
 					fuzzy: false,
