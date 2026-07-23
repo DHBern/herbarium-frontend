@@ -94,7 +94,10 @@
 		<thead class="border-primary-800/20! bg-primary-400!">
 			<tr>
 				{#each structure as { key, label } (key)}
-					<th class="hover:cursor-pointer w-0 whitespace-nowrap" onclick={() => handleSort(key)}>
+					<th
+						class="hover:cursor-pointer w-0 whitespace-nowrap text-surface-950"
+						onclick={() => handleSort(key)}
+					>
 						{label} <i class="fa-solid pointer-events-none {sortIcon(key)}"></i>
 					</th>
 				{/each}

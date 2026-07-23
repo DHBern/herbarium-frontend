@@ -46,23 +46,23 @@
 	}
 </script>
 
-<section class="w-full px-8 my-8 container py-4 mx-auto">
+<section class="w-full my-8 container py-4 mx-auto flex gap-6">
+	<Content />
 	{#if featured}
 		<enhanced:img
 			src={featured}
 			alt="featured"
-			class="max-w-full md:max-w-96 mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
+			class="max-w-full md:max-w-96 border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e: Event & { currentTarget: HTMLImageElement }) => {
 				openLightbox(e.currentTarget.src);
 			}}
 			role="presentation"
 		/>
 	{/if}
-	<Content />
 </section>
 
 <section class="mx-4">
-	<div class="flex flex-col lg:flex-row gap-4 justify-between items-start">
+	<div class="container mx-auto flex flex-col lg:flex-row gap-4 justify-between items-start mb-4">
 		<div class="flex-1">
 			<h2 class="h3 mb-3">Filter</h2>
 			<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -81,10 +81,10 @@
 					</label>
 				{/each}
 			</div>
-			<button class="btn preset-tonal-primary mt-4" onclick={resetFilters}> Reset filters </button>
-		</div>
-		<div class="lg:w-48 flex-none text-right">
-			<p class="mt-1">
+			<button class="btn preset-tonal-primary mt-4 float-left mr-4" onclick={resetFilters}>
+				Reset filters
+			</button>
+			<p class="mt-4">
 				Found {filteredItems.length} Result{filteredItems.length !== 1 ? 's' : ''}.
 			</p>
 		</div>
