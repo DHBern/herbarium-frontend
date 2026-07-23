@@ -1,7 +1,7 @@
 <script lang="ts">
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import ItemList from '$lib/components/ItemList.svelte';
-	import { Switch } from '@skeletonlabs/skeleton-svelte';
+	import { Switch, ToggleGroup } from '@skeletonlabs/skeleton-svelte';
 	import MiniSearch from 'minisearch';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
@@ -34,8 +34,22 @@
 	let searchtext = $state<string | AdvancedSearch>('');
 	let advancedToggle = $state(false);
 	let advancedFields = $state<Record<string, string>>({});
+	let filters = $state<Record<string, string[]>>({
+		collectionType: [],
+		TaxonomicGroup: []
+	});
 	// svelte-ignore state_referenced_locally
-	let filtereditems = $state<Item[]>(data?.items || []);
+	let searchedItems = $state<Item[]>(data?.items || []);
+	let filteredItems = $derived.by(() => {
+		return searchedItems.filter((item) => {
+			for (const [filterKey, filterValues] of Object.entries(filters)) {
+				if (filterValues.length > 0 && !filterValues.includes(item[filterKey])) {
+					return false;
+				}
+			}
+			return true;
+		});
+	});
 	let searching = $state(false);
 
 	onMount(() => {
@@ -100,6 +114,7 @@
 
 	$effect(() => {
 		if (searchtext) {
+			console.log('searchtext');
 			searching = true;
 			allDocumentsAdded.then(async () => {
 				const results = await asyncSearch(searchtext, {
@@ -107,11 +122,12 @@
 					prefix: true,
 					combineWith: 'AND'
 				});
-				filtereditems = results;
+				searchedItems = results;
 				searching = false;
 			});
 		} else {
-			filtereditems = data?.items ?? [];
+			console.log('no searchtext, resetting filtereditems');
+			searchedItems = data?.items ?? [];
 		}
 	});
 
@@ -194,6 +210,17 @@
 					/>
 				</label>
 			{:else}
+				<ToggleGroup
+					value={filters['collectionType']}
+					onValueChange={(v) => (filters['collectionType'] = v.value)}
+					multiple
+				>
+					{#each Array.from(new Set(data.items.map((i) => i.collectionType))) as type}
+						<ToggleGroup.Item value={type}>
+							{type}
+						</ToggleGroup.Item>
+					{/each}
+				</ToggleGroup>
 				{#each data.itemstructure as item}
 					<label class="label" transition:slide|global>
 						<span>{item.label}</span>
@@ -205,9 +232,9 @@
 					</label>
 				{/each}
 			{/if}
-
+			{filters['collectionType']}
 			<p class="mt-5">
-				Found {searching ? '...' : filtereditems?.length} Result{filtereditems?.length !== 1
+				Found {searching ? '...' : filteredItems?.length} Result{filteredItems?.length !== 1
 					? 's'
 					: ''}.
 			</p>
@@ -218,7 +245,7 @@
 <section class="mx-4">
 	<ItemList
 		structure={data?.itemstructure.filter((item: any) => item.showInList || item.id)}
-		items={filtereditems}
+		items={filteredItems}
 	/>
 </section>
 
