@@ -6,7 +6,7 @@
 	font-style: normal;
 	font-display: swap;
 	font-weight: 100 900;
-	src: url('fonts/Inter-VariableFont_slnt,wght.ttf') format('woff2-variations');
+	src: url('/fonts/Inter-VariableFont_slnt,wght.ttf') format('woff2-variations');
 }
 
 [data-theme='herbarium'] {
