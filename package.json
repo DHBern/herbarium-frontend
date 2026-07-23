@@ -9,7 +9,8 @@
 		"check": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json",
 		"check:watch": "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch",
 		"lint": "prettier --check . && eslint .",
-		"format": "prettier --write ."
+		"format": "prettier --write .",
+		"convert-data": "node data-preparation/xlsx-to-json.js"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
@@ -28,6 +29,7 @@
 		"@tsconfig/svelte": "^5.0.8",
 		"@types/node": "^26.1.1",
 		"eslint": "^10.7.0",
+		"read-excel-file": "^9.3.4",
 		"eslint-plugin-svelte": "^3.22.0",
 		"globals": "^17.7.0",
 		"mdsvex": "^0.12.8",
