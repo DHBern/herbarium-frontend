@@ -172,7 +172,10 @@
 					}}
 					class="mb-3 h-8"
 				>
-					<Switch.Control class="h-full w-16 bg-surface-400 data-[state=checked]:bg-surface-300">
+					<Switch.Control
+						class=" bg-surface-400 data-[state=checked]:bg-surface-300"
+						style="--spacing: 0.4rem;"
+					>
 						<Switch.Thumb />
 					</Switch.Control>
 					<Switch.Label class="text-base font-light"
@@ -182,7 +185,7 @@
 				</Switch>
 			</div>
 			{#if !advancedToggle}
-				<label transition:slide>
+				<label transition:slide class="label">
 					<input
 						class="input p-6 placeholder-primary-600 bg-surface-200 preset-outlined-surface-400-600 rounded-full"
 						type="text"
