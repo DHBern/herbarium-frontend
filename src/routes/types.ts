@@ -40,6 +40,11 @@ export interface MiniSearchOptions {
 	};
 }
 
+export interface ResultNavigation {
+	collection: string;
+	ids: string[];
+}
+
 export interface CollectionPageData {
 	collection: string;
 	structure: ItemStructure[];

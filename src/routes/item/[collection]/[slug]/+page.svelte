@@ -2,11 +2,46 @@
 	import ContentContainer from '$lib/components/ContentContainer.svelte';
 	import { onMount } from 'svelte';
 	import { asset, resolve } from '$app/paths';
+	import { goto } from '$app/navigation';
+	import { page } from '$app/state';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions.js';
+	import { resultNavigation } from '$lib/stores.svelte';
 	import type { Viewer } from 'openseadragon';
 	let OpenSeadragon;
 	let viewer: Viewer | undefined = $state();
 	let { data } = $props();
+
+	let collection = $derived(page.params.collection);
+	let slug = $derived(page.params.slug);
+	let navActive = $derived(
+		resultNavigation.collection === collection && resultNavigation.ids.length > 0
+	);
+	let currentIndex = $derived(navActive ? resultNavigation.ids.indexOf(slug) : -1);
+	let prevSlug = $derived(currentIndex > 0 ? resultNavigation.ids[currentIndex - 1] : null);
+	let nextSlug = $derived(
+		currentIndex >= 0 && currentIndex < resultNavigation.ids.length - 1
+			? resultNavigation.ids[currentIndex + 1]
+			: null
+	);
+
+	function goToItem(targetSlug: string) {
+		goto(resolve('/item/[collection]/[slug]', { collection, slug: targetSlug }));
+	}
+
+	function handleKeydown(event: KeyboardEvent) {
+		if (!navActive) return;
+		const viewerElement = document.getElementById('viewer');
+		if (viewerElement && document.activeElement && viewerElement.contains(document.activeElement)) {
+			return;
+		}
+		if (event.key === 'ArrowLeft' && prevSlug) {
+			event.preventDefault();
+			goToItem(prevSlug);
+		} else if (event.key === 'ArrowRight' && nextSlug) {
+			event.preventDefault();
+			goToItem(nextSlug);
+		}
+	}
 	onMount(async () => {
 		OpenSeadragon = (await import('openseadragon')).default;
 		viewer = new OpenSeadragon.Viewer({
@@ -71,7 +106,10 @@
 			},
 			sequenceMode: false
 		});
-		if (data.iiif) {
+	});
+
+	$effect(() => {
+		if (viewer && data.iiif) {
 			viewer.open(data.iiif);
 		}
 	});
@@ -81,11 +119,36 @@
 	<link rel="preconnect" href="https://iiif.ub.unibe.ch" />
 </svelte:head>
 
+<svelte:window onkeydown={handleKeydown} />
+
 <ContentContainer>
 	<div class="grid md:grid-cols-2 md:grid-rows-[auto_1fr] gap-4 lg:gap-6">
 		{#if data.metadata}
 			{@const d = data.metadata}
 			<div class="md:col-span-2 lg:col-span-1 lg:col-start-2">
+				{#if navActive}
+					<div class="md:col-span-2 lg:col-span-1 lg:col-start-2 flex items-center gap-3">
+						<button
+							class="btn-icon preset-tonal-primary"
+							disabled={!prevSlug}
+							onclick={() => prevSlug && goToItem(prevSlug)}
+							aria-label="Previous result"
+						>
+							<i class="fa-solid fa-arrow-left"></i>
+						</button>
+						<span class="text-sm font-medium"
+							>{currentIndex + 1} / {resultNavigation.ids.length}</span
+						>
+						<button
+							class="btn-icon preset-tonal-primary"
+							disabled={!nextSlug}
+							onclick={() => nextSlug && goToItem(nextSlug)}
+							aria-label="Next result"
+						>
+							<i class="fa-solid fa-arrow-right"></i>
+						</button>
+					</div>
+				{/if}
 				<h1 class="h1 text-balance pb-2 md:pb-4 inline italic">
 					{#if d?.Genus?.trim() || d?.Species?.trim()}
 						{d.Genus}
