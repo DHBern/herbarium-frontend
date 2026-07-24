@@ -6,7 +6,6 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	if (params.collection === 'main') {
 		structure = (await import(`$lib/structure.json`)).default;
 	} else {
-		console.log('fetching ', params.collection);
 		structure = (await import(`$lib/collections/${params.collection}/structure.json`)).default;
 	}
 	let itemDataRaw: Item[] = [];

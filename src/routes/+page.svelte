@@ -78,14 +78,12 @@
 
 			allDocumentsAdded = new Promise<void>((resolve) => {
 				$miniSearch.addAllAsync(data.items, { chunkSize: 12000 }).then(() => {
-					console.log('all documents added');
 					resolve();
 				});
 			});
 		} else if (!$miniSearch.documentCount) {
 			allDocumentsAdded = new Promise<void>((resolve) => {
 				$miniSearch.addAllAsync(data.items, { chunkSize: 12000 }).then(() => {
-					console.log('all documents added');
 					resolve();
 				});
 			});
@@ -97,7 +95,6 @@
 		const advancedParam = page.url.searchParams.get('a');
 
 		if (searchParam) {
-			console.log('searchtext', searchParam);
 			searchtext = searchParam;
 			page.url.searchParams.delete('s');
 			history.replaceState(null, '', page.url.toString());
@@ -121,7 +118,6 @@
 
 	$effect(() => {
 		if (searchtext) {
-			console.log('searchtext');
 			searching = true;
 			allDocumentsAdded.then(async () => {
 				const results = await asyncSearch(searchtext, {
@@ -133,7 +129,6 @@
 				searching = false;
 			});
 		} else {
-			console.log('no searchtext, resetting filtereditems');
 			searchedItems = data?.items ?? [];
 		}
 	});
