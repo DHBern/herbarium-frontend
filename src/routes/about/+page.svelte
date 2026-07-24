@@ -156,7 +156,6 @@
 		>.
 	</p>
 	<p>
-		<!-- svelte-ignore a11y-img-redundant-alt -->
 		<enhanced:img
 			src="$lib/assets/International_Image_Interoperability_Framework_logo.png"
 			width="180px"

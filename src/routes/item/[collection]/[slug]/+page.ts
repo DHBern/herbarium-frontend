@@ -2,13 +2,13 @@ import type { ItemStructure, Item } from '../../../types';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async ({ params, fetch }) => {
-	let structure: ItemStructure[] = [];
+	let structure: ItemStructure[];
 	if (params.collection === 'main') {
 		structure = (await import(`$lib/structure.json`)).default;
 	} else {
 		structure = (await import(`$lib/collections/${params.collection}/structure.json`)).default;
 	}
-	let itemDataRaw: Item[] = [];
+	let itemDataRaw: Item[];
 	if (params.collection === 'main') {
 		itemDataRaw = (await import(`$lib/data.json`)).default;
 	} else {

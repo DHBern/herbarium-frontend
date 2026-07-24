@@ -6,7 +6,6 @@
 		ToggleGroup,
 		Combobox,
 		Portal,
-		type ComboboxRootProps,
 		useListCollection
 	} from '@skeletonlabs/skeleton-svelte';
 	import MiniSearch from 'minisearch';
