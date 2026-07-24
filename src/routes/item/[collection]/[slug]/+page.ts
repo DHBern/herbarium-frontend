@@ -18,14 +18,27 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	const itemData = Array.isArray(itemDataRaw) ? itemDataRaw : [];
 	const idKey = structure.find((s) => s.id)?.key ?? structure[0]?.key;
 	const item = itemData.find((item) => item[idKey] === params.slug);
+	const iiif = await fetch(
+		`https://iiif.ub.unibe.ch/presentation/v3.0/boga/manifest/${item?.[idKey]}/`
+	)
+		.then((res) => (res.ok ? res.json() : false))
+		.then((json) => {
+			return json.items?.flatMap((canvas: any) => {
+				return canvas.items?.flatMap((annotationPage: any) => {
+					return annotationPage.items?.flatMap((annotation: any) => {
+						if (annotation.body?.type === 'Image') {
+							return annotation.body.service[0].id;
+						}
+						return [];
+					});
+				});
+			});
+		});
 
 	return {
 		key: params.slug,
 		metadata: item,
-		iiif:
-			(await fetch(`https://iiif.ub.unibe.ch/image/v3/boga/${item?.[idKey]}.tif/info.json`).then(
-				(res) => (res.ok ? res.json() : false)
-			)) ?? false,
+		iiif,
 		structure
 	};
 };
