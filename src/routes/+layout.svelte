@@ -73,6 +73,14 @@
 	});
 </script>
 
+<svelte:head>
+	<script
+		defer
+		src="https://umami.dsl.unibe.ch/script-umami.js"
+		data-website-id="2517db3a-5234-4936-957f-99064a9c0a19"
+	></script>
+</svelte:head>
+
 <div class="flex h-full flex-col">
 	<!-- Header / App Bar -->
 	<header class="flex-none bg-surface-100-900 px-4">
