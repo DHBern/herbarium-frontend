@@ -93,6 +93,41 @@
 	></script>
 </svelte:head>
 
+{#snippet navLinks(itemClass: string)}
+	{#each pages as page}
+		<li>
+			<a
+				href={resolve(page.path, {})}
+				class="{itemClass} hover:preset-tonal-primary {classesActive(page.path)}"
+				onclick={() => (mobileMenuOpen = false)}
+			>
+				{page.slug}
+			</a>
+		</li>
+	{/each}
+{/snippet}
+
+{#snippet searchField(wrapperClass: string, inputClass: string)}
+	<li class={wrapperClass}>
+		<input
+			class="input placeholder-primary-600 bg-surface-200 rounded-full {inputClass}"
+			type="text"
+			placeholder="search"
+			aria-label="Search"
+			bind:value={searchtext}
+			onchange={doSearch}
+		/>
+		<a
+			href={resolve(`/?s=${searchtext}`, {})}
+			class="btn-icon"
+			aria-label="Search"
+			onclick={() => (mobileMenuOpen = false)}
+		>
+			<i class="fa-solid fa-search"></i>
+		</a>
+	</li>
+{/snippet}
+
 <svelte:document
 	onkeydown={(event) => {
 		if (event.key === 'Escape' && mobileMenuOpen) {
@@ -109,8 +144,10 @@
 
 <div class="flex h-full flex-col">
 	<!-- Header / App Bar -->
-	<header class="flex-none bg-surface-100-900 px-4" bind:this={header}>
-		<div class="flex h-full items-center justify-between gap-4 flex-wrap">
+	<header class="flex-initial bg-surface-100-900 px-4" bind:this={header}>
+		<div
+			class="flex h-full items-center justify-between gap-4 flex-wrap md:flex-nowrap flex-initial"
+		>
 			<!-- Lead: mobile menu toggle -->
 			<button
 				class="btn-icon md:hidden"
@@ -123,32 +160,16 @@
 			</button>
 
 			<!-- Desktop navigation -->
-			<nav class="hidden h-full flex-none items-center md:flex gap-1">
-				{#each pages as page}
-					<a
-						href={resolve(page.path, {})}
-						class="flex h-full items-center p-4 hover:preset-tonal-primary {classesActive(
-							page.path
-						)}">{page.slug}</a
-					>
-				{/each}
-
-				{#if !otherSearchisVisible}
-					<label>
-						<input
-							class="input placeholder-primary-600 bg-surface-200 rounded-full ml-2"
-							type="text"
-							placeholder="search"
-							aria-label="Search"
-							bind:value={searchtext}
-							onchange={doSearch}
-						/>
-					</label>
-
-					<a href={resolve(`/?s=${searchtext}`, {})} class="btn-icon" aria-label="Search"
-						><i class="fa-solid fa-search"></i></a
-					>
-				{/if}
+			<nav class="hidden h-full flex-initial min-w-0 md:flex">
+				<ul class="flex h-full min-w-0 items-center gap-1">
+					{@render navLinks('flex h-full items-center p-4')}
+					{#if !otherSearchisVisible}
+						{@render searchField(
+							'flex items-center gap-2 min-w-0 flex-1 max-w-64',
+							'w-full min-w-0'
+						)}
+					{/if}
+				</ul>
 			</nav>
 
 			<!-- Trail: logos -->
@@ -180,39 +201,8 @@
 				<div class="basis-full h-0"></div>
 				<nav id="mobile-nav" class="md:hidden w-full" transition:slide>
 					<ul class="pb-2">
-						{#each pages as page}
-							<li>
-								<a
-									href={resolve(page.path, {})}
-									class="block rounded px-4 py-2 hover:preset-tonal-primary {classesActive(
-										page.path
-									)}"
-									onclick={() => (mobileMenuOpen = false)}
-								>
-									{page.slug}
-								</a>
-							</li>
-						{/each}
-						<li class="px-4 py-2">
-							<div class="flex gap-2">
-								<input
-									class="input placeholder-primary-600 bg-surface-200 rounded-full flex-1"
-									type="text"
-									placeholder="search"
-									aria-label="Search"
-									bind:value={searchtext}
-									onchange={doSearch}
-								/>
-								<a
-									href={resolve(`/?s=${searchtext}`, {})}
-									class="btn-icon"
-									aria-label="Search"
-									onclick={() => (mobileMenuOpen = false)}
-								>
-									<i class="fa-solid fa-search"></i>
-								</a>
-							</div>
-						</li>
+						{@render navLinks('block rounded px-4 py-2')}
+						{@render searchField('flex gap-2', 'flex-1')}
 					</ul>
 				</nav>
 			{/if}
