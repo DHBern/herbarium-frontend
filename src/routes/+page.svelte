@@ -13,7 +13,7 @@
 	import { slide } from 'svelte/transition';
 	import { miniSearch } from '$lib/stores.svelte';
 	import { page } from '$app/state';
-	import { afterNavigate } from '$app/navigation';
+	import { afterNavigate, replaceState } from '$app/navigation';
 	import type { AdvancedSearch, Item, SearchQuery } from './types';
 	import type { PageProps } from './$types.js';
 
@@ -96,12 +96,12 @@
 		if (searchParam) {
 			searchtext = searchParam;
 			page.url.searchParams.delete('s');
-			history.replaceState(null, '', page.url.toString());
+			replaceState(page.url.toString(), { searchParam: searchParam });
 		} else if (advancedParam) {
 			advancedToggle = true;
 			advancedFields = JSON.parse(advancedParam);
 			page.url.searchParams.delete('a');
-			history.replaceState(null, '', page.url.toString());
+			replaceState(page.url.toString(), { searchParam: advancedParam });
 		}
 	});
 
