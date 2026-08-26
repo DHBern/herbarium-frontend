@@ -84,7 +84,7 @@
 <div class="flex h-full flex-col">
 	<!-- Header / App Bar -->
 	<header class="flex-none bg-surface-100-900 px-4">
-		<div class="flex h-full items-center justify-between gap-4">
+		<div class="flex h-full items-center justify-between gap-4 flex-wrap">
 			<!-- Lead: mobile menu toggle -->
 			<button
 				class="btn-icon md:hidden"
@@ -152,28 +152,28 @@
 					/>
 				</a>
 			</div>
+			<!-- Mobile navigation drawer -->
+			{#if mobileMenuOpen}
+				<div class="basis-full h-0"></div>
+				<nav class="md:hidden w-full" transition:slide>
+					<ul class="pb-2">
+						{#each pages as page}
+							<li>
+								<a
+									href={resolve(page.path, {})}
+									class="block rounded px-4 py-2 hover:preset-tonal-primary {classesActive(
+										page.path
+									)}"
+									onclick={() => (mobileMenuOpen = false)}
+								>
+									{page.slug}
+								</a>
+							</li>
+						{/each}
+					</ul>
+				</nav>
+			{/if}
 		</div>
-
-		<!-- Mobile navigation drawer -->
-		{#if mobileMenuOpen}
-			<nav class="md:hidden" transition:slide>
-				<ul class="pb-2">
-					{#each pages as page}
-						<li>
-							<a
-								href={resolve(page.path, {})}
-								class="block rounded px-4 py-2 hover:preset-tonal-primary {classesActive(
-									page.path
-								)}"
-								onclick={() => (mobileMenuOpen = false)}
-							>
-								{page.slug}
-							</a>
-						</li>
-					{/each}
-				</ul>
-			</nav>
-		{/if}
 	</header>
 
 	<!-- Page Route Content -->
