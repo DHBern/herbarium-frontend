@@ -36,6 +36,14 @@
 
 	let searchtext = $state('');
 	let otherSearchisVisible = $state(false);
+	let header: HTMLElement | null = null;
+
+	function doSearch() {
+		const to = searchtext;
+		searchtext = '';
+		mobileMenuOpen = false;
+		goto(resolve(`/?s=${to}`, {}));
+	}
 
 	let observer: IntersectionObserver;
 
@@ -56,6 +64,10 @@
 		inputElements.forEach((element) => {
 			observer.observe(element);
 		});
+
+		return () => {
+			observer?.disconnect();
+		};
 	});
 
 	afterNavigate(() => {
@@ -81,18 +93,33 @@
 	></script>
 </svelte:head>
 
+<svelte:document
+	onkeydown={(event) => {
+		if (event.key === 'Escape' && mobileMenuOpen) {
+			mobileMenuOpen = false;
+		}
+	}}
+	onclick={(event) => {
+		const target = event.target as Node | null;
+		if (mobileMenuOpen && header && target && !header.contains(target)) {
+			mobileMenuOpen = false;
+		}
+	}}
+/>
+
 <div class="flex h-full flex-col">
 	<!-- Header / App Bar -->
-	<header class="flex-none bg-surface-100-900 px-4">
+	<header class="flex-none bg-surface-100-900 px-4" bind:this={header}>
 		<div class="flex h-full items-center justify-between gap-4 flex-wrap">
 			<!-- Lead: mobile menu toggle -->
 			<button
 				class="btn-icon md:hidden"
 				onclick={() => (mobileMenuOpen = !mobileMenuOpen)}
-				aria-label="Open menu"
+				aria-label={mobileMenuOpen ? 'Close menu' : 'Open menu'}
 				aria-expanded={mobileMenuOpen}
+				aria-controls="mobile-nav"
 			>
-				<i class="fa-solid fa-bars"></i>
+				<i class="fa-solid {mobileMenuOpen ? 'fa-xmark' : 'fa-bars'}"></i>
 			</button>
 
 			<!-- Desktop navigation -->
@@ -112,13 +139,9 @@
 							class="input placeholder-primary-600 bg-surface-200 rounded-full ml-2"
 							type="text"
 							placeholder="search"
+							aria-label="Search"
 							bind:value={searchtext}
-							onchange={() => {
-								const to = searchtext;
-
-								searchtext = '';
-								goto(resolve(`/?s=${to}`, {}));
-							}}
+							onchange={doSearch}
 						/>
 					</label>
 
@@ -134,7 +157,7 @@
 					<img
 						src={unibe}
 						alt="Logo of the University of Bern"
-						class="my-1 h-[43px] max-h-20 w-auto"
+						class="my-1 h-10.75 max-h-20 w-auto"
 					/>
 				</a>
 
@@ -146,7 +169,7 @@
 					<img
 						src={boga}
 						alt="Logo of the botanical garden"
-						class="my-1 h-[43px] max-h-20 w-auto"
+						class="my-1 h-10.75 max-h-20 w-auto"
 						height="43"
 						width="72"
 					/>
@@ -155,7 +178,7 @@
 			<!-- Mobile navigation drawer -->
 			{#if mobileMenuOpen}
 				<div class="basis-full h-0"></div>
-				<nav class="md:hidden w-full" transition:slide>
+				<nav id="mobile-nav" class="md:hidden w-full" transition:slide>
 					<ul class="pb-2">
 						{#each pages as page}
 							<li>
@@ -170,6 +193,26 @@
 								</a>
 							</li>
 						{/each}
+						<li class="px-4 py-2">
+							<div class="flex gap-2">
+								<input
+									class="input placeholder-primary-600 bg-surface-200 rounded-full flex-1"
+									type="text"
+									placeholder="search"
+									aria-label="Search"
+									bind:value={searchtext}
+									onchange={doSearch}
+								/>
+								<a
+									href={resolve(`/?s=${searchtext}`, {})}
+									class="btn-icon"
+									aria-label="Search"
+									onclick={() => (mobileMenuOpen = false)}
+								>
+									<i class="fa-solid fa-search"></i>
+								</a>
+							</div>
+						</li>
 					</ul>
 				</nav>
 			{/if}
