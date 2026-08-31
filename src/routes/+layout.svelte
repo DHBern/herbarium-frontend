@@ -90,6 +90,7 @@
 		defer
 		src="https://umami.dsl.unibe.ch/script-umami.js"
 		data-website-id="2517db3a-5234-4936-957f-99064a9c0a19"
+		data-performance="true"
 	></script>
 </svelte:head>
 
