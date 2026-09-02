@@ -180,7 +180,12 @@
 						</dt>
 
 						<dd class="pl-2 pt-4">
-							<a class="anchor" href={resolve(`/?a=${JSON.stringify({ [key]: metadataVal })}`, {})}>
+							<a
+								class="anchor"
+								href={key === 'Catalog_Number'
+									? resolve('/item/main/[slug]', { slug: metadataVal })
+									: resolve(`/?a=${JSON.stringify({ [key]: metadataVal })}`, {})}
+							>
 								{#if key === 'Country'}
 									{@html addFlagToCountry(metadataVal)}
 								{:else if key === 'Genus' || key === 'Species'}
