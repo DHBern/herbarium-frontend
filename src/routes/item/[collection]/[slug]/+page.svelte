@@ -104,7 +104,8 @@
 					DOWN: 'flip_pressed.svg'
 				}
 			},
-			sequenceMode: false
+			sequenceMode: false,
+			crossOriginPolicy: 'Anonymous'
 		});
 	});
 
