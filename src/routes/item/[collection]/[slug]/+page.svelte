@@ -6,11 +6,15 @@
 	import { page } from '$app/state';
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions.js';
 	import { resultNavigation } from '$lib/stores.svelte';
+	import iiifLogo from '$lib/assets/IIIF-logo-colored-text.svg';
 	import type { Viewer } from 'openseadragon';
 	let OpenSeadragon;
 	let viewer: Viewer | undefined = $state();
+	let manifestLinkEl: HTMLAnchorElement | undefined;
+	let downloadLinkEl: HTMLAnchorElement | undefined;
 	let { data } = $props();
 	let imageOpenFailed = $derived(!data.iiif);
+	let downloadUrl = $derived(data.iiif?.[0] ? `${data.iiif[0]}/full/max/0/default.jpg` : undefined);
 
 	let collection = $derived(page.params.collection);
 	let slug = $derived(page.params.slug);
@@ -111,6 +115,11 @@
 		viewer.addHandler('open-failed', () => {
 			imageOpenFailed = true;
 		});
+		for (const el of [downloadLinkEl, manifestLinkEl]) {
+			if (!el) continue;
+			viewer.addControl(el, { anchor: OpenSeadragon.ControlAnchor.TOP_LEFT });
+			el.style.display = 'block';
+		}
 	});
 
 	$effect(() => {
@@ -175,6 +184,30 @@
 					: 'bg-primary-900'}"
 			>
 				<div id="viewer" class="w-full h-[60vh]"></div>
+				<a
+					bind:this={downloadLinkEl}
+					href={downloadUrl}
+					target="_blank"
+					rel="noopener"
+					title="Download full-size image"
+					class={`h-12 w-12 text-white bg-black/60 hover:bg-black/80 ${!downloadUrl ? 'opacity-40 pointer-events-none' : ''}`}
+					style="display:none"
+				>
+					<span class="absolute inset-0 flex items-center justify-center">
+						<i class="fa-solid fa-download fa-2xl"></i>
+					</span>
+				</a>
+				<a
+					bind:this={manifestLinkEl}
+					href={data.manifestUrl}
+					target="_blank"
+					rel="noopener"
+					title="IIIF Manifest"
+					class={`h-12 w-12 text-white bg-black/60 hover:bg-black/80 ${!data.manifestUrl ? 'opacity-40 pointer-events-none' : ''}`}
+					style="display:none"
+				>
+					<img src={iiifLogo} alt="IIIF" class="h-full w-11 p-2 object-contain" />
+				</a>
 				{#if imageOpenFailed}
 					<div
 						class="absolute inset-0 flex items-center justify-center bg-surface-100-900 preset-tonal-warning"

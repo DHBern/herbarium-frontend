@@ -17,9 +17,8 @@ export const load: PageLoad = async ({ params, fetch }) => {
 	const itemData = Array.isArray(itemDataRaw) ? itemDataRaw : [];
 	const idKey = structure.find((s) => s.id)?.key ?? structure[0]?.key;
 	const item = itemData.find((item) => item[idKey] === params.slug);
-	const iiif = await fetch(
-		`https://iiif.ub.unibe.ch/presentation/v3.0/boga/manifest/${item?.[idKey]}/`
-	)
+	const manifestUrl = `https://iiif.ub.unibe.ch/presentation/v3.0/boga/manifest/${item?.[idKey]}/`;
+	const iiif = await fetch(manifestUrl)
 		.then((res) => (res.ok ? res.json() : false))
 		.then((json) => {
 			return json.items?.flatMap((canvas: any) => {
@@ -38,6 +37,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		key: params.slug,
 		metadata: item,
 		iiif,
+		manifestUrl,
 		structure
 	};
 };
