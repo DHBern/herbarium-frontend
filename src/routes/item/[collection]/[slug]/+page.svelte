@@ -10,6 +10,7 @@
 	let OpenSeadragon;
 	let viewer: Viewer | undefined = $state();
 	let { data } = $props();
+	let imageOpenFailed = $derived(!data.iiif);
 
 	let collection = $derived(page.params.collection);
 	let slug = $derived(page.params.slug);
@@ -107,6 +108,9 @@
 			sequenceMode: false,
 			crossOriginPolicy: 'Anonymous'
 		});
+		viewer.addHandler('open-failed', () => {
+			imageOpenFailed = true;
+		});
 	});
 
 	$effect(() => {
@@ -166,11 +170,18 @@
 				</h1>
 			</div>
 			<div
-				class="lg:row-span-2 lg:row-start-1 w-full h-fit {d.Type !== 'no'
+				class="lg:row-span-2 lg:row-start-1 w-full h-fit relative {d.Type !== 'no'
 					? 'bg-warning-300'
 					: 'bg-primary-900'}"
 			>
 				<div id="viewer" class="w-full h-[60vh]"></div>
+				{#if imageOpenFailed}
+					<div
+						class="absolute inset-0 flex items-center justify-center bg-surface-100-900 preset-tonal-warning"
+					>
+						<p>Image not available</p>
+					</div>
+				{/if}
 			</div>
 			<dl class="grid grid-cols-[1fr_3fr] justify-between h-fit">
 				{#each data.structure as { label, key }}
