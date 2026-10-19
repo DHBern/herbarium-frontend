@@ -4,7 +4,7 @@ import type { PageLoad } from './$types';
 export const load: PageLoad = async ({ params, fetch }) => {
 	let structure: ItemStructure[];
 	if (params.collection === 'main') {
-		structure = (await import(`#lib/structure.json`)).default;
+		structure = (await import(`#lib/structure.json`)).default as ItemStructure[];
 	} else {
 		structure = (await import(`#lib/collections/${params.collection}/structure.json`)).default;
 	}

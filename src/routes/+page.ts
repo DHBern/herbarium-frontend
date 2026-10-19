@@ -1,6 +1,7 @@
 import itemDataRaw from '#lib/data.json';
 import structure from '#lib/structure.json';
 import type { PageLoad } from './$types';
+import type { ItemStructure } from './types';
 
 export const load: PageLoad = async () => {
 	const itemData: Array<{ [key: string]: any }> = Array.isArray(itemDataRaw) ? itemDataRaw : [];
@@ -28,7 +29,7 @@ export const load: PageLoad = async () => {
 
 	return {
 		categories: structure.map((cat) => cat.key),
-		itemstructure: structure,
+		itemstructure: structure as ItemStructure[],
 		items: returnitems
 	};
 };

@@ -21,6 +21,7 @@ export interface ItemStructure {
 	label: string;
 	showInList?: boolean;
 	id?: boolean;
+	filter?: 'simple' | 'advanced';
 }
 
 export interface PageData {
