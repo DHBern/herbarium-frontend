@@ -190,7 +190,7 @@
 					target="_blank"
 					rel="noopener"
 					title="Download full-size image"
-					class={`h-12 w-12 text-white bg-black/60 hover:bg-black/80 ${!downloadUrl ? 'opacity-40 pointer-events-none' : ''}`}
+					class={`h-12 w-12 text-white bg-black/40 hover:bg-black/80 ${!downloadUrl ? 'opacity-40 pointer-events-none' : ''}`}
 					style="display:none"
 				>
 					<span class="absolute inset-0 flex items-center justify-center">
@@ -203,7 +203,7 @@
 					target="_blank"
 					rel="noopener"
 					title="IIIF Manifest"
-					class={`h-12 w-12 text-white bg-black/60 hover:bg-black/80 ${!data.manifestUrl ? 'opacity-40 pointer-events-none' : ''}`}
+					class={`h-12 w-12 text-white bg-black/40 hover:bg-black/80 ${!data.manifestUrl ? 'opacity-40 pointer-events-none' : ''}`}
 					style="display:none"
 				>
 					<img src={iiifLogo} alt="IIIF" class="h-full w-11 p-2 object-contain" />
