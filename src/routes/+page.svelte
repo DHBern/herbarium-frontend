@@ -1,13 +1,8 @@
 <script lang="ts">
 	import ContentContainer from '#lib/components/ContentContainer.svelte';
 	import ItemList from '#lib/components/ItemList.svelte';
-	import {
-		Switch,
-		ToggleGroup,
-		Combobox,
-		Portal,
-		useListCollection
-	} from '@skeletonlabs/skeleton-svelte';
+	import SearchFilter from '#lib/components/SearchFilter.svelte';
+	import { Switch } from '@skeletonlabs/skeleton-svelte';
 	import MiniSearch from 'minisearch';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
@@ -23,27 +18,42 @@
 		capture: () => ({
 			searchtext,
 			advancedToggle,
-			advancedFields
+			advancedFields,
+			filters
 		}),
 		restore: (value: {
 			searchtext: string | AdvancedSearch;
 			advancedToggle: boolean;
 			advancedFields: Record<string, string>;
+			filters: Record<string, string[]>;
 		}) => {
 			advancedFields = value.advancedFields;
 			searchtext = value.searchtext;
 			advancedToggle = value.advancedToggle;
+			filters = value.filters;
 		}
 	};
+
+	// fields with a `filter` key in structure.json are filtered by value (ToggleGroup / Combobox)
+	// instead of by text; 'simple' filters are shown in both modes, 'advanced' ones only in advanced
+	let filterFields = $derived(data.itemstructure.filter((item) => item.filter));
+	let filterValues = $derived(
+		Object.fromEntries(
+			filterFields.map((field) => [
+				field.key,
+				Array.from(new Set(data.items.map((i) => i[field.key]))).filter((i) => i) as string[]
+			])
+		)
+	);
 
 	let allDocumentsAdded = $state<Promise<void>>(Promise.resolve());
 	let searchtext = $state<string | AdvancedSearch>('');
 	let advancedToggle = $state(false);
 	let advancedFields = $state<Record<string, string>>({});
-	let filters = $state<Record<string, string[]>>({
-		collectionType: [],
-		TaxonomicGroup: []
-	});
+	// svelte-ignore state_referenced_locally
+	let filters = $state<Record<string, string[]>>(
+		Object.fromEntries(filterFields.map((field) => [field.key, []]))
+	);
 	// svelte-ignore state_referenced_locally
 	let searchedItems = $state<Item[]>(data?.items || []);
 	let filteredItems = $derived.by(() => {
@@ -194,6 +204,12 @@
 					onCheckedChange={(e) => {
 						advancedToggle = e.checked;
 						searchtext = '';
+						if (!advancedToggle) {
+							// advanced-only filters are hidden in simple mode, so don't let them narrow results
+							for (const field of filterFields) {
+								if (field.filter === 'advanced') filters[field.key] = [];
+							}
+						}
 					}}
 					class="mb-3 h-8"
 				>
@@ -219,85 +235,14 @@
 					/>
 				</label>
 			{:else}
-				{#each data.itemstructure as item}
-					{#if filters[item.key]}
-						<div class="label" transition:slide|global>
-							<span>{item.label}</span>
-							{const filterValues = Array.from(new Set(data.items.map((i) => i[item.key]))).filter(
-								(i) => i
-							)}
-							{#if filterValues.length <= 4}
-								<div class="block">
-									<ToggleGroup
-										value={filters[item.key]}
-										onValueChange={(v) => (filters[item.key] = v.value)}
-										multiple
-									>
-										{#each filterValues as type}
-											<ToggleGroup.Item value={type}>
-												{type}
-											</ToggleGroup.Item>
-										{/each}
-									</ToggleGroup>
-								</div>
-							{:else}
-								{let filteredFilterValues = $state(filterValues)}
-								{const collection = $derived(
-									useListCollection({
-										items: filteredFilterValues,
-										itemToString: (item) => item,
-										itemToValue: (item) => item
-									})
-								)}
-								<Combobox
-									value={filters[item.key]}
-									{collection}
-									onValueChange={(v) => (filters[item.key] = v.value)}
-									onInputValueChange={(e) => {
-										const filtered = filterValues.filter((i) =>
-											i.toLowerCase().includes(e.inputValue.toLowerCase())
-										);
-										if (filtered.length > 0) {
-											filteredFilterValues = filtered;
-										} else {
-											filteredFilterValues = Array.from(
-												new Set(data.items.map((i) => i[item.key]))
-											).filter((i) => i);
-										}
-									}}
-									onOpenChange={() => {
-										filteredFilterValues = filterValues;
-									}}
-									placeholder={`Filter by ${item?.label ?? item.key}`}
-									multiple
-								>
-									<Combobox.Control>
-										<Combobox.Input />
-										<Combobox.Trigger />
-									</Combobox.Control>
-									<Portal>
-										<Combobox.Positioner>
-											<Combobox.Content>
-												{#each filteredFilterValues as comboItem (comboItem)}
-													<Combobox.Item item={comboItem}>
-														<Combobox.ItemText>{comboItem}</Combobox.ItemText>
-														<Combobox.ItemIndicator />
-													</Combobox.Item>
-												{/each}
-											</Combobox.Content>
-										</Combobox.Positioner>
-									</Portal>
-								</Combobox>
-								<div class="flex flex-wrap gap-2 mt-1">
-									{#each filters[item.key] as selected (selected)}
-										<span class="badge preset-filled">
-											{selected}
-										</span>
-									{/each}
-								</div>
-							{/if}
-						</div>
-					{:else}
+				{#each data.itemstructure as item (item.key)}
+					{#if item.filter === 'advanced'}
+						<SearchFilter
+							{item}
+							values={filterValues[item.key]}
+							bind:selected={filters[item.key]}
+						/>
+					{:else if !item.filter}
 						<label class="label" transition:slide|global>
 							<span>{item.label}</span>
 							<input
@@ -309,13 +254,22 @@
 					{/if}
 				{/each}
 			{/if}
-			{filters['collectionType']}
-			<p class="mt-5">
-				Found {searching ? '...' : filteredItems?.length} Result{filteredItems?.length !== 1
-					? 's'
-					: ''}.
-			</p>
 		</div>
+	</div>
+	<div class="flex flex-wrap items-start gap-x-8 gap-y-4 mt-8">
+		{#each filterFields.filter((field) => field.filter === 'simple') as item (item.key)}
+			<SearchFilter
+				{item}
+				values={filterValues[item.key]}
+				bind:selected={filters[item.key]}
+				class="md:w-auto md:min-w-72"
+			/>
+		{/each}
+		<p class="self-end md:ml-auto">
+			Found {searching ? '...' : filteredItems?.length} Result{filteredItems?.length !== 1
+				? 's'
+				: ''}.
+		</p>
 	</div>
 </ContentContainer>
 
