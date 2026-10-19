@@ -3,19 +3,15 @@
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '#lib/functions.js';
 	import { resultNavigation } from '#lib/stores.svelte.js';
 	import { blur, fly } from 'svelte/transition';
-	import { untrack } from 'svelte';
 	let { items = $bindable([]), structure = [], collection = '' } = $props();
 
 	let intersectionObserver: any;
 
-	$effect(() => {
-		if (!idKey) return;
-		const ids = items.map((item) => item[idKey]);
-		untrack(() => {
-			resultNavigation.collection = collection || 'main';
-			resultNavigation.ids = ids;
-		});
-	});
+	// hand the current result order to the detail page for its prev/next navigation
+	const setResultNavigation = () => {
+		resultNavigation.collection = collection || 'main';
+		resultNavigation.ids = items.map((item) => item[idKey]);
+	};
 
 	function ensureIntersectionObserver() {
 		if (intersectionObserver) return;
@@ -192,6 +188,7 @@
 										collection: collection || 'main',
 										slug: row[idKey]
 									})}
+									onclick={setResultNavigation}
 								>
 									{#if key === 'Country'}
 										{@html addFlagToCountry(row[key])}
