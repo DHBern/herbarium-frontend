@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { CollectionPageData } from '../../types';
-	import { openLightbox } from '$lib/functions';
-	import ItemList from '$lib/components/ItemList.svelte';
+	import { openLightbox } from '#lib/functions.js';
+	import ItemList from '#lib/components/ItemList.svelte';
 
 	interface Props {
 		data: CollectionPageData;

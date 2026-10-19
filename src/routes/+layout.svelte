@@ -8,13 +8,15 @@
 	import { afterNavigate, goto } from '$app/navigation';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
-	import boga from '$lib/assets/BOGA-Logo_Black.svg';
-	import unibe from '$lib/assets/unibe.svg';
-	import LightBox from '$lib/components/LightBox.svelte';
+	import boga from '#lib/assets/BOGA-Logo_Black.svg';
+	import unibe from '#lib/assets/unibe.svg';
+	import LightBox from '#lib/components/LightBox.svelte';
 
 	let { children }: { children?: import('svelte').Snippet } = $props();
 
 	afterNavigate((params) => {
+		if (params.shallow && params.type === 'goto') return;
+
 		const isNewPage = params.from?.url?.pathname !== params.to?.url?.pathname;
 		const elemPage = document.querySelector('#page');
 
@@ -32,7 +34,7 @@
 		{ slug: 'illustrations', path: '/illustrations' },
 		{ slug: 'about us', path: '/about' },
 		{ slug: 'impressum', path: '/impressum' }
-	];
+	] as const;
 
 	let searchtext = $state('');
 	let otherSearchisVisible = $state(false);
@@ -42,7 +44,7 @@
 		const to = searchtext;
 		searchtext = '';
 		mobileMenuOpen = false;
-		goto(resolve(`/?s=${to}`, {}));
+		goto(resolve(`/?s=${encodeURIComponent(to)}`));
 	}
 
 	let observer: IntersectionObserver;
@@ -70,7 +72,9 @@
 		};
 	});
 
-	afterNavigate(() => {
+	afterNavigate(({ shallow, type }) => {
+		if (shallow && type === 'goto') return;
+
 		otherSearchisVisible = false;
 
 		const inputElements = document.querySelectorAll('main .input');
@@ -98,12 +102,10 @@
 	{#each pages as page}
 		<li>
 			<a
-				href={resolve(page.path, {})}
+				href={resolve(page.path)}
 				class="{itemClass} hover:preset-tonal-primary {classesActive(page.path)}"
-				onclick={() => (mobileMenuOpen = false)}
+				onclick={() => (mobileMenuOpen = false)}>{page.slug}</a
 			>
-				{page.slug}
-			</a>
 		</li>
 	{/each}
 {/snippet}
@@ -119,13 +121,11 @@
 			onchange={doSearch}
 		/>
 		<a
-			href={resolve(`/?s=${searchtext}`, {})}
+			href={resolve(`/?s=${encodeURIComponent(searchtext)}`)}
 			class="btn-icon"
 			aria-label="Search"
-			onclick={() => (mobileMenuOpen = false)}
+			onclick={() => (mobileMenuOpen = false)}><i class="fa-solid fa-search"></i></a
 		>
-			<i class="fa-solid fa-search"></i>
-		</a>
 	</li>
 {/snippet}
 
@@ -141,7 +141,7 @@
 			mobileMenuOpen = false;
 		}
 	}}
-/>
+></svelte:document>
 
 <div class="flex h-full flex-col">
 	<!-- Header / App Bar -->

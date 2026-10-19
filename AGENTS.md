@@ -5,8 +5,10 @@ University of Bern. See [README.md](README.md) for the project summary and autho
 
 ## Tech stack
 
-- **Svelte 5** (runes) + **SvelteKit 2**, deployed as a static site via `@sveltejs/adapter-static`.
-- **Tailwind CSS v4** + **Skeleton v4** (`@skeletonlabs/skeleton` + `@skeletonlabs/skeleton-svelte`).
+- **Svelte 5** (runes, `experimental.async` enabled) + **SvelteKit 3**, deployed as a static site
+  via `@sveltejs/adapter-static`. Vite 8, TypeScript 6.
+- **Tailwind CSS v4** + **Skeleton v5** (`@skeletonlabs/skeleton` + `@skeletonlabs/skeleton-svelte`).
+- **mdsvex** for `.md` content (collection descriptions), **@sveltejs/enhanced-img** for images.
 - **pnpm** package manager (lockfile v9). Search is client-side with **MiniSearch**; IIIF image
   viewing uses **OpenSeadragon**.
 
@@ -14,44 +16,70 @@ University of Bern. See [README.md](README.md) for the project summary and autho
 
 - `pnpm dev` — dev server (`pnpm dev -- --open` to open a tab).
 - `pnpm build` — static production build into `build/` (previews with `pnpm preview`).
-- `pnpm check` — `svelte-check` type checking. Note: skeleton-svelte's unused `tree-view`
-  component ships broken `.d.ts` files, so `check` reports `node_modules` errors that are not ours.
+- `pnpm check` — `svelte-kit sync` + `svelte-check` type checking.
 - `pnpm lint` / `pnpm format` — Prettier + ESLint.
+- `pnpm convert-data` — `data-preparation/xlsx-to-json.js`, converts the Excel export to JSON.
 
 ## Project structure
 
+- `vite.config.ts` — **all** SvelteKit/Svelte config lives here, passed to the `sveltekit({...})`
+  plugin (adapter, `paths.base`, mdsvex preprocessing, `extensions`, `compilerOptions`,
+  `inspector`). There is **no `svelte.config.js`** in SvelteKit 3 — don't recreate it.
 - `src/routes/` — SvelteKit pages. `+page.svelte` is the searchable home/list; `illustrations/`,
-  `about/`, `impressum/` are content pages; `item/[slug]/` is the specimen detail page with the
-  OpenSeadragon IIIF viewer.
+  `about/`, `impressum/` are content pages; `collections/` lists the curated collections and
+  `collections/[collection]/` renders one (content from `src/lib/collections/<name>/`);
+  `item/[collection]/[slug]/` is the specimen detail page with the OpenSeadragon IIIF viewer
+  (`main` is the collection name for the main herbarium dataset).
 - `src/routes/+layout.svelte` — app chrome (header nav, mobile menu, footer) and the global
   `LightBox`. `layout.css` is the global stylesheet / Tailwind entry (see Styling below).
-- `src/lib/` — shared code: `data.json` + `structure.json` (all herbarium metadata and the
-  column/field config), `functions.ts` (formatting helpers), `stores.svelte.ts` (runes/writable
-  stores), and `components/` (`ItemList`, `ContentContainer`, `LightBox`).
+- `src/lib/` — shared code: `data.json` + `structure.json` (main herbarium metadata and the
+  column/field config), `collections/<name>/` (`data.json`, `structure.json`, `content.md` per
+  collection), `functions.ts` (formatting helpers), `stores.svelte.ts` (runes/writable stores),
+  `assets/`, and `components/` (`ItemList`, `ContentContainer`, `LightBox`, `MarkdownLayout` /
+  `MarkdownImage` for mdsvex).
 - `src/routes/types.ts` — shared `Item` / `PageData` / search TypeScript interfaces.
 - `src/herbarium.css` — the custom Skeleton theme (`[data-theme='herbarium']`).
 - `static/` — fonts, robots.txt, OpenSeadragon SVG icons. `src/404.html` / `src/app.html` set
   `data-theme`.
-- `data-preparation/` — standalone Python scripts to generate IIIF metadata CSVs (not part of the
-  build); see [data-preparation/iiif-metadata/README.md](data-preparation/iiif-metadata/README.md).
+- `data-preparation/` — standalone scripts, not part of the build: `xlsx-to-json.js` and Python
+  scripts to generate IIIF metadata CSVs (see
+  [data-preparation/iiif-metadata/README.md](data-preparation/iiif-metadata/README.md)).
 
-## Static build & routing conventions
+## Static build & routing conventions (SvelteKit 3)
 
 - Everything is prerendered (`export const prerender = true`) with an SPA fallback to `404.html`.
-- Use `resolve` / `assets` from `$app/paths` for all internal links and static asset URLs — the site is served under a configurable GitHub Pages `BASE_PATH` (set in CI).
+- The site is served under a configurable GitHub Pages `BASE_PATH` (set in CI), so use `resolve` /
+  `asset` from `$app/paths` for all internal links and static asset URLs. `base`, `assets` and
+  `resolveRoute` **no longer exist**.
+  - `resolve` takes a route ID (leading `/`, optional query/hash) plus params only when the route
+    has them: `resolve('/item/[collection]/[slug]', { collection, slug })`, `resolve('/about')`,
+    ``resolve(`/?s=${encodeURIComponent(q)}`)`` — never pass an empty `{}` for param-less routes.
+  - `asset` takes a path **without** leading slash: `asset('favicon.png')`.
+- Import shared code via `#lib` (Node subpath imports declared in `package.json`), **not `$lib`**,
+  and include the file extension: `import { x } from '#lib/functions.js'`,
+  `'#lib/stores.svelte.js'`. CSS `url()`s can't use `#lib` — use relative paths there.
+- `page` from `$app/state` (`$app/stores` is gone). `page.url` is readonly — copy with
+  `new URL(page.url.href)` before mutating.
+- Shallow routing uses `goto(url, { shallow: true, replace: true, state })` (not
+  `pushState`/`replaceState`). Shallow navigations also fire `afterNavigate`, so hooks that should
+  only react to real navigations bail out on `shallow`. `goto` rejects non-app URLs; use
+  `window.location.href` for external ones.
+- In pages, read route params from `PageProps` (`let { data, params }: PageProps = $props()`).
 - OpenSeadragon is browser-only: import it dynamically inside `onMount`, never at module top level.
 
-## Styling conventions (Tailwind v4 + Skeleton v4)
+## Styling conventions (Tailwind v4 + Skeleton v5)
 
 - **No `tailwind.config.js`.** Configuration is CSS-first in `src/routes/layout.css`:
   `@import 'tailwindcss'` → `@import '@skeletonlabs/skeleton'` →
   `@import '@skeletonlabs/skeleton-svelte'` → `@import '../herbarium'` (custom theme).
-- Use **v4 class names**: `preset-*` (e.g. `preset-tonal-primary`), not v2 `variant-*`; surface pairs
-  like `bg-surface-100-900` without the `-token` suffix; trailing `!important` (`bg-primary-100!`,
-  not `!bg-primary-100`).
+- Use current class names: `preset-*` (e.g. `preset-tonal-primary`), not v2 `variant-*`; surface
+  pairs like `bg-surface-100-900` without the `-token` suffix; trailing `!important`
+  (`bg-primary-100!`, not `!bg-primary-100`). v5 renamed `input-group`/`ig-*` to `field-group`
+  and removed `card-hover`.
 - Import components from `@skeletonlabs/skeleton-svelte`. v2 APIs (`AppShell`, `AppBar`, `Drawer`,
   `Toast`, `SlideToggle`, `storePopup`, `initializeStores`) **no longer exist** — compose layout
-  manually and use v4 components (e.g. `Switch` with its compound `Switch.Control/Thumb/Label`).
+  manually and use compound components (e.g. `Switch` with `Switch.Control/Thumb/Label`, state in
+  via `checked`, out via `onCheckedChange`).
 - **Gotcha:** the build error `Cannot use @variant with unknown variant: md` is a red herring for a
   leftover Skeleton v2 import — search for and remove the offending v2 API, not a config change.
 
@@ -60,12 +88,13 @@ University of Bern. See [README.md](README.md) for the project summary and autho
 - **TypeScript everywhere, no JSDoc typing.** Svelte components use `<script lang="ts">`; type props
   and load functions with real TS (`let { x }: Props = $props()`, `export const load: PageLoad`).
 - Use Svelte 5 runes (`$state`, `$derived`, `$props`, `$effect`).
+- `tsconfig.json` extends `$app/tsconfig` (not `./.svelte-kit/tsconfig.json`).
 
 ## References
 
 - Skeleton (Svelte) docs for LLMs: <https://www.skeleton.dev/llms.txt> (Svelte-specific variant:
   <https://www.skeleton.dev/llms-svelte.txt>). Consult these before touching Skeleton components or
-  theme tokens, since v4 differs substantially from v2/v3.
+  theme tokens, since v5 differs substantially from v2/v3.
 
 ---
 

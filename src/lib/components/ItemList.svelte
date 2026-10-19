@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions';
-	import { resultNavigation } from '$lib/stores.svelte';
+	import { addFlagToCountry, setGenusAndSpeciesItalic } from '#lib/functions.js';
+	import { resultNavigation } from '#lib/stores.svelte.js';
 	import { blur, fly } from 'svelte/transition';
 	import { untrack } from 'svelte';
 	let { items = $bindable([]), structure = [], collection = '' } = $props();

@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { selectedImagePath } from '$lib/stores.svelte';
-	import { closeLightbox } from '$lib/functions';
+	import { selectedImagePath } from '#lib/stores.svelte.js';
+	import { closeLightbox } from '#lib/functions.js';
 	import { fade, slide } from 'svelte/transition';
 </script>
 

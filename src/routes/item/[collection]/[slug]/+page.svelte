@@ -1,23 +1,24 @@
 <script lang="ts">
-	import ContentContainer from '$lib/components/ContentContainer.svelte';
+	import ContentContainer from '#lib/components/ContentContainer.svelte';
 	import { onMount } from 'svelte';
 	import { asset, resolve } from '$app/paths';
 	import { goto } from '$app/navigation';
-	import { page } from '$app/state';
-	import { addFlagToCountry, setGenusAndSpeciesItalic } from '$lib/functions.js';
-	import { resultNavigation } from '$lib/stores.svelte';
-	import iiifLogo from '$lib/assets/IIIF-logo-colored-text.svg';
+	import type { AssetPath } from '$app/types';
+	import { addFlagToCountry, setGenusAndSpeciesItalic } from '#lib/functions.js';
+	import { resultNavigation } from '#lib/stores.svelte.js';
+	import iiifLogo from '#lib/assets/IIIF-logo-colored-text.svg';
 	import type { Viewer } from 'openseadragon';
+	import type { PageProps } from './$types';
 	let OpenSeadragon;
 	let viewer: Viewer | undefined = $state();
 	let manifestLinkEl: HTMLAnchorElement | undefined;
 	let downloadLinkEl: HTMLAnchorElement | undefined;
-	let { data } = $props();
+	let { data, params }: PageProps = $props();
 	let imageOpenFailed = $derived(!data.iiif);
 	let downloadUrl = $derived(data.iiif?.[0] ? `${data.iiif[0]}/full/max/0/default.jpg` : undefined);
 
-	let collection = $derived(page.params.collection);
-	let slug = $derived(page.params.slug);
+	let collection = $derived(params.collection);
+	let slug = $derived(params.slug);
 	let navActive = $derived(
 		resultNavigation.collection === collection && resultNavigation.ids.length > 0
 	);
@@ -51,7 +52,8 @@
 		OpenSeadragon = (await import('openseadragon')).default;
 		viewer = new OpenSeadragon.Viewer({
 			id: 'viewer',
-			prefixUrl: asset('/openseadragon-svg-icons/icons/'),
+			// a directory prefix, not a single file, so it isn't part of the generated AssetPath union
+			prefixUrl: asset('openseadragon-svg-icons/icons/' as AssetPath),
 			showNavigator: true,
 			navImages: {
 				zoomIn: {
@@ -129,10 +131,7 @@
 	});
 </script>
 
-<svelte:head>
-	<link rel="preconnect" href="https://iiif.ub.unibe.ch" />
-</svelte:head>
-
+<svelte:head><link rel="preconnect" href="https://iiif.ub.unibe.ch" /></svelte:head>
 <svelte:window onkeydown={handleKeydown} />
 
 <ContentContainer>
@@ -228,8 +227,8 @@
 							<a
 								class="anchor"
 								href={key === 'Catalog_Number'
-									? resolve('/item/main/[slug]', { slug: metadataVal })
-									: resolve(`/?a=${JSON.stringify({ [key]: metadataVal })}`, {})}
+									? resolve('/item/[collection]/[slug]', { collection: 'main', slug: metadataVal })
+									: resolve(`/?a=${encodeURIComponent(JSON.stringify({ [key]: metadataVal }))}`)}
 							>
 								{#if key === 'Country'}
 									{@html addFlagToCountry(metadataVal)}

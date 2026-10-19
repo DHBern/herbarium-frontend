@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { openLightbox } from '$lib/functions';
+	import { openLightbox } from '#lib/functions.js';
 	interface Props {
 		src: string;
 		alt: string;

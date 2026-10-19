@@ -25,13 +25,13 @@ export const load: PageLoad = async ({ params }) => {
 
 	try {
 		const structure: ItemStructure[] = (
-			await import(`$lib/collections/${collection}/structure.json`)
+			await import(`#lib/collections/${collection}/structure.json`)
 		).default;
-		const mdsvexComponent = await import(`$lib/collections/${collection}/content.md`);
-		const items: unknown[] = (await import(`$lib/collections/${collection}/data.json`)).default;
+		const mdsvexComponent = await import(`#lib/collections/${collection}/content.md`);
+		const items: unknown[] = (await import(`#lib/collections/${collection}/data.json`)).default;
 
 		const enhancedImages = import.meta.glob<{ default: string }>(
-			'$lib/assets/*.{avif,gif,heif,jpeg,jpg,png,tiff,webp}',
+			'#lib/assets/*.{avif,gif,heif,jpeg,jpg,png,tiff,webp}',
 			{ query: '?enhanced' }
 		);
 		let featured: string | undefined;

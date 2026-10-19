@@ -4,15 +4,15 @@ import type { PageLoad } from './$types';
 export const load: PageLoad = async ({ params, fetch }) => {
 	let structure: ItemStructure[];
 	if (params.collection === 'main') {
-		structure = (await import(`$lib/structure.json`)).default;
+		structure = (await import(`#lib/structure.json`)).default;
 	} else {
-		structure = (await import(`$lib/collections/${params.collection}/structure.json`)).default;
+		structure = (await import(`#lib/collections/${params.collection}/structure.json`)).default;
 	}
 	let itemDataRaw: Item[];
 	if (params.collection === 'main') {
-		itemDataRaw = (await import(`$lib/data.json`)).default;
+		itemDataRaw = (await import(`#lib/data.json`)).default;
 	} else {
-		itemDataRaw = (await import(`$lib/collections/${params.collection}/data.json`)).default;
+		itemDataRaw = (await import(`#lib/collections/${params.collection}/data.json`)).default;
 	}
 	const itemData = Array.isArray(itemDataRaw) ? itemDataRaw : [];
 	const idKey = structure.find((s) => s.id)?.key ?? structure[0]?.key;

@@ -1,29 +1,29 @@
 <script lang="ts">
-	import { openLightbox } from '$lib/functions';
-	import ContentContainer from '$lib/components/ContentContainer.svelte';
-	import pdf1 from '$lib/assets/1a_Studer_IconesFungorum_001-171.pdf';
-	import pdf2 from '$lib/assets/02_Otth_IconesFungorum_Agaricineen.pdf';
-	import pdf3 from '$lib/assets/03_Otth_IconesFungorum_Agaricineen.pdf';
-	import pdf4 from '$lib/assets/04_Otth_IconesFungorum_Agaricineen.pdf';
-	import pdf5 from '$lib/assets/05_Otth_IconesFungorum_Agaricineen.pdf';
-	import pdf6 from '$lib/assets/06_Otth_IconesFungorum_Polyporeen.pdf';
-	import pdf7 from '$lib/assets/07_Otth_IconesFungorum_Polyporeen.pdf';
-	import pdf8 from '$lib/assets/08_Otth_IconesFungorum_Hydneen+Telephoreen+Clavariaceen+Tremellineen.pdf';
-	import pdf9 from '$lib/assets/09_Otth_IconesFungorum_Gastromyceten+Uredineen.pdf';
-	import pdf10 from '$lib/assets/10_Otth_IconesFungorum_Discomyceten.pdf';
-	import pdf11 from '$lib/assets/11_Otth_IconesFungorum_Tubericineen+Pyrenomyceten.pdf';
-	import pdf12 from '$lib/assets/12_Otth_IconesFungorum_Imperfecti.pdf';
-	import pdf13 from '$lib/assets/13_Otth_IconesFungorum_Ustilagineen+Phykomyceten+Myxomyceten.pdf';
-	import pdf14 from '$lib/assets/01_Otth_IconesFungorum_Agaricineen.pdf';
-	import pdf15 from '$lib/assets/2a_Studer_IconesFungorum_172-329.pdf';
-	import pdf16 from '$lib/assets/2b_Studer_IconesFungorum_330-447.pdf';
-	import pdf17 from '$lib/assets/3a_Studer_IconesFungorum_448-605.pdf';
-	import pdf18 from '$lib/assets/3b_Studer_IconesFungorum_606-748.pdf';
-	import pdf19 from '$lib/assets/3c_Studer_IconesFungorum_749-839.pdf';
-	import pdf20 from '$lib/assets/4a_Studer_IconesFungorum_840-983.pdf';
-	import pdf21 from '$lib/assets/4b_Studer_IconesFungorum_984-1090.pdf';
-	import pdf22 from '$lib/assets/4c_Studer_IconesFungorum_1091-1178.pdf';
-	import pdf23 from '$lib/assets/5_Studer_IconesFungorum.pdf';
+	import { openLightbox } from '#lib/functions.js';
+	import ContentContainer from '#lib/components/ContentContainer.svelte';
+	import pdf1 from '#lib/assets/1a_Studer_IconesFungorum_001-171.pdf';
+	import pdf2 from '#lib/assets/02_Otth_IconesFungorum_Agaricineen.pdf';
+	import pdf3 from '#lib/assets/03_Otth_IconesFungorum_Agaricineen.pdf';
+	import pdf4 from '#lib/assets/04_Otth_IconesFungorum_Agaricineen.pdf';
+	import pdf5 from '#lib/assets/05_Otth_IconesFungorum_Agaricineen.pdf';
+	import pdf6 from '#lib/assets/06_Otth_IconesFungorum_Polyporeen.pdf';
+	import pdf7 from '#lib/assets/07_Otth_IconesFungorum_Polyporeen.pdf';
+	import pdf8 from '#lib/assets/08_Otth_IconesFungorum_Hydneen+Telephoreen+Clavariaceen+Tremellineen.pdf';
+	import pdf9 from '#lib/assets/09_Otth_IconesFungorum_Gastromyceten+Uredineen.pdf';
+	import pdf10 from '#lib/assets/10_Otth_IconesFungorum_Discomyceten.pdf';
+	import pdf11 from '#lib/assets/11_Otth_IconesFungorum_Tubericineen+Pyrenomyceten.pdf';
+	import pdf12 from '#lib/assets/12_Otth_IconesFungorum_Imperfecti.pdf';
+	import pdf13 from '#lib/assets/13_Otth_IconesFungorum_Ustilagineen+Phykomyceten+Myxomyceten.pdf';
+	import pdf14 from '#lib/assets/01_Otth_IconesFungorum_Agaricineen.pdf';
+	import pdf15 from '#lib/assets/2a_Studer_IconesFungorum_172-329.pdf';
+	import pdf16 from '#lib/assets/2b_Studer_IconesFungorum_330-447.pdf';
+	import pdf17 from '#lib/assets/3a_Studer_IconesFungorum_448-605.pdf';
+	import pdf18 from '#lib/assets/3b_Studer_IconesFungorum_606-748.pdf';
+	import pdf19 from '#lib/assets/3c_Studer_IconesFungorum_749-839.pdf';
+	import pdf20 from '#lib/assets/4a_Studer_IconesFungorum_840-983.pdf';
+	import pdf21 from '#lib/assets/4b_Studer_IconesFungorum_984-1090.pdf';
+	import pdf22 from '#lib/assets/4c_Studer_IconesFungorum_1091-1178.pdf';
+	import pdf23 from '#lib/assets/5_Studer_IconesFungorum.pdf';
 </script>
 
 <ContentContainer class="styled">
@@ -54,7 +54,7 @@
 		Z+ZT.
 	</p>
 	<enhanced:img
-		src="$lib/assets/FB_posts_pilzbuch_03.jpg"
+		src="#lib/assets/FB_posts_pilzbuch_03.jpg"
 		alt="agaricus adiposus"
 		class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
 		onclick={(e: Event & { currentTarget: HTMLImageElement }) => {
@@ -151,7 +151,7 @@
 		1914, 136-167
 	</a>.
 	<enhanced:img
-		src="$lib/assets/Studer-Steinhäuslin.jpg"
+		src="#lib/assets/Studer-Steinhäuslin.jpg"
 		alt="Cortinarius traganus"
 		class="max-w-full md:max-w-96 md:float-left mx-auto mt-4 md:my-4 md:mr-6 border-8 border-primary-500 anchor cursor-pointer"
 		onclick={(e: Event & { currentTarget: HTMLImageElement }) => {

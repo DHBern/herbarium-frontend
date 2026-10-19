@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ContentContainer from '$lib/components/ContentContainer.svelte';
-	import ItemList from '$lib/components/ItemList.svelte';
+	import ContentContainer from '#lib/components/ContentContainer.svelte';
+	import ItemList from '#lib/components/ItemList.svelte';
 	import {
 		Switch,
 		ToggleGroup,
@@ -11,9 +11,9 @@
 	import MiniSearch from 'minisearch';
 	import { onMount } from 'svelte';
 	import { slide } from 'svelte/transition';
-	import { miniSearch } from '$lib/stores.svelte';
+	import { miniSearch } from '#lib/stores.svelte.js';
 	import { page } from '$app/state';
-	import { afterNavigate, replaceState } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import type { AdvancedSearch, Item, SearchQuery } from './types';
 	import type { PageProps } from './$types.js';
 
@@ -89,19 +89,27 @@
 		}
 	});
 
-	afterNavigate(() => {
-		const searchParam = page.url.searchParams.get('s');
-		const advancedParam = page.url.searchParams.get('a');
+	afterNavigate(({ shallow, type }) => {
+		if (shallow && type === 'goto') return;
+
+		const url = new URL(page.url.href);
+		const searchParam = url.searchParams.get('s');
+		const advancedParam = url.searchParams.get('a');
 
 		if (searchParam) {
 			searchtext = searchParam;
-			page.url.searchParams.delete('s');
-			replaceState(page.url.toString(), { searchParam: searchParam });
+			url.searchParams.delete('s');
+			goto(url, { shallow: true, replace: true, state: { searchParam } });
 		} else if (advancedParam) {
 			advancedToggle = true;
 			advancedFields = JSON.parse(advancedParam);
-			page.url.searchParams.delete('a');
-			replaceState(page.url.toString(), { searchParam: advancedParam });
+			url.searchParams.delete('a');
+
+			goto(url, {
+				shallow: true,
+				replace: true,
+				state: { searchParam: advancedParam }
+			});
 		}
 	});
 
@@ -321,8 +329,8 @@
 <style>
 	.image-background {
 		background-image: image-set(
-			url('$lib/assets/P1044324.00_00_45_03.Still003.webp') type('image/webp'),
-			url('$lib/assets/P1044324.00_00_45_03.Still003.jpg') type('image/jpg')
+			url('../lib/assets/P1044324.00_00_45_03.Still003.webp') type('image/webp'),
+			url('../lib/assets/P1044324.00_00_45_03.Still003.jpg') type('image/jpg')
 		);
 		background-size: cover;
 		background-position: center -200px;

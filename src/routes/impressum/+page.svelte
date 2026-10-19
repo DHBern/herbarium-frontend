@@ -1,6 +1,6 @@
 <script lang="ts">
-	import ContentContainer from '$lib/components/ContentContainer.svelte';
-	import { openLightbox } from '$lib/functions';
+	import ContentContainer from '#lib/components/ContentContainer.svelte';
+	import { openLightbox } from '#lib/functions.js';
 </script>
 
 <ContentContainer>
@@ -16,7 +16,7 @@
 			</p>
 		</div>
 		<enhanced:img
-			src="$lib/assets/IMG_5263.JPG"
+			src="#lib/assets/IMG_5263.JPG"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e: any) => {
@@ -34,7 +34,7 @@
 			</p>
 		</div>
 		<enhanced:img
-			src="$lib/assets/wittwenmacher.jpg"
+			src="#lib/assets/wittwenmacher.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e: any) => {
@@ -62,7 +62,7 @@
 			</p>
 		</div>
 		<enhanced:img
-			src="$lib/assets/P1006420.jpg"
+			src="#lib/assets/P1006420.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e: any) => {
@@ -81,7 +81,7 @@
 			</p>
 		</div>
 		<enhanced:img
-			src="$lib/assets/P1770528.jpg"
+			src="#lib/assets/P1770528.jpg"
 			alt="herbarium"
 			class="max-w-full border-8 border-primary-500 anchor cursor-pointer"
 			onclick={(e: any) => {

@@ -1,5 +1,5 @@
-import itemDataRaw from '$lib/data.json';
-import structure from '$lib/structure.json';
+import itemDataRaw from '#lib/data.json';
+import structure from '#lib/structure.json';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = async () => {

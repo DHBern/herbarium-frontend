@@ -30,8 +30,8 @@
 <style>
 	.image-background {
 		background-image: image-set(
-			url('$lib/assets/P1044324.00_00_45_03.Still003.webp') type('image/webp'),
-			url('$lib/assets/P1044324.00_00_45_03.Still003.jpg') type('image/jpg')
+			url('../../lib/assets/P1044324.00_00_45_03.Still003.webp') type('image/webp'),
+			url('../../lib/assets/P1044324.00_00_45_03.Still003.jpg') type('image/jpg')
 		);
 		background-size: cover;
 		background-position: center -200px;
