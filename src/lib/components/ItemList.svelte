@@ -53,62 +53,101 @@
 		};
 	}
 
-	const handleSort = (event: any, key: any) => {
-		const i = event.target?.querySelector('i');
+	let lastSortKey: string | null = $state(null);
+	let sortOrder: 'asc' | 'desc' = $state('asc');
+	let sortedItems: unknown = null;
+	// a new list from the parent (e.g. a new search) arrives unsorted, so it has no sort key
+	let sortKey = $derived(items === sortedItems ? lastSortKey : null);
 
-		const sort = (key: string, order: string) => {
-			items = items.sort((a, b) => {
-				if (order === 'asc') {
-					if (a[key] < b[key]) return -1;
-					if (a[key] > b[key]) return 1;
-					return 0;
-				} else {
-					if (a[key] > b[key]) return -1;
-					if (a[key] < b[key]) return 1;
-					return 0;
-				}
-			});
-		};
+	const sort = (key: string, order: 'asc' | 'desc') => {
+		const direction = order === 'asc' ? 1 : -1;
+		items = items.sort((a, b) => (a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0) * direction);
+		sortedItems = items;
+	};
 
-		if (i) {
-			if (i.classList.contains('fa-sort')) {
-				i.classList.remove('fa-sort');
-				i.classList.add('fa-sort-up');
-				// set 'fa-sort' to all other i
-				const otherElements = document.querySelectorAll('.fa-sort-up, .fa-sort-down');
-				otherElements.forEach((element) => {
-					if (element !== i) {
-						element.classList.remove('fa-sort-up', 'fa-sort-down');
-						element.classList.add('fa-sort');
-					}
-				});
-				sort(key, 'asc');
-			} else if (i.classList.contains('fa-sort-up')) {
-				i.classList.remove('fa-sort-up');
-				i.classList.add('fa-sort-down');
-				sort(key, 'desc');
-			} else {
-				i.classList.remove('fa-sort-down');
-				i.classList.add('fa-sort');
-				if (items[0].hasOwnProperty('score')) {
-					sort('score', 'desc');
-				} else {
-					sort('Catalog_Number', 'desc');
-				}
-			}
+	// cycles each column through asc → desc → default order (by score, or catalog number)
+	const handleSort = (key: string) => {
+		if (sortKey !== key) {
+			lastSortKey = key;
+			sortOrder = 'asc';
+		} else if (sortOrder === 'asc') {
+			sortOrder = 'desc';
+		} else {
+			lastSortKey = null;
 		}
+
+		if (lastSortKey) sort(lastSortKey, sortOrder);
+		else sort(items[0] && 'score' in items[0] ? 'score' : 'Catalog_Number', 'desc');
 	};
 	let visibleNumber = $state(30);
 
 	let showHelperElements = $state(false);
 	let table: any = $state();
+	let tableWidth = $state(0);
+	let clientWidth = $state(0);
+	let scrollLeft = $state(0);
+	let trackWidth = $state(0);
+	let hasOverflow = $derived(tableWidth > clientWidth + 1);
+	let maxScroll = $derived(tableWidth - clientWidth);
+	let thumbWidth = $derived(Math.max((trackWidth * clientWidth) / tableWidth, 40));
+	let thumbTravel = $derived(trackWidth - thumbWidth);
+	let thumbLeft = $derived(maxScroll > 0 ? (scrollLeft / maxScroll) * thumbTravel : 0);
+
+	// custom top scrollbar (native overlay scrollbars, e.g. in Firefox, stay hidden until scrolled)
+	let drag: { startX: number; startScroll: number } | null = null;
+
+	const onThumbPointerDown = (event: PointerEvent) => {
+		event.stopPropagation();
+		(event.currentTarget as HTMLElement).setPointerCapture(event.pointerId);
+		drag = { startX: event.clientX, startScroll: table.scrollLeft };
+	};
+
+	const onThumbPointerMove = (event: PointerEvent) => {
+		if (!drag || thumbTravel <= 0) return;
+		table.scrollLeft = drag.startScroll + ((event.clientX - drag.startX) * maxScroll) / thumbTravel;
+	};
+
+	const onThumbPointerUp = () => {
+		drag = null;
+	};
+
+	const onTrackPointerDown = (event: PointerEvent) => {
+		// jump so that the thumb is centered on the clicked position
+		const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+		const target = event.clientX - rect.left - thumbWidth / 2;
+		table.scrollTo({ left: (target / thumbTravel) * maxScroll, behavior: 'smooth' });
+	};
 
 	let idKey = $derived(structure.find((s) => s.id)?.key ?? null);
 	let visibleCategories = $derived(structure.filter((s) => s.showInList));
 	let visibleItems = $derived(items.slice(0, visibleNumber));
 </script>
 
-<div class="table-wrap" bind:this={table}>
+{#if hasOverflow}
+	<div
+		class="relative mb-1 h-3 cursor-pointer rounded-full bg-primary-100"
+		bind:clientWidth={trackWidth}
+		onpointerdown={onTrackPointerDown}
+		aria-hidden="true"
+	>
+		<div
+			class="absolute top-0 h-full cursor-grab touch-none rounded-full bg-primary-500 hover:bg-primary-700 active:cursor-grabbing"
+			style:width="{thumbWidth}px"
+			style:left="{thumbLeft}px"
+			onpointerdown={onThumbPointerDown}
+			onpointermove={onThumbPointerMove}
+			onpointerup={onThumbPointerUp}
+			onpointercancel={onThumbPointerUp}
+			aria-hidden="true"
+		></div>
+	</div>
+{/if}
+<div
+	class="table-wrap"
+	bind:this={table}
+	bind:clientWidth
+	onscroll={() => (scrollLeft = table.scrollLeft)}
+>
 	{#if showHelperElements}
 		<button
 			class="btn-icon preset-tonal-primary fixed top-24 right-6 z-50"
@@ -122,15 +161,18 @@
 			<i class="fa-solid fa-arrows-up-to-line"></i>
 		</button>
 	{/if}
-	<table class="table bg-primary-100!">
-		<thead use:viewport={false} class="border-primary-800/20! bg-primary-400!">
+	<table class="table whitespace-nowrap bg-primary-100" bind:offsetWidth={tableWidth}>
+		<thead use:viewport={false} class="border-primary-800/20 bg-primary-400">
 			<tr>
 				{#each visibleCategories as { key, label }}
-					<th
-						class="hover:cursor-pointer w-0 whitespace-nowrap text-surface-950"
-						onclick={(e) => handleSort(e, key)}
-					>
-						{label} <i class="fa-solid pointer-events-none fa-sort"></i>
+					<th class="w-0 cursor-pointer text-surface-950" onclick={() => handleSort(key)}>
+						{label}
+						<i
+							class={[
+								'fa-solid',
+								sortKey !== key ? 'fa-sort' : sortOrder === 'asc' ? 'fa-sort-up' : 'fa-sort-down'
+							]}
+						></i>
 					</th>
 				{/each}
 			</tr>
@@ -138,11 +180,11 @@
 		<tbody>
 			{#each visibleItems as row, i (row[idKey])}
 				<tr
-					class="border-primary-800/20! even:bg-primary-400/30!"
+					class="border-primary-800/20 even:bg-primary-400/30"
 					use:viewport={i !== visibleItems.length - 1}
 				>
 					{#each visibleCategories as { key }, j}
-						<td class="w-0 whitespace-nowrap {j === 0 ? 'italic' : ''}">
+						<td class={['w-0', j === 0 && 'italic']}>
 							{#if j === 0}<i class="fa-solid fa-camera"></i>{/if}
 							{#if row[key]}
 								<a
