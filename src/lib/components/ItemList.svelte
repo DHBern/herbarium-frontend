@@ -20,7 +20,7 @@
 				if (entry.target.tagName === 'THEAD') {
 					if (entry.isIntersecting) {
 						showHelperElements = false;
-					} else if (entry.boundingClientRect.y < 0) {
+					} else if (entry.boundingClientRect.top < window.innerHeight / 2) {
 						showHelperElements = true;
 					}
 				} else {
