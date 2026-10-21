@@ -190,10 +190,7 @@
 					</div>
 				{/if}
 				<h1 class="h1 text-balance pb-2 md:pb-4 inline italic">
-					{#if d?.Genus?.trim() || d?.Species?.trim()}
-						{d.Genus}
-						{d.Species}
-					{:else if d?.Accepted_Name?.trim()}
+					{#if d?.Accepted_Name?.trim()}
 						{d.Accepted_Name}
 					{:else}
 						{d['Label Name']}
