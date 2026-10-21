@@ -10,6 +10,14 @@ export const setGenusAndSpeciesItalic = (input: string, genus: string, species: 
 	);
 };
 
+const IIIF_BASE = 'https://iiif.ub.unibe.ch';
+
+export const manifestUrl = (id: string) =>
+	`${IIIF_BASE}/presentation/v3.0/boga/manifest/${encodeURIComponent(id)}/`;
+
+export const thumbnailUrl = (id: string) =>
+	`${IIIF_BASE}/image/boga/${encodeURIComponent(id)}.tif/thumbnail/1.webp`;
+
 export const openLightbox = (src: string) => {
 	selectedImagePath.path = src;
 };

@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
+	import Intro from '#lib/collections/content.md';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();
@@ -9,17 +10,29 @@
 
 <section class="w-full px-8 my-8">
 	<div class="container py-4 mx-auto">
-		<h1 class="h1 font-bold tracking-wide mb-4">Collections</h1>
-		<p class="p lg:text-xl mb-8">
-			Explore curated selections from the Herbarium Bernense. Each collection has its own filters
-			and structure.
-		</p>
+		<div class="mb-8 lg:text-xl">
+			<Intro />
+		</div>
 
-		<ul class="list-inside list-disc space-y-2">
-			{#each data.collections as collection}
+		<ul class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+			{#each data.collections as collection (collection.slug)}
 				<li>
-					<a class="anchor" href={resolve('/collections/[collection]', { collection })}>
-						{collection}
+					<a
+						class="card preset-tonal-primary hover:preset-filled-primary-500 flex h-full flex-col overflow-hidden"
+						href={resolve('/collections/[collection]', { collection: collection.slug })}
+					>
+						{#if collection.featured}
+							<enhanced:img
+								src={collection.featured}
+								alt=""
+								class="aspect-4/3 w-full object-cover"
+							/>
+						{:else}
+							<div class="aspect-4/3 w-full bg-primary-200 flex items-center justify-center">
+								<i class="fa-solid fa-leaf fa-2xl text-primary-500" aria-hidden="true"></i>
+							</div>
+						{/if}
+						<span class="h4 p-4">{collection.title}</span>
 					</a>
 				</li>
 			{/each}

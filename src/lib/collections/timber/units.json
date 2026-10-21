@@ -1,0 +1,60 @@
+[
+	{
+		"Catalog_Number": "Platzhalter1",
+		"Unit_Title": "Brazilian timber collection 01",
+		"OLD_TITLE": "Brazilian timber collection"
+	},
+	{
+		"Catalog_Number": "Platzhalter2",
+		"Unit_Title": "Brazilian timber collection 02",
+		"OLD_TITLE": "Brazilian timber collection"
+	},
+	{
+		"Catalog_Number": "Platzhalter6",
+		"Unit_Title": "Timber collection 01",
+		"OLD_TITLE": "Wood",
+		"ex-Collection": "S. Wäckerli"
+	},
+	{
+		"Catalog_Number": "Platzhalter7",
+		"Unit_Title": "Timber collection 02",
+		"OLD_TITLE": "wood",
+		"Donator": "Ursula Käser",
+		"ex-Collection": "Campus Muristalden"
+	},
+	{
+		"Catalog_Number": "BERN-B-00004844",
+		"Unit_Title": "Wood anatomy 01",
+		"OLD_TITLE": "Teaching material about trees"
+	},
+	{
+		"Catalog_Number": "BERN-B-00004845",
+		"Unit_Title": "Wood anatomy 02",
+		"OLD_TITLE": "Teaching material about trees"
+	},
+	{
+		"Catalog_Number": "BERN-B-00004846",
+		"Unit_Title": "Wood anatomy 03",
+		"OLD_TITLE": "Teaching material about trees"
+	},
+	{
+		"Catalog_Number": "BERN-B-00004847",
+		"Unit_Title": "Wood anatomy 04",
+		"OLD_TITLE": "Teaching material about trees"
+	},
+	{
+		"Catalog_Number": "BERN-B-00004848",
+		"Unit_Title": "Wood anatomy 05",
+		"OLD_TITLE": "Teaching material about trees"
+	},
+	{
+		"Catalog_Number": "BERN-B-00004849",
+		"Unit_Title": "Wood anatomy 06",
+		"OLD_TITLE": "Teaching material about trees"
+	},
+	{
+		"Catalog_Number": "BERN-B-00004850",
+		"Unit_Title": "Wood anatomy 07",
+		"OLD_TITLE": "Teaching material about trees"
+	}
+]

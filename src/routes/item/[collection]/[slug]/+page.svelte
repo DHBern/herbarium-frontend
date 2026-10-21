@@ -7,6 +7,7 @@
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '#lib/functions.js';
 	import { resultNavigation } from '#lib/stores.svelte.js';
 	import iiifLogo from '#lib/assets/IIIF-logo-colored-text.svg';
+	import UnitContents from '#lib/components/UnitContents.svelte';
 	import type { Viewer } from 'openseadragon';
 	import type { PageProps } from './$types';
 	let OpenSeadragon;
@@ -18,6 +19,7 @@
 	let downloadUrl = $derived(data.iiif?.[0] ? `${data.iiif[0]}/full/max/0/default.jpg` : undefined);
 
 	let collection = $derived(params.collection);
+	let isMain = $derived(collection === 'main');
 	let slug = $derived(params.slug);
 	let navActive = $derived(
 		resultNavigation.collection === collection && resultNavigation.ids.length > 0
@@ -165,7 +167,17 @@
 	<div class="grid md:grid-cols-2 md:grid-rows-[auto_1fr] gap-4 lg:gap-6">
 		{#if data.metadata}
 			{@const d = data.metadata}
+			{@const isType = isMain && d.Type && d.Type !== 'no'}
 			<div class="md:col-span-2 lg:col-span-1 lg:col-start-2">
+				{#if !isMain}
+					<a
+						class="anchor mb-2 inline-flex items-center gap-2"
+						href={resolve('/collections/[collection]', { collection })}
+					>
+						<i class="fa-solid fa-arrow-left"></i>
+						{data.collectionTitle ?? collection}
+					</a>
+				{/if}
 				{#if navActive}
 					<div class="md:col-span-2 lg:col-span-1 lg:col-start-2 flex items-center gap-3">
 						<button
@@ -189,20 +201,22 @@
 						</button>
 					</div>
 				{/if}
-				<h1 class="h1 text-balance pb-2 md:pb-4 inline italic">
-					{#if d?.Accepted_Name?.trim()}
+				<h1 class={['h1 text-balance pb-2 md:pb-4 inline', isMain && 'italic']}>
+					{#if !isMain}
+						{d.Unit_Title}
+					{:else if d?.Accepted_Name?.trim()}
 						{d.Accepted_Name}
 					{:else}
 						{d['Label Name']}
 					{/if}
 
-					{#if d.Type && d.Type !== 'no'}
+					{#if isType}
 						<span class="badge preset-filled-warning-500"> {d.Type}</span>
 					{/if}
 				</h1>
 			</div>
 			<div
-				class="lg:row-span-2 lg:row-start-1 w-full h-fit relative {d.Type !== 'no'
+				class="lg:row-span-2 lg:row-start-1 w-full h-fit relative {isType
 					? 'bg-warning-300'
 					: 'bg-primary-900'}"
 			>
@@ -249,22 +263,29 @@
 						</dt>
 
 						<dd class="pl-2 pt-4">
-							<a
-								class="anchor"
-								href={key === 'Catalog_Number'
-									? resolve('/item/[collection]/[slug]', { collection: 'main', slug: metadataVal })
-									: resolve(`/?a=${encodeURIComponent(JSON.stringify({ [key]: metadataVal }))}`)}
-							>
-								{#if key === 'Country'}
-									{@html addFlagToCountry(metadataVal)}
-								{:else if key === 'Genus' || key === 'Species'}
-									<span class="italic">{metadataVal}</span>
-								{:else if key === 'Accepted_Name' || key === 'Label_Name'}
-									{@html setGenusAndSpeciesItalic(metadataVal, d.Genus, d.Species)}
-								{:else}
-									{metadataVal}
-								{/if}
-							</a>
+							{#if !isMain}
+								{metadataVal}
+							{:else}
+								<a
+									class="anchor"
+									href={key === 'Catalog_Number'
+										? resolve('/item/[collection]/[slug]', {
+												collection: 'main',
+												slug: metadataVal
+											})
+										: resolve(`/?a=${encodeURIComponent(JSON.stringify({ [key]: metadataVal }))}`)}
+								>
+									{#if key === 'Country'}
+										{@html addFlagToCountry(metadataVal)}
+									{:else if key === 'Genus' || key === 'Species'}
+										<span class="italic">{metadataVal}</span>
+									{:else if key === 'Accepted_Name' || key === 'Label_Name'}
+										{@html setGenusAndSpeciesItalic(metadataVal, d.Genus, d.Species)}
+									{:else}
+										{metadataVal}
+									{/if}
+								</a>
+							{/if}
 						</dd>
 					{/if}
 				{/each}
@@ -282,4 +303,10 @@
 			</p>
 		{/if}
 	</div>
+	{#if data.contents.length > 0}
+		<section class="mt-8">
+			<h2 class="h3 mb-4">On this {collection === 'display-herbarium' ? 'panel' : 'unit'}</h2>
+			<UnitContents items={data.contents} structure={data.contentsStructure} />
+		</section>
+	{/if}
 </ContentContainer>

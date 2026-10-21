@@ -1,4 +1,6 @@
 ---
+title: 'Display herbarium'
+hidden: true
 featured: 'display-herbarium.jpg'
 ---
 

@@ -1,0 +1,21 @@
+[
+	{
+		"Catalog_Number": "Platzhalter3",
+		"Unit_Title": "Plant fibers 01",
+		"OLD_TITLE": "/"
+	},
+	{
+		"Catalog_Number": "Platzhalter4",
+		"Unit_Title": "Plant fluids 01",
+		"OLD_TITLE": "resource",
+		"Donator": "Ursula Käser",
+		"ex-Collection": "Campus Muristalden"
+	},
+	{
+		"Catalog_Number": "Platzhalter5",
+		"Unit_Title": "Plant fluids 02",
+		"OLD_TITLE": "resource",
+		"Donator": "Ursula Käser",
+		"ex-Collection": "Campus Muristalden"
+	}
+]

@@ -1,0 +1,17 @@
+{
+	"units": [
+		{ "label": "Title", "key": "Unit_Title" },
+		{ "label": "Catalog Number", "key": "Catalog_Number" },
+		{ "label": "Old title", "key": "OLD_TITLE" },
+		{ "label": "Donator", "key": "Donator" },
+		{ "label": "ex-Collection", "key": "ex-Collection" }
+	],
+	"contents": [
+		{ "label": "No", "key": "Position" },
+		{ "label": "Catalog Number", "key": "Catalog_Number" },
+		{ "label": "Vernacular name", "key": "Vernacular_Name" },
+		{ "label": "Label name", "key": "Label_Name" },
+		{ "label": "Accepted name", "key": "Accepted_Name" },
+		{ "label": "Family", "key": "Family" }
+	]
+}
