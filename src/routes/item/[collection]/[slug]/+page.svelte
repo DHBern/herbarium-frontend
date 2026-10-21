@@ -30,6 +30,33 @@
 			: null
 	);
 
+	let downloading = $state(false);
+
+	// the IIIF server is cross-origin, so the `download` attribute alone is ignored by browsers;
+	// fetch the image as a blob and download it from a same-origin object URL instead
+	async function downloadImage(event: MouseEvent) {
+		if (!downloadUrl) return;
+		event.preventDefault();
+		if (downloading) return;
+		downloading = true;
+		try {
+			const response = await fetch(downloadUrl);
+			if (!response.ok) throw new Error(`HTTP ${response.status}`);
+			const objectUrl = URL.createObjectURL(await response.blob());
+			const a = document.createElement('a');
+			a.href = objectUrl;
+			a.download = `${collection}-${slug}.jpg`;
+			document.body.appendChild(a);
+			a.click();
+			a.remove();
+			setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+		} catch {
+			window.open(downloadUrl, '_blank', 'noopener');
+		} finally {
+			downloading = false;
+		}
+	}
+
 	function goToItem(targetSlug: string) {
 		goto(resolve('/item/[collection]/[slug]', { collection, slug: targetSlug }));
 	}
@@ -186,14 +213,15 @@
 				<a
 					bind:this={downloadLinkEl}
 					href={downloadUrl}
-					target="_blank"
-					rel="noopener"
+					download={`${collection}-${slug}.jpg`}
+					onclick={downloadImage}
 					title="Download full-size image"
+					aria-busy={downloading}
 					class={`h-12 w-12 text-white bg-black/40 hover:bg-black/80 ${!downloadUrl ? 'opacity-40 pointer-events-none' : ''}`}
 					style="display:none"
 				>
 					<span class="absolute inset-0 flex items-center justify-center">
-						<i class="fa-solid fa-download fa-2xl"></i>
+						<i class={`fa-solid fa-2xl ${downloading ? 'fa-spinner fa-spin' : 'fa-download'}`}></i>
 					</span>
 				</a>
 				<a
