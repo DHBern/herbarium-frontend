@@ -11,8 +11,8 @@
 	import type { PageProps } from './$types';
 	let OpenSeadragon;
 	let viewer: Viewer | undefined = $state();
-	let manifestLinkEl: HTMLAnchorElement | undefined;
-	let downloadLinkEl: HTMLAnchorElement | undefined;
+	let manifestLinkEl: HTMLAnchorElement | undefined = $state();
+	let downloadLinkEl: HTMLAnchorElement | undefined = $state();
 	let { data, params }: PageProps = $props();
 	let imageOpenFailed = $derived(!data.iiif);
 	let downloadUrl = $derived(data.iiif?.[0] ? `${data.iiif[0]}/full/max/0/default.jpg` : undefined);
