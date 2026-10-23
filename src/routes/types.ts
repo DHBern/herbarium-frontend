@@ -54,7 +54,6 @@ export interface CollectionUnit {
 
 export interface CollectionContent {
 	Unit: string;
-	Position?: number;
 	Catalog_Number?: string;
 	[key: string]: unknown;
 }

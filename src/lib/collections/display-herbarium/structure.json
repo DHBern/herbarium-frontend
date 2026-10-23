@@ -6,8 +6,8 @@
 		{ "label": "Families", "key": "Families" }
 	],
 	"contents": [
-		{ "label": "No", "key": "Position" },
-		{ "label": "Old Catalog Number", "key": "Old Catalog Number" },
+		{ "label": "Specimen No", "key": "Specimen No" },
+		{ "label": "Old Catalog Number", "key": "old Catalog Number" },
 		{ "label": "Catalog Number", "key": "Catalog_Number" },
 		{ "label": "Label Name", "key": "Label Name" },
 		{ "label": "Accepted Name", "key": "Accepted Name" },

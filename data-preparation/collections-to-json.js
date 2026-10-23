@@ -6,11 +6,13 @@
  *
  * Workbook layout:
  *   - sheet `units` (required): one row per unit (panel, box, …). `Catalog_Number` is the IIIF id
- *     and URL slug, `Unit_Title` the caption; an optional `Sort` column sets the order. Units
- *     without `Catalog_Number` get one derived from `Panel No` + `Panel side`.
+ *     and URL slug, `Unit_Title` the caption. Units without `Catalog_Number` get one derived from
+ *     `Panel No` + `Panel side`.
  *   - sheet `contents` (optional): one row per item on a unit. `Unit` references the unit's
- *     `Catalog_Number` (or is derived from `Panel No` + `Panel side`), `Position` sets the order and
- *     `Catalog_Number` links the item to the main herbarium.
+ *     `Catalog_Number` (or is derived from `Panel No` + `Panel side`) and `Catalog_Number` links the
+ *     item to the main herbarium.
+ *
+ * Both sheets are kept in sheet order, which is the order shown on the website.
  *
  * Usage:
  *   pnpm convert-collections
@@ -56,25 +58,6 @@ function toId(value) {
 }
 
 /**
- * Sort by a numeric/string column if any record has it, keeping sheet order otherwise.
- *
- * @param {Record<string, unknown>[]} records
- * @param {string} key
- */
-function sortBy(records, key) {
-	if (!records.some((r) => r[key] !== undefined)) return records;
-	return records
-		.map((record, index) => ({ record, index }))
-		.sort((a, b) => {
-			const x = a.record[key];
-			const y = b.record[key];
-			if (x === y || x === undefined || y === undefined) return a.index - b.index;
-			return x < y ? -1 : 1;
-		})
-		.map(({ record }) => record);
-}
-
-/**
  * @param {string} name
  * @param {Set<string>} mainCatalogNumbers
  * @returns {Promise<number>} number of contents catalog numbers missing from the main data
@@ -89,7 +72,7 @@ async function convertCollection(name, mainCatalogNumbers) {
 		throw new Error(`${name}.xlsx has no "units" sheet.`);
 	}
 
-	const units = sortBy(sheetToObjects(unitRows), 'Sort').map((unit) => ({
+	const units = sheetToObjects(unitRows).map((unit) => ({
 		...unit,
 		Catalog_Number: toId(unit.Catalog_Number) ?? derivePanelId(unit['Panel No'], unit['Panel side'])
 	}));

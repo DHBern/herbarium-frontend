@@ -69,10 +69,8 @@ export async function loadCollection(slug: string) {
 	};
 }
 
-/** The items on one unit, in `Position` order (empty if the collection has no contents). */
+/** The items on one unit, in sheet order (empty if the collection has no contents). */
 export async function loadUnitContents(slug: string, unit: string) {
 	const contents = (await contentsFiles[path(slug, 'contents.json')]?.()) ?? [];
-	return contents
-		.filter((item) => item.Unit === unit)
-		.sort((a, b) => (a.Position ?? 0) - (b.Position ?? 0));
+	return contents.filter((item) => item.Unit === unit);
 }
