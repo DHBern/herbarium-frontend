@@ -1,6 +1,6 @@
 import { error } from '@sveltejs/kit';
 import { loadCollection, loadUnitContents } from '#lib/collection-data.js';
-import { manifestUrl as buildManifestUrl } from '#lib/functions.js';
+import { IMAGE_MISSING, manifestUrl as buildManifestUrl } from '#lib/functions.js';
 import type { ItemStructure, Item, CollectionContent } from '../../../types';
 import type { PageLoad } from './$types';
 
@@ -34,23 +34,25 @@ export const load: PageLoad = async ({ params, fetch }) => {
 			: await loadCollectionItem(params.collection, params.slug);
 
 	const manifestUrl = item.id ? buildManifestUrl(String(item.id)) : undefined;
-	const iiif = manifestUrl
-		? await fetch(manifestUrl)
-				.then((res) => (res.ok ? res.json() : false))
-				.then((json) => {
-					return json.items?.flatMap((canvas: any) => {
-						return canvas.items?.flatMap((annotationPage: any) => {
-							return annotationPage.items?.flatMap((annotation: any) => {
-								if (annotation.body?.type === 'Image') {
-									return annotation.body.service[0].id;
-								}
-								return [];
+	// skip the request for items the build-time check found no image for
+	const iiif =
+		manifestUrl && item.metadata?.Image !== IMAGE_MISSING
+			? await fetch(manifestUrl)
+					.then((res) => (res.ok ? res.json() : false))
+					.then((json) => {
+						return json.items?.flatMap((canvas: any) => {
+							return canvas.items?.flatMap((annotationPage: any) => {
+								return annotationPage.items?.flatMap((annotation: any) => {
+									if (annotation.body?.type === 'Image') {
+										return annotation.body.service[0].id;
+									}
+									return [];
+								});
 							});
 						});
-					});
-				})
-				.catch(() => false)
-		: false;
+					})
+					.catch(() => false)
+			: false;
 
 	return {
 		key: params.slug,

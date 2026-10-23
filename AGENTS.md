@@ -19,6 +19,11 @@ University of Bern. See [README.md](README.md) for the project summary and autho
 - `pnpm check` — `svelte-kit sync` + `svelte-check` type checking.
 - `pnpm lint` / `pnpm format` — Prettier + ESLint.
 - `pnpm convert-data` — `data-preparation/xlsx-to-json.js`, converts the Excel export to JSON.
+  Both `convert-data` and `convert-collections` check every `Catalog_Number` against the IIIF
+  Image API (`image/v3.0/boga/<id>.tif/info.json`: 302 = exists, 404 = missing; helper in
+  `data-preparation/iiif-utils.js`) and write an `Image` field (`"available"` /
+  `"not available"`). It drives the list's camera icon and the "Image" filter. The check takes a
+  few minutes; `-- --skip-images` skips it (field omitted → every item shows the icon).
 
 ## Project structure
 

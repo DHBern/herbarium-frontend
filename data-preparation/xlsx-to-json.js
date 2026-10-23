@@ -7,6 +7,10 @@
  *   pnpm convert-data
  *   pnpm convert-data -- --input ./other.xlsx --output ./src/lib/data.json
  *   node data-preparation/xlsx-to-json.js --input ./other.xlsx
+ *
+ * Every record gets an `Image` field ("available" / "not available") from a check against the
+ * IIIF Image API, which takes a few minutes; `--skip-images` skips it (the field is then omitted
+ * and the frontend shows every item as having an image).
  */
 
 import { writeFile } from 'node:fs/promises';
@@ -15,6 +19,7 @@ import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import readXlsxFile from 'read-excel-file/node';
 import { parseArgs, rowToObject } from './xlsx-utils.js';
+import { checkImages, IMAGE_AVAILABLE, IMAGE_MISSING } from './iiif-utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -60,6 +65,15 @@ async function main() {
 		});
 
 	console.log(`Parsed ${records.length} records from the first worksheet.`);
+
+	if (!flags['skip-images']) {
+		const withImage = await checkImages(records.map((record) => record.Catalog_Number));
+		for (const record of records) {
+			record.Image = withImage.has(record.Catalog_Number) ? IMAGE_AVAILABLE : IMAGE_MISSING;
+		}
+		const count = records.filter((record) => record.Image === IMAGE_AVAILABLE).length;
+		console.log(`${count} of ${records.length} records have an image.`);
+	}
 
 	await writeFile(outputPath, JSON.stringify(records, null, '\t') + '\n', 'utf-8');
 	console.log(`Wrote ${outputPath}`);

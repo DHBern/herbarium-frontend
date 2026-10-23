@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { addFlagToCountry, setGenusAndSpeciesItalic } from '#lib/functions.js';
+	import { addFlagToCountry, IMAGE_AVAILABLE, setGenusAndSpeciesItalic } from '#lib/functions.js';
 	import { resultNavigation } from '#lib/stores.svelte.js';
 	import { blur, fly } from 'svelte/transition';
 	import type { Item, ItemStructure } from '../../routes/types';
@@ -187,7 +187,9 @@
 					{#each visibleCategories as { key }, j}
 						{@const partialItalic = key === 'Accepted_Name' && row.Genus && row.Species}
 						<td class={['w-0', nameKeys.has(key) && !partialItalic && 'italic']}>
-							{#if j === 0 && id}<i class="fa-solid fa-camera"></i>{/if}
+							{#if j === 0 && id && row.Image === IMAGE_AVAILABLE}
+								<i class="fa-solid fa-camera" title="Image available"></i>
+							{/if}
 							{#snippet value()}
 								{#if key === 'Country'}
 									{@html addFlagToCountry(row[key])}

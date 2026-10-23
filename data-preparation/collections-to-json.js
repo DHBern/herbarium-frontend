@@ -17,6 +17,9 @@
  * Usage:
  *   pnpm convert-collections
  *   pnpm convert-collections -- --collection display-herbarium
+ *
+ * Every unit gets an `Image` field ("available" / "not available") from a check against the IIIF
+ * Image API; `--skip-images` skips it.
  */
 
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
@@ -26,6 +29,7 @@ import { resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import readXlsxFile from 'read-excel-file/node';
 import { parseArgs, sheetToObjects } from './xlsx-utils.js';
+import { checkImages, IMAGE_AVAILABLE, IMAGE_MISSING } from './iiif-utils.js';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, '..');
@@ -61,9 +65,10 @@ function toId(value) {
 /**
  * @param {string} name
  * @param {Set<string>} mainCatalogNumbers
+ * @param {boolean} skipImages
  * @returns {Promise<number>} number of contents catalog numbers missing from the main data
  */
-async function convertCollection(name, mainCatalogNumbers) {
+async function convertCollection(name, mainCatalogNumbers, skipImages) {
 	const inputPath = resolve(INPUT_DIR, `${name}.xlsx`);
 	const sheets = await readXlsxFile(inputPath);
 	const sheet = (sheetName) => sheets.find((s) => s.sheet.toLowerCase() === sheetName)?.data;
@@ -87,6 +92,13 @@ async function convertCollection(name, mainCatalogNumbers) {
 			throw new Error(`${name}: duplicate unit ${unit.Catalog_Number}.`);
 		}
 		unitIds.add(unit.Catalog_Number);
+	}
+
+	if (!skipImages) {
+		const withImage = await checkImages(units.map((unit) => unit.Catalog_Number));
+		for (const unit of units) {
+			unit.Image = withImage.has(unit.Catalog_Number) ? IMAGE_AVAILABLE : IMAGE_MISSING;
+		}
 	}
 
 	const outDir = resolve(OUTPUT_DIR, name);
@@ -140,9 +152,9 @@ async function main() {
 	// first if it isn't there (e.g. in a fresh checkout)
 	if (!existsSync(MAIN_DATA)) {
 		console.log(`${MAIN_DATA} not found, running xlsx-to-json.js first ...`);
-		const result = spawnSync(process.execPath, [resolve(__dirname, 'xlsx-to-json.js')], {
-			stdio: 'inherit'
-		});
+		const args = [resolve(__dirname, 'xlsx-to-json.js')];
+		if (flags['skip-images']) args.push('--skip-images');
+		const result = spawnSync(process.execPath, args, { stdio: 'inherit' });
 		if (result.status !== 0) {
 			console.error('Converting the main data failed.');
 			process.exit(result.status ?? 1);
@@ -155,7 +167,7 @@ async function main() {
 
 	let missing = 0;
 	for (const name of names) {
-		missing += await convertCollection(name, mainCatalogNumbers);
+		missing += await convertCollection(name, mainCatalogNumbers, Boolean(flags['skip-images']));
 	}
 	if (missing > 0) {
 		console.warn(`${missing} catalog number(s) not found in the main data (links will 404).`);
