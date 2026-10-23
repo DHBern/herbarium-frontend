@@ -21,6 +21,7 @@
 
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
+import { spawnSync } from 'node:child_process';
 import { resolve, dirname, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import readXlsxFile from 'read-excel-file/node';
@@ -132,6 +133,19 @@ async function main() {
 		if (!existsSync(resolve(INPUT_DIR, `${name}.xlsx`))) {
 			console.error(`Input file not found: ${name}.xlsx`);
 			process.exit(1);
+		}
+	}
+
+	// the main data is needed to check the contents' catalog numbers; it's generated, so create it
+	// first if it isn't there (e.g. in a fresh checkout)
+	if (!existsSync(MAIN_DATA)) {
+		console.log(`${MAIN_DATA} not found, running xlsx-to-json.js first ...`);
+		const result = spawnSync(process.execPath, [resolve(__dirname, 'xlsx-to-json.js')], {
+			stdio: 'inherit'
+		});
+		if (result.status !== 0) {
+			console.error('Converting the main data failed.');
+			process.exit(result.status ?? 1);
 		}
 	}
 

@@ -10,3 +10,8 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 data-preparation/iiif-metadata/*.csv
 
+
+# generated from data-preparation/*.xlsx (pnpm convert-data / pnpm convert-collections)
+/src/lib/data.json
+/src/lib/collections/*/units.json
+/src/lib/collections/*/contents.json

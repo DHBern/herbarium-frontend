@@ -20,6 +20,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install
 
+      - name: Generate data from xlsx
+        run: |
+          pnpm run convert-data
+          pnpm run convert-collections
+
       - name: build
         env:
           # BASE_PATH: '/${{ github.event.repository.name }}'
