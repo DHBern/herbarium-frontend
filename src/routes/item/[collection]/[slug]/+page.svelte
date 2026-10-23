@@ -7,7 +7,7 @@
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '#lib/functions.js';
 	import { resultNavigation } from '#lib/stores.svelte.js';
 	import iiifLogo from '#lib/assets/IIIF-logo-colored-text.svg';
-	import UnitContents from '#lib/components/UnitContents.svelte';
+	import ItemList from '#lib/components/ItemList.svelte';
 	import type { Viewer } from 'openseadragon';
 	import type { PageProps } from './$types';
 	let OpenSeadragon;
@@ -306,7 +306,7 @@
 	{#if data.contents.length > 0}
 		<section class="mt-8">
 			<h2 class="h3 mb-4">On this {collection === 'display-herbarium' ? 'panel' : 'unit'}</h2>
-			<UnitContents items={data.contents} structure={data.contentsStructure} />
+			<ItemList items={data.contents} structure={data.contentsStructure} collection="main" />
 		</section>
 	{/if}
 </ContentContainer>

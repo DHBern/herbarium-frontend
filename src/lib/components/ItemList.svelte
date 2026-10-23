@@ -3,14 +3,25 @@
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '#lib/functions.js';
 	import { resultNavigation } from '#lib/stores.svelte.js';
 	import { blur, fly } from 'svelte/transition';
-	let { items = $bindable([]), structure = [], collection = '' } = $props();
+	import type { Item, ItemStructure } from '../../routes/types';
+
+	interface Props {
+		items?: Item[];
+		structure?: ItemStructure[];
+		collection?: string;
+	}
+
+	let { items = [], structure = [], collection = '' }: Props = $props();
+
+	const nameKeys = new Set(['Label_Name', 'Label Name', 'Accepted_Name', 'Accepted Name']);
 
 	let intersectionObserver: any;
 
 	// hand the current result order to the detail page for its prev/next navigation
 	const setResultNavigation = () => {
+		if (!idKey) return;
 		resultNavigation.collection = collection || 'main';
-		resultNavigation.ids = items.map((item) => item[idKey]);
+		resultNavigation.ids = sortedItems.map((item) => item[idKey]).filter(Boolean);
 	};
 
 	function ensureIntersectionObserver() {
@@ -49,31 +60,24 @@
 		};
 	}
 
-	let lastSortKey: string | null = $state(null);
-	let sortOrder: 'asc' | 'desc' = $state('asc');
-	let sortedItems: unknown = null;
-	// a new list from the parent (e.g. a new search) arrives unsorted, so it has no sort key
-	let sortKey = $derived(items === sortedItems ? lastSortKey : null);
+	// remembers which list the sort was chosen for: a new list from the parent (e.g. a new search)
+	// arrives in its own order, so it has no sort key
+	let sorting = $state.raw<{ key: string; order: 'asc' | 'desc'; for: Item[] } | null>(null);
+	let sortKey = $derived(sorting?.for === items ? sorting.key : null);
+	let sortOrder = $derived(sorting?.order ?? 'asc');
 
-	const sort = (key: string, order: 'asc' | 'desc') => {
-		const direction = order === 'asc' ? 1 : -1;
-		items = items.sort((a, b) => (a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0) * direction);
-		sortedItems = items;
-	};
+	let sortedItems = $derived.by(() => {
+		if (!sortKey) return items;
+		const key = sortKey;
+		const direction = sortOrder === 'asc' ? 1 : -1;
+		return [...items].sort((a, b) => (a[key] < b[key] ? -1 : a[key] > b[key] ? 1 : 0) * direction);
+	});
 
-	// cycles each column through asc → desc → default order (by score, or catalog number)
+	// cycles each column through asc → desc → the order the list was passed in
 	const handleSort = (key: string) => {
-		if (sortKey !== key) {
-			lastSortKey = key;
-			sortOrder = 'asc';
-		} else if (sortOrder === 'asc') {
-			sortOrder = 'desc';
-		} else {
-			lastSortKey = null;
-		}
-
-		if (lastSortKey) sort(lastSortKey, sortOrder);
-		else sort(items[0] && 'score' in items[0] ? 'score' : 'Catalog_Number', 'desc');
+		if (sortKey !== key) sorting = { key, order: 'asc', for: items };
+		else if (sortOrder === 'asc') sorting = { key, order: 'desc', for: items };
+		else sorting = null;
 	};
 	let visibleNumber = $state(30);
 
@@ -116,7 +120,7 @@
 
 	let idKey = $derived(structure.find((s) => s.id)?.key ?? null);
 	let visibleCategories = $derived(structure.filter((s) => s.showInList));
-	let visibleItems = $derived(items.slice(0, visibleNumber));
+	let visibleItems = $derived(sortedItems.slice(0, visibleNumber));
 </script>
 
 {#if hasOverflow}
@@ -174,32 +178,39 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each visibleItems as row, i (row[idKey])}
+			{#each visibleItems as row, i (idKey && row[idKey] ? row[idKey] : i)}
+				{@const id = idKey ? row[idKey] : undefined}
 				<tr
 					class="border-primary-800/20 even:bg-primary-400/30"
 					use:viewport={i !== visibleItems.length - 1}
 				>
 					{#each visibleCategories as { key }, j}
-						<td class={['w-0', j === 0 && 'italic']}>
-							{#if j === 0}<i class="fa-solid fa-camera"></i>{/if}
-							{#if row[key]}
+						{@const partialItalic = key === 'Accepted_Name' && row.Genus && row.Species}
+						<td class={['w-0', nameKeys.has(key) && !partialItalic && 'italic']}>
+							{#if j === 0 && id}<i class="fa-solid fa-camera"></i>{/if}
+							{#snippet value()}
+								{#if key === 'Country'}
+									{@html addFlagToCountry(row[key])}
+								{:else if key === 'Genus' || key === 'Species'}
+									<span class="italic">{row[key]}</span>
+								{:else if partialItalic}
+									{@html setGenusAndSpeciesItalic(row[key], row.Genus, row.Species)}
+								{:else}
+									{row[key]}
+								{/if}
+							{/snippet}
+							{#if row[key] && id}
 								<a
 									href={resolve('/item/[collection]/[slug]', {
 										collection: collection || 'main',
-										slug: row[idKey]
+										slug: id
 									})}
 									onclick={setResultNavigation}
 								>
-									{#if key === 'Country'}
-										{@html addFlagToCountry(row[key])}
-									{:else if key === 'Genus' || key === 'Species'}
-										<span class="italic">{row[key]}</span>
-									{:else if key === 'Accepted_Name'}
-										{@html setGenusAndSpeciesItalic(row[key], row.Genus, row.Species)}
-									{:else}
-										{row[key]}
-									{/if}
+									{@render value()}
 								</a>
+							{:else if row[key]}
+								{@render value()}
 							{/if}
 						</td>
 					{/each}

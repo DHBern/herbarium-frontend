@@ -7,10 +7,10 @@
 		{ "label": "ex-Collection", "key": "ex-Collection" }
 	],
 	"contents": [
-		{ "label": "Catalog Number", "key": "Catalog_Number" },
-		{ "label": "Vernacular name", "key": "Vernacular_Name" },
-		{ "label": "Label name", "key": "Label_Name" },
-		{ "label": "Accepted name", "key": "Accepted_Name" },
-		{ "label": "Family", "key": "Family" }
+		{ "label": "Catalog Number", "key": "Catalog_Number", "showInList": true, "id": true },
+		{ "label": "Vernacular name", "key": "Vernacular_Name", "showInList": true },
+		{ "label": "Label name", "key": "Label_Name", "showInList": true },
+		{ "label": "Accepted name", "key": "Accepted_Name", "showInList": true },
+		{ "label": "Family", "key": "Family", "showInList": true }
 	]
 }
