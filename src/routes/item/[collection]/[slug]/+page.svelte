@@ -140,7 +140,8 @@
 					DOWN: 'flip_pressed.svg'
 				}
 			},
-			sequenceMode: false,
+			// always bind the prev/next controls; the effect below toggles the mode per item
+			sequenceMode: true,
 			crossOriginPolicy: 'Anonymous'
 		});
 		viewer.addHandler('open-failed', () => {
@@ -155,7 +156,12 @@
 
 	$effect(() => {
 		if (viewer && data.iiif) {
-			viewer.open(data.iiif);
+			// not exposed in OSD's type declarations
+			const v = viewer as Viewer & { sequenceMode: boolean; pagingControl?: HTMLElement };
+			const multiple = data.iiif.length > 1;
+			v.sequenceMode = multiple;
+			if (v.pagingControl) v.pagingControl.style.display = multiple ? '' : 'none';
+			v.open(data.iiif, 0);
 		}
 	});
 </script>
