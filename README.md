@@ -24,3 +24,32 @@ npm run build
 ```
 
 You can preview the production build with `npm run preview`.
+
+## Converting metadata
+
+Run `pnpm convert-data` to convert `data-preparation/input.xlsx` into `src/lib/data.json`,
+or `pnpm convert-collections` to convert the workbooks in `data-preparation/collections/`.
+The main conversion also accepts `--input <path>` and `--output <path>`.
+
+Both commands inventory the nested collections below the
+[IIIF herbarium collection](https://iiif.ub.unibe.ch/presentation/v3.0/boga/collection/herbarium)
+and write an `Image` field (`"available"` / `"not available"`). Specimen IDs come from manifest
+labels, so multi-image specimens are recognised without assuming a `<Catalog_Number>.tif`
+filename. Main-herbarium manifests (labels starting with `BERN-`, `Sheet-` or `BOX-`) are not
+opened individually; only display manifests (e.g. `001a`) are, because their canvas filenames
+provide the spreadsheet alias (`demo_1a`). This keeps the crawl to roughly 1,600 requests.
+The inventory is loaded once per command, even when converting multiple collection workbooks.
+Up to 16 requests run concurrently; each completed request frees a slot immediately, so one
+slow response does not stall a whole batch. Progress is printed every 10 seconds, including
+completed, active and queued requests and the oldest active URLs. Failed requests are retried
+up to three attempts with a 60-second timeout per attempt; retries are logged.
+
+The main conversion warns about each `BERN-…` / `Sheet-…` / `BOX-…` ID present on IIIF but
+absent from the input workbook, followed by a total. Display identifiers are excluded from these
+warnings;
+collection workbooks have their own image-availability checks. Warnings do not add records to
+the generated data. An incomplete or failed IIIF inventory aborts conversion before writing
+image availability rather than guessing which records have images.
+
+Pass `--skip-images` to either command to avoid IIIF requests and inventory warnings. The
+`Image` field is then omitted, and the frontend treats every record as having an image.

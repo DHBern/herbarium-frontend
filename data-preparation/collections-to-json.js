@@ -19,7 +19,7 @@
  *   pnpm convert-collections -- --collection display-herbarium
  *
  * Every unit gets an `Image` field ("available" / "not available") from a check against the IIIF
- * Image API; `--skip-images` skips it.
+ * Presentation API inventory (shared across workbooks); `--skip-images` skips it.
  */
 
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';

@@ -9,7 +9,7 @@
  *   node data-preparation/xlsx-to-json.js --input ./other.xlsx
  *
  * Every record gets an `Image` field ("available" / "not available") from a check against the
- * IIIF Image API, which takes a few minutes; `--skip-images` skips it (the field is then omitted
+ * IIIF Presentation API inventory; `--skip-images` skips it (the field is then omitted
  * and the frontend shows every item as having an image).
  */
 
@@ -67,7 +67,10 @@ async function main() {
 	console.log(`Parsed ${records.length} records from the first worksheet.`);
 
 	if (!flags['skip-images']) {
-		const withImage = await checkImages(records.map((record) => record.Catalog_Number));
+		const withImage = await checkImages(
+			records.map((record) => record.Catalog_Number),
+			{ warnMissing: true, inputName: inputPath }
+		);
 		for (const record of records) {
 			record.Image = withImage.has(record.Catalog_Number) ? IMAGE_AVAILABLE : IMAGE_MISSING;
 		}

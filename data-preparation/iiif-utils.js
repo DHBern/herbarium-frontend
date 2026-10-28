@@ -1,77 +1,153 @@
 /**
- * Helpers for checking which catalog numbers have an image on the UB IIIF server.
+ * Helpers for inventorying catalog numbers on the UB IIIF Presentation API.
  */
 
-const IMAGE_API = 'https://iiif.ub.unibe.ch/image/v3.0/boga';
+const COLLECTION_URL = 'https://iiif.ub.unibe.ch/presentation/v3.0/boga/collection/herbarium';
 const RETRIES = 3;
 const REQUEST_TIMEOUT = 60 * 1000;
+const CONCURRENCY = 16;
+// Catalog numbers of the main herbarium (input.xlsx); manifests labelled like this need no fetch.
+const MAIN_ID = /^(BERN|Sheet|BOX)-/;
+let inventory;
 
 /** Values of the `Image` field; `IMAGE_MISSING` must match `src/lib/functions.ts`. */
 export const IMAGE_AVAILABLE = 'available';
 export const IMAGE_MISSING = 'not available';
 
-/**
- * Whether the image exists: the server redirects `<id>.tif/info.json` to the image's
- * UUID-based info.json if it does and answers 404 if it doesn't.
- *
- * @param {string} id
- * @returns {Promise<boolean>}
- */
-async function hasImage(id) {
-	const url = `${IMAGE_API}/${encodeURIComponent(id)}.tif/info.json`;
+async function fetchResource(url, signal) {
 	for (let attempt = 1; ; attempt++) {
 		try {
 			const res = await fetch(url, {
-				method: 'HEAD',
-				redirect: 'manual',
-				signal: AbortSignal.timeout(REQUEST_TIMEOUT)
+				signal: AbortSignal.any([signal, AbortSignal.timeout(REQUEST_TIMEOUT)])
 			});
-			if (res.status === 404) return false;
-			if (res.status >= 200 && res.status < 400) return true;
-			throw new Error(`HTTP ${res.status}`);
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+			return await res.json();
 		} catch (error) {
+			if (signal.aborted) throw error;
 			if (attempt >= RETRIES) throw new Error(`${url}: ${error.message}`, { cause: error });
+			console.warn(`  warning: ${url}: ${error.message}; retrying (${attempt}/${RETRIES})`);
 		}
 	}
 }
 
-/**
- * Check the given catalog numbers against the IIIF Image API.
- * Ids whose check keeps failing count as having an image, so the frontend rather shows the
- * camera icon once too often than hides it wrongly.
- *
- * @param {Iterable<string>} ids
- * @param {{ concurrency?: number }} [options]
- * @returns {Promise<Set<string>>} the ids that have an image
- */
-export async function checkImages(ids, { concurrency = 16 } = {}) {
-	const queue = [...new Set(ids)].filter(Boolean);
-	const total = queue.length;
-	const withImage = new Set();
-	let done = 0;
-	let failed = 0;
+function labelIds(resource) {
+	const labels = Object.values(resource.label ?? {}).flat();
+	if (labels.length === 0 || labels.some((label) => typeof label !== 'string' || !label.trim())) {
+		throw new Error(`Missing or invalid IIIF label: ${resource.id}`);
+	}
+	return new Set(
+		labels.map((label) =>
+			label
+				.trim()
+				.replace(/\/+$/, '')
+				.split('/')
+				.pop()
+				.replace(/\.(tiff?|jpe?g|png)$/i, '')
+		)
+	);
+}
 
-	console.log(`Checking ${total} ids on the IIIF server ...`);
+async function loadInventory() {
+	const ids = new Set();
+	const visited = new Set();
+	const queue = [];
+	const pending = new Map();
+	const active = new Map();
+	const controller = new AbortController();
+	const started = Date.now();
+	let completed = 0;
+	console.log('Reading the IIIF Presentation API inventory ...');
 
-	const worker = async () => {
-		while (queue.length > 0) {
-			const id = queue.shift();
-			try {
-				if (await hasImage(id)) withImage.add(id);
-			} catch (error) {
-				console.warn(`  warning: ${error.message}`);
-				withImage.add(id);
-				failed++;
-			}
-			done++;
-			if (done % 1000 === 0) console.log(`  ${done}/${total} checked`);
+	const enqueue = (resource) => {
+		if (typeof resource.id !== 'string' || !resource.id) {
+			throw new Error('IIIF resource without an id.');
 		}
+		if (visited.has(resource.id)) return;
+		visited.add(resource.id);
+		queue.push(resource);
 	};
 
-	await Promise.all(Array.from({ length: concurrency }, worker));
+	const visit = async (reference) => {
+		const resource = await fetchResource(reference.id, controller.signal);
+		if (resource.type !== reference.type || !Array.isArray(resource.items)) {
+			throw new Error(`Invalid IIIF ${reference.type}: ${reference.id}`);
+		}
+		if (resource.type === 'Manifest') {
+			for (const canvas of resource.items) {
+				if (canvas.type !== 'Canvas') throw new Error(`Invalid canvas in ${resource.id}`);
+				for (const id of labelIds(canvas)) ids.add(id);
+			}
+		} else {
+			// Follow only children, never partOf (which points back to the parent).
+			for (const child of resource.items) {
+				if (child.type === 'Collection') {
+					enqueue(child);
+				} else if (child.type === 'Manifest') {
+					const names = labelIds(child);
+					for (const id of names) ids.add(id);
+					// Main-herbarium manifest labels already are the catalog number, including for
+					// multi-image specimens. Display panels are instead labelled "001a"; only
+					// their canvas filenames supply the spreadsheet alias "demo_1a".
+					if (![...names].every((id) => MAIN_ID.test(id))) enqueue(child);
+				} else {
+					throw new Error(`Unexpected IIIF child type "${child.type}" in ${resource.id}`);
+				}
+			}
+		}
+		completed++;
+	};
 
-	if (failed > 0) {
-		console.warn(`${failed} id(s) could not be checked and are assumed to have an image.`);
+	const progress = setInterval(() => {
+		const now = Date.now();
+		console.log(
+			`  ${Math.round((now - started) / 1000)}s: ${completed}/${visited.size} resources read, ` +
+				`${active.size} active, ${queue.length} queued, ${ids.size} identifiers`
+		);
+		for (const [url, since] of [...active].slice(0, 3)) {
+			console.log(`    waiting ${Math.round((now - since) / 1000)}s: ${url}`);
+		}
+	}, 10_000);
+
+	try {
+		enqueue({ id: COLLECTION_URL, type: 'Collection' });
+		while (queue.length > 0 || pending.size > 0) {
+			while (queue.length > 0 && pending.size < CONCURRENCY) {
+				const reference = queue.shift();
+				active.set(reference.id, Date.now());
+				const task = visit(reference)
+					.then(
+						() => ({ id: reference.id }),
+						(error) => ({ id: reference.id, error })
+					)
+					.finally(() => active.delete(reference.id));
+				pending.set(reference.id, task);
+			}
+			if (pending.size > 0) {
+				const result = await Promise.race(pending.values());
+				pending.delete(result.id);
+				if ('error' in result) throw result.error;
+			}
+		}
+	} finally {
+		clearInterval(progress);
+		controller.abort();
+		await Promise.allSettled(pending.values());
 	}
-	return withImage;
+	console.log(`Found ${ids.size} IIIF identifiers (including display aliases).`);
+	return ids;
+}
+
+export async function checkImages(ids, { warnMissing = false, inputName = 'input.xlsx' } = {}) {
+	const inputIds = new Set(ids);
+	const available = await (inventory ??= loadInventory());
+	if (warnMissing) {
+		const missing = [...available].filter((id) => MAIN_ID.test(id) && !inputIds.has(id)).sort();
+		for (const id of missing) {
+			console.warn(`  warning: IIIF catalog number ${id} is not in ${inputName}`);
+		}
+		if (missing.length > 0) {
+			console.warn(`${missing.length} IIIF catalog number(s) not found in ${inputName}.`);
+		}
+	}
+	return new Set([...inputIds].filter((id) => available.has(id)));
 }
