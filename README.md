@@ -27,11 +27,14 @@ You can preview the production build with `npm run preview`.
 
 ## Converting metadata
 
-Run `pnpm convert-data` to convert `data-preparation/input.xlsx` into `src/lib/data.json`,
-or `pnpm convert-collections` to convert the workbooks in `data-preparation/collections/`.
-The main conversion also accepts `--input <path>` and `--output <path>`.
+Run `pnpm convert` to convert both `data-preparation/input.xlsx` (into `src/lib/data.json`) and
+the workbooks in `data-preparation/collections/` in one go. It loads the IIIF inventory only once
+and starts it while `input.xlsx` is still being read, so it is much faster than running the two
+steps separately. `pnpm convert-data` and `pnpm convert-collections` remain available for
+converting just one part. The main conversion also accepts `--input <path>` and `--output <path>`,
+the collections conversion `--collection <name>`; `pnpm convert` accepts all of them.
 
-Both commands inventory the nested collections below the
+All commands inventory the nested collections below the
 [IIIF herbarium collection](https://iiif.ub.unibe.ch/presentation/v3.0/boga/collection/herbarium)
 and write an `Image` field (`"available"` / `"not available"`). Specimen IDs come from manifest
 labels, so multi-image specimens are recognised without assuming a `<Catalog_Number>.tif`

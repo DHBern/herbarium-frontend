@@ -15,6 +15,7 @@
  * Both sheets are kept in sheet order, which is the order shown on the website.
  *
  * Usage:
+ *   pnpm convert            (main data + all collections, one shared IIIF inventory)
  *   pnpm convert-collections
  *   pnpm convert-collections -- --collection display-herbarium
  *
@@ -24,9 +25,8 @@
 
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import { spawnSync } from 'node:child_process';
 import { resolve, dirname, basename } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import readXlsxFile from 'read-excel-file/node';
 import { parseArgs, sheetToObjects } from './xlsx-utils.js';
 import { checkImages, IMAGE_AVAILABLE, IMAGE_MISSING } from './iiif-utils.js';
@@ -134,8 +134,12 @@ async function convertCollection(name, mainCatalogNumbers, skipImages) {
 	return missing;
 }
 
-async function main() {
-	const flags = parseArgs();
+/**
+ * @param {Record<string, string | boolean>} flags
+ * @param {Iterable<unknown>} [mainCatalogNumbers] main data catalog numbers; read from
+ *   `src/lib/data.json` (converting it first if missing) when omitted
+ */
+export async function convertCollections(flags, mainCatalogNumbers) {
 	const names = flags.collection
 		? [String(flags.collection)]
 		: (await readdir(INPUT_DIR))
@@ -144,38 +148,35 @@ async function main() {
 
 	for (const name of names) {
 		if (!existsSync(resolve(INPUT_DIR, `${name}.xlsx`))) {
-			console.error(`Input file not found: ${name}.xlsx`);
-			process.exit(1);
+			throw new Error(`Input file not found: ${name}.xlsx`);
 		}
 	}
 
-	// the main data is needed to check the contents' catalog numbers; it's generated, so create it
-	// first if it isn't there (e.g. in a fresh checkout)
-	if (!existsSync(MAIN_DATA)) {
-		console.log(`${MAIN_DATA} not found, running xlsx-to-json.js first ...`);
-		const args = [resolve(__dirname, 'xlsx-to-json.js')];
-		if (flags['skip-images']) args.push('--skip-images');
-		const result = spawnSync(process.execPath, args, { stdio: 'inherit' });
-		if (result.status !== 0) {
-			console.error('Converting the main data failed.');
-			process.exit(result.status ?? 1);
+	if (!mainCatalogNumbers) {
+		// the main data is generated, so create it first if it isn't there (e.g. in a fresh checkout)
+		if (!existsSync(MAIN_DATA)) {
+			console.log(`${MAIN_DATA} not found, converting the main data first ...`);
+			const { convertMain } = await import('./xlsx-to-json.js');
+			await convertMain({ 'skip-images': Boolean(flags['skip-images']) });
 		}
+		/** @type {{ Catalog_Number?: string }[]} */
+		const mainData = JSON.parse(await readFile(MAIN_DATA, 'utf-8'));
+		mainCatalogNumbers = mainData.map((record) => record.Catalog_Number);
 	}
-
-	/** @type {{ Catalog_Number?: string }[]} */
-	const mainData = JSON.parse(await readFile(MAIN_DATA, 'utf-8'));
-	const mainCatalogNumbers = new Set(mainData.map((record) => record.Catalog_Number));
+	const mainIds = new Set(mainCatalogNumbers);
 
 	let missing = 0;
 	for (const name of names) {
-		missing += await convertCollection(name, mainCatalogNumbers, Boolean(flags['skip-images']));
+		missing += await convertCollection(name, mainIds, Boolean(flags['skip-images']));
 	}
 	if (missing > 0) {
 		console.warn(`${missing} catalog number(s) not found in the main data (links will 404).`);
 	}
 }
 
-main().catch((error) => {
-	console.error(error);
-	process.exit(1);
-});
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+	convertCollections(parseArgs()).catch((error) => {
+		console.error(error);
+		process.exit(1);
+	});
+}

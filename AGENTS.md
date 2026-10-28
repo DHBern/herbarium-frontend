@@ -18,12 +18,14 @@ University of Bern. See [README.md](README.md) for the project summary and autho
 - `pnpm build` — static production build into `build/` (previews with `pnpm preview`).
 - `pnpm check` — `svelte-kit sync` + `svelte-check` type checking.
 - `pnpm lint` / `pnpm format` — Prettier + ESLint.
-- `pnpm convert-data` — `data-preparation/xlsx-to-json.js`, converts the Excel export to JSON.
-  Both `convert-data` and `convert-collections` check every `Catalog_Number` against the IIIF
-  Image API (`image/v3.0/boga/<id>.tif/info.json`: 302 = exists, 404 = missing; helper in
-  `data-preparation/iiif-utils.js`) and write an `Image` field (`"available"` /
-  `"not available"`). It drives the list's camera icon and the "Image" filter. The check takes a
-  few minutes; `-- --skip-images` skips it (field omitted → every item shows the icon).
+- `pnpm convert` — `data-preparation/convert.js`, runs the main conversion
+  (`pnpm convert-data`, `xlsx-to-json.js`) and the collections conversion
+  (`pnpm convert-collections`, `collections-to-json.js`) in one process. All of them check every
+  `Catalog_Number` against an inventory crawled from the IIIF Presentation API collection
+  `presentation/v3.0/boga/collection/herbarium` (helper in `data-preparation/iiif-utils.js`) and
+  write an `Image` field (`"available"` / `"not available"`). It drives the list's camera icon and
+  the "Image" filter. The crawl takes ~3 minutes, so prefer `pnpm convert`, which does it once;
+  `-- --skip-images` skips it (field omitted → every item shows the icon).
 
 ## Project structure
 

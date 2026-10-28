@@ -138,6 +138,13 @@ async function loadInventory() {
 	return ids;
 }
 
+/** Start loading the inventory in the background so it overlaps with reading the workbooks. */
+export function preloadInventory() {
+	inventory ??= loadInventory();
+	// a failure is reported by the checkImages call that awaits it
+	inventory.catch(() => {});
+}
+
 export async function checkImages(ids, { warnMissing = false, inputName = 'input.xlsx' } = {}) {
 	const inputIds = new Set(ids);
 	const available = await (inventory ??= loadInventory());

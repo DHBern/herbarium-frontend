@@ -4,6 +4,7 @@
  * SvelteKit frontend (`src/lib/data.json`).
  *
  * Usage:
+ *   pnpm convert            (main data + all collections, one shared IIIF inventory)
  *   pnpm convert-data
  *   pnpm convert-data -- --input ./other.xlsx --output ./src/lib/data.json
  *   node data-preparation/xlsx-to-json.js --input ./other.xlsx
@@ -16,7 +17,7 @@
 import { writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import readXlsxFile from 'read-excel-file/node';
 import { parseArgs, rowToObject } from './xlsx-utils.js';
 import { checkImages, IMAGE_AVAILABLE, IMAGE_MISSING } from './iiif-utils.js';
@@ -29,14 +30,16 @@ const ROOT = resolve(__dirname, '..');
 const DEFAULT_INPUT = resolve(ROOT, 'data-preparation/input.xlsx');
 const DEFAULT_OUTPUT = resolve(ROOT, 'src/lib/data.json');
 
-async function main() {
-	const flags = parseArgs();
+/**
+ * @param {Record<string, string | boolean>} flags
+ * @returns {Promise<Record<string, unknown>[]>} the written records
+ */
+export async function convertMain(flags) {
 	const inputPath = resolve(flags.input ? String(flags.input) : DEFAULT_INPUT);
 	const outputPath = resolve(flags.output ? String(flags.output) : DEFAULT_OUTPUT);
 
 	if (!existsSync(inputPath)) {
-		console.error(`Input file not found: ${inputPath}`);
-		process.exit(1);
+		throw new Error(`Input file not found: ${inputPath}`);
 	}
 
 	console.log(`Reading ${inputPath} ...`);
@@ -48,8 +51,7 @@ async function main() {
 	const rows = sheet.data;
 
 	if (!Array.isArray(rows) || rows.length === 0) {
-		console.error('The workbook appears to be empty.');
-		process.exit(1);
+		throw new Error('The workbook appears to be empty.');
 	}
 
 	/** @type {string[]} */
@@ -80,9 +82,12 @@ async function main() {
 
 	await writeFile(outputPath, JSON.stringify(records, null, '\t') + '\n', 'utf-8');
 	console.log(`Wrote ${outputPath}`);
+	return records;
 }
 
-main().catch((error) => {
-	console.error(error);
-	process.exit(1);
-});
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+	convertMain(parseArgs()).catch((error) => {
+		console.error(error);
+		process.exit(1);
+	});
+}
