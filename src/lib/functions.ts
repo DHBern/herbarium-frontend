@@ -20,8 +20,8 @@ export const IMAGE_AVAILABLE = 'available';
 export const manifestUrl = (id: string) =>
 	`${IIIF_BASE}/presentation/v3.0/boga/manifest/${encodeURIComponent(id)}/`;
 
-export const thumbnailUrl = (id: string) =>
-	`${IIIF_BASE}/image/boga/${encodeURIComponent(id)}.${id.startsWith('demo_') ? 'jpg' : 'tif'}/thumbnail/1.webp`;
+export const thumbnailUrl = (id: string, size: 'small' | 'medium' = 'small') =>
+	`${IIIF_BASE}/image/boga/${encodeURIComponent(id)}.${id.startsWith('demo_') ? 'jpg' : 'tif'}/thumbnail/${size}.webp`;
 
 export const openLightbox = (src: string) => {
 	selectedImagePath.path = src;

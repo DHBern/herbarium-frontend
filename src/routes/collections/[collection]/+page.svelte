@@ -39,12 +39,13 @@
 
 <section class="container mx-auto px-4 mb-12">
 	<p class="mb-4">{data.units.length} unit{data.units.length !== 1 ? 's' : ''}</p>
-	<ul class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+	<ul class="grid grid-cols-2 gap-2 sm:grid-cols-[repeat(auto-fill,minmax(10.5rem,1fr))] sm:gap-4">
 		{#each data.units as unit (unit.Catalog_Number)}
 			<li>
 				<UnitThumbnail
 					id={unit.Catalog_Number}
 					title={unit.Unit_Title}
+					sizes="auto, (min-width: 40rem) 12rem, calc(50vw - 2.25rem)"
 					href={resolve('/item/[collection]/[slug]', {
 						collection: data.collection,
 						slug: unit.Catalog_Number

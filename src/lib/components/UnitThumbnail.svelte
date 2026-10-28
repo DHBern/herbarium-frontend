@@ -5,10 +5,11 @@
 		id: string;
 		title: string;
 		href: string;
+		sizes: string;
 		onclick?: () => void;
 	}
 
-	let { id, title, href, onclick }: Props = $props();
+	let { id, title, href, sizes, onclick }: Props = $props();
 
 	let failedId = $state<string | null>(null);
 	let failed = $derived(failedId === id);
@@ -26,7 +27,9 @@
 			<i class="fa-solid fa-image fa-2xl text-primary-400" aria-hidden="true"></i>
 		{:else}
 			<img
-				src={thumbnailUrl(id)}
+				src={thumbnailUrl(id, 'small')}
+				srcset={`${thumbnailUrl(id, 'small')} 300w, ${thumbnailUrl(id, 'medium')} 550w`}
+				{sizes}
 				alt={title}
 				loading="lazy"
 				decoding="async"
