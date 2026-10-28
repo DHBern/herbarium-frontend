@@ -1,0 +1,14 @@
+{
+	"units": [
+		{ "label": "Title", "key": "Unit_Title" },
+		{ "label": "Catalog Number", "key": "Catalog_Number" },
+		{ "label": "Accepted name", "key": "Accepted_Name" },
+		{ "label": "Family", "key": "Family" },
+		{ "label": "Collector", "key": "recordedBy" },
+		{ "label": "Year", "key": "year" },
+		{ "label": "Country", "key": "country" },
+		{ "label": "Country code", "key": "countryCode" },
+		{ "label": "State / Province", "key": "stateProvince" },
+		{ "label": "Locality", "key": "locality" }
+	]
+}

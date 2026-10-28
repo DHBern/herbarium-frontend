@@ -1,0 +1,7 @@
+{
+	"units": [
+		{ "label": "Title", "key": "Unit_Title" },
+		{ "label": "Catalog Number", "key": "Catalog_Number" },
+		{ "label": "ex-Collection", "key": "ex_Collection" }
+	]
+}
