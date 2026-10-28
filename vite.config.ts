@@ -22,6 +22,9 @@ export default defineConfig({
 			preprocess: [vitePreprocess(), mdsvex({ extensions: ['.md'], layout: markdownLayout })],
 			inspector: true,
 			adapter: adapter({ fallback: '404.html' }),
+			prerender: {
+				handleHttpError: 'warn'
+			},
 			paths: {
 				base: process.argv.includes('dev') ? '' : process.env.BASE_PATH
 			}
