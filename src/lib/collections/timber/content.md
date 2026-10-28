@@ -1,5 +1,6 @@
 ---
 title: 'Timber and wood collections'
+featured: 'BERN-B-00005032'
 ---
 
 # Timber and wood collections

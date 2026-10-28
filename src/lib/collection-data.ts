@@ -4,6 +4,7 @@ import type {
 	CollectionStructure,
 	CollectionUnit
 } from '../routes/types';
+import { thumbnailUrl } from '#lib/functions.js';
 
 type Markdown = typeof import('*.md');
 
@@ -22,11 +23,19 @@ const enhancedImages = import.meta.glob<string>(
 	{ query: '?enhanced', import: 'default' }
 );
 
+const IMAGE_FILE = /\.(avif|gif|heif|jpeg|jpg|png|tiff|webp)$/i;
+
 const path = (slug: string, file: string) => `./collections/${slug}/${file}`;
 
-async function resolveFeatured(file: unknown): Promise<string | undefined> {
-	if (typeof file !== 'string') return undefined;
-	const entry = Object.entries(enhancedImages).find(([p]) => p.endsWith(`/${file}`));
+/**
+ * `featured` front matter is either an image file in `src/lib/assets/` (e.g. `foo.jpg`) or an
+ * Image API id (e.g. `demo_9b`), which resolves to its medium IIIF thumbnail.
+ */
+async function resolveFeatured(featured: unknown): Promise<string | undefined> {
+	if (typeof featured !== 'string' || !featured.trim()) return undefined;
+	const value = featured.trim();
+	if (!IMAGE_FILE.test(value)) return thumbnailUrl(value, 'medium');
+	const entry = Object.entries(enhancedImages).find(([p]) => p.endsWith(`/${value}`));
 	return entry ? await entry[1]() : undefined;
 }
 
