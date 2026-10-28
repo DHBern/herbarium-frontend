@@ -1,51 +1,67 @@
-import type { ItemStructure, Item } from '../../../types';
+import { error } from '@sveltejs/kit';
+import { loadCollection, loadUnitContents } from '#lib/collection-data.js';
+import { IMAGE_MISSING, manifestUrl as buildManifestUrl } from '#lib/functions.js';
+import type { ItemStructure, Item, CollectionContent } from '../../../types';
 import type { PageLoad } from './$types';
 
-export const load: PageLoad = async ({ params, fetch }) => {
-	let structure: ItemStructure[];
-	if (params.collection === 'main') {
-		structure = (await import(`#lib/structure.json`)).default as ItemStructure[];
-	} else {
-		structure = (await import(`#lib/collections/${params.collection}/structure.json`)).default;
-	}
-	let itemDataRaw: Item[];
-	if (params.collection === 'main') {
-		itemDataRaw = (await import(`#lib/data.json`)).default;
-	} else {
-		itemDataRaw = (await import(`#lib/collections/${params.collection}/data.json`)).default;
-	}
+async function loadMainItem(slug: string) {
+	const structure = (await import(`#lib/structure.json`)).default as ItemStructure[];
+	const itemDataRaw: Item[] = (await import(`#lib/data.json`)).default;
 	const itemData = Array.isArray(itemDataRaw) ? itemDataRaw : [];
 	const idKey = structure.find((s) => s.id)?.key ?? structure[0]?.key;
-	const item = itemData.find((item) => item[idKey] === params.slug);
-	const manifestUrl = `https://iiif.ub.unibe.ch/presentation/v3.0/boga/manifest/${item?.[idKey]}/`;
-	const iiif = await fetch(manifestUrl)
-		.then((res) => (res.ok ? res.json() : false))
-		.then((json) => {
-			return json.items?.flatMap((canvas: any) => {
-				return canvas.items?.flatMap((annotationPage: any) => {
-					return annotationPage.items?.flatMap((annotation: any) => {
-						if (annotation.body?.type === 'Image') {
-							return annotation.body.service[0].id;
-						}
-						return [];
-					});
-				});
-			});
-		});
+	const item = itemData.find((item) => item[idKey] === slug);
+	return { metadata: item, id: item?.[idKey], structure };
+}
+
+async function loadCollectionItem(collection: string, slug: string) {
+	const data = await loadCollection(collection);
+	if (!data) error(404, `Collection "${collection}" not found.`);
+	const unit = data.units.find((u) => u.Catalog_Number === slug);
+	return {
+		metadata: unit as Item | undefined,
+		id: unit?.Catalog_Number,
+		structure: data.structure.units,
+		collectionTitle: data.title,
+		contents: unit ? await loadUnitContents(collection, slug) : ([] as CollectionContent[]),
+		contentsStructure: data.structure.contents ?? []
+	};
+}
+
+export const load: PageLoad = async ({ params, fetch }) => {
+	const item =
+		params.collection === 'main'
+			? await loadMainItem(params.slug)
+			: await loadCollectionItem(params.collection, params.slug);
+	if (!item.metadata) error(404, `No item "${params.slug}" found.`);
+
+	const manifestUrl = item.id ? buildManifestUrl(String(item.id)) : undefined;
+	// skip the request for items the build-time check found no image for
+	const iiif =
+		manifestUrl && item.metadata?.Image !== IMAGE_MISSING
+			? await fetch(manifestUrl)
+					.then((res) => (res.ok ? res.json() : false))
+					.then((json) => {
+						return json.items?.flatMap((canvas: any) => {
+							return canvas.items?.flatMap((annotationPage: any) => {
+								return annotationPage.items?.flatMap((annotation: any) => {
+									if (annotation.body?.type === 'Image') {
+										return annotation.body.service[0].id;
+									}
+									return [];
+								});
+							});
+						});
+					})
+					.catch(() => false)
+			: false;
 
 	return {
 		key: params.slug,
-		metadata: item,
 		iiif,
 		manifestUrl,
-		structure
+		collectionTitle: undefined as string | undefined,
+		contents: [] as CollectionContent[],
+		contentsStructure: [] as ItemStructure[],
+		...item
 	};
 };
-
-// export function entries() {
-// 	return Array.isArray(itemDataRaw)
-// 		? itemDataRaw.map((item) => ({
-// 				slug: item.Catalog_Number.replace('/', '')
-// 			}))
-// 		: [];
-// }

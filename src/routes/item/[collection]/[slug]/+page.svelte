@@ -7,6 +7,7 @@
 	import { addFlagToCountry, setGenusAndSpeciesItalic } from '#lib/functions.js';
 	import { resultNavigation } from '#lib/stores.svelte.js';
 	import iiifLogo from '#lib/assets/IIIF-logo-colored-text.svg';
+	import ItemList from '#lib/components/ItemList.svelte';
 	import type { Viewer } from 'openseadragon';
 	import type { PageProps } from './$types';
 	let OpenSeadragon;
@@ -18,6 +19,7 @@
 	let downloadUrl = $derived(data.iiif?.[0] ? `${data.iiif[0]}/full/max/0/default.jpg` : undefined);
 
 	let collection = $derived(params.collection);
+	let isMain = $derived(collection === 'main');
 	let slug = $derived(params.slug);
 	let navActive = $derived(
 		resultNavigation.collection === collection && resultNavigation.ids.length > 0
@@ -138,7 +140,8 @@
 					DOWN: 'flip_pressed.svg'
 				}
 			},
-			sequenceMode: false,
+			// always bind the prev/next controls; the effect below toggles the mode per item
+			sequenceMode: true,
 			crossOriginPolicy: 'Anonymous'
 		});
 		viewer.addHandler('open-failed', () => {
@@ -153,7 +156,12 @@
 
 	$effect(() => {
 		if (viewer && data.iiif) {
-			viewer.open(data.iiif);
+			// not exposed in OSD's type declarations
+			const v = viewer as Viewer & { sequenceMode: boolean; pagingControl?: HTMLElement };
+			const multiple = data.iiif.length > 1;
+			v.sequenceMode = multiple;
+			if (v.pagingControl) v.pagingControl.style.display = multiple ? '' : 'none';
+			v.open(data.iiif, 0);
 		}
 	});
 </script>
@@ -165,44 +173,55 @@
 	<div class="grid md:grid-cols-2 md:grid-rows-[auto_1fr] gap-4 lg:gap-6">
 		{#if data.metadata}
 			{@const d = data.metadata}
+			{@const isType = isMain && d.Type && d.Type !== 'no'}
 			<div class="md:col-span-2 lg:col-span-1 lg:col-start-2">
-				{#if navActive}
-					<div class="md:col-span-2 lg:col-span-1 lg:col-start-2 flex items-center gap-3">
-						<button
-							class="btn-icon preset-tonal-primary"
-							disabled={!prevSlug}
-							onclick={() => prevSlug && goToItem(prevSlug)}
-							aria-label="Previous result"
-						>
+				<div class="mb-2 flex items-center gap-2">
+					{#if !isMain}
+						<a class="anchor" href={resolve('/collections/[collection]', { collection })}>
 							<i class="fa-solid fa-arrow-left"></i>
-						</button>
-						<span class="text-sm font-medium"
-							>{currentIndex + 1} / {resultNavigation.ids.length}</span
-						>
-						<button
-							class="btn-icon preset-tonal-primary"
-							disabled={!nextSlug}
-							onclick={() => nextSlug && goToItem(nextSlug)}
-							aria-label="Next result"
-						>
-							<i class="fa-solid fa-arrow-right"></i>
-						</button>
-					</div>
-				{/if}
-				<h1 class="h1 text-balance pb-2 md:pb-4 inline italic">
-					{#if d?.Accepted_Name?.trim()}
+							{data.collectionTitle ?? collection}
+						</a>
+					{/if}
+					{#if navActive}
+						<div class="md:col-span-2 lg:col-span-1 lg:col-start-2 flex items-center gap-3">
+							<button
+								class="btn-icon preset-tonal-primary"
+								disabled={!prevSlug}
+								onclick={() => prevSlug && goToItem(prevSlug)}
+								aria-label="Previous result"
+							>
+								<i class="fa-solid fa-arrow-left"></i>
+							</button>
+							<span class="text-sm font-medium"
+								>{currentIndex + 1} / {resultNavigation.ids.length}</span
+							>
+							<button
+								class="btn-icon preset-tonal-primary"
+								disabled={!nextSlug}
+								onclick={() => nextSlug && goToItem(nextSlug)}
+								aria-label="Next result"
+							>
+								<i class="fa-solid fa-arrow-right"></i>
+							</button>
+						</div>
+					{/if}
+				</div>
+				<h1 class={['h1 text-balance pb-2 md:pb-4 inline', isMain && 'italic']}>
+					{#if !isMain}
+						{d.Unit_Title}
+					{:else if d?.Accepted_Name?.trim()}
 						{d.Accepted_Name}
 					{:else}
 						{d['Label Name']}
 					{/if}
 
-					{#if d.Type && d.Type !== 'no'}
+					{#if isType}
 						<span class="badge preset-filled-warning-500"> {d.Type}</span>
 					{/if}
 				</h1>
 			</div>
 			<div
-				class="lg:row-span-2 lg:row-start-1 w-full h-fit relative {d.Type !== 'no'
+				class="lg:row-span-2 lg:row-start-1 w-full h-fit relative {isType
 					? 'bg-warning-300'
 					: 'bg-primary-900'}"
 			>
@@ -249,22 +268,29 @@
 						</dt>
 
 						<dd class="pl-2 pt-4">
-							<a
-								class="anchor"
-								href={key === 'Catalog_Number'
-									? resolve('/item/[collection]/[slug]', { collection: 'main', slug: metadataVal })
-									: resolve(`/?a=${encodeURIComponent(JSON.stringify({ [key]: metadataVal }))}`)}
-							>
-								{#if key === 'Country'}
-									{@html addFlagToCountry(metadataVal)}
-								{:else if key === 'Genus' || key === 'Species'}
-									<span class="italic">{metadataVal}</span>
-								{:else if key === 'Accepted_Name' || key === 'Label_Name'}
-									{@html setGenusAndSpeciesItalic(metadataVal, d.Genus, d.Species)}
-								{:else}
-									{metadataVal}
-								{/if}
-							</a>
+							{#if !isMain}
+								{metadataVal}
+							{:else}
+								<a
+									class="anchor"
+									href={key === 'Catalog_Number'
+										? resolve('/item/[collection]/[slug]', {
+												collection: 'main',
+												slug: metadataVal
+											})
+										: resolve(`/?a=${encodeURIComponent(JSON.stringify({ [key]: metadataVal }))}`)}
+								>
+									{#if key === 'Country'}
+										{@html addFlagToCountry(metadataVal)}
+									{:else if key === 'Genus' || key === 'Species'}
+										<span class="italic">{metadataVal}</span>
+									{:else if key === 'Accepted_Name' || key === 'Label_Name'}
+										{@html setGenusAndSpeciesItalic(metadataVal, d.Genus, d.Species)}
+									{:else}
+										{metadataVal}
+									{/if}
+								</a>
+							{/if}
 						</dd>
 					{/if}
 				{/each}
@@ -282,4 +308,10 @@
 			</p>
 		{/if}
 	</div>
+	{#if data.contents.length > 0}
+		<section class="mt-8">
+			<h2 class="h3 mb-4">On this {collection === 'display-herbarium' ? 'panel' : 'unit'}</h2>
+			<ItemList items={data.contents} structure={data.contentsStructure} collection="main" />
+		</section>
+	{/if}
 </ContentContainer>

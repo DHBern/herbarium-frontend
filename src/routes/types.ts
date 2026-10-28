@@ -46,11 +46,35 @@ export interface ResultNavigation {
 	ids: string[];
 }
 
+export interface CollectionUnit {
+	Catalog_Number: string;
+	Unit_Title: string;
+	[key: string]: unknown;
+}
+
+export interface CollectionContent {
+	Unit: string;
+	Catalog_Number?: string;
+	[key: string]: unknown;
+}
+
+export interface CollectionStructure {
+	units: ItemStructure[];
+	contents?: ItemStructure[];
+}
+
+export interface CollectionInfo {
+	slug: string;
+	title: string;
+	hidden: boolean;
+	featured?: string;
+}
+
 export interface CollectionPageData {
 	collection: string;
-	structure: ItemStructure[];
-	items: Item[];
-	categories: string[];
+	title: string;
+	units: CollectionUnit[];
+	structure: CollectionStructure;
 	featured?: string;
 	Content: typeof import('*.md').default;
 }

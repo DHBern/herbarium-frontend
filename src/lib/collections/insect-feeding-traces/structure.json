@@ -1,0 +1,9 @@
+{
+	"units": [
+		{ "label": "Title", "key": "Unit_Title" },
+		{ "label": "Catalog Number", "key": "Catalog_Number" },
+		{ "label": "Old title", "key": "OLD_TITLE" },
+		{ "label": "Donator", "key": "Donator" },
+		{ "label": "ex-Collection", "key": "ex-Collection" }
+	]
+}

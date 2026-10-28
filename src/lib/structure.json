@@ -13,5 +13,6 @@
 	{ "label": "Locality", "key": "Locality" },
 	{ "label": "Catalog Number", "key": "Catalog_Number", "id": true },
 	{ "label": "Collection Type", "key": "collectionType", "showInList": false, "filter": "simple" },
-	{ "label": "Taxonomic Group", "key": "TaxonomicGroup", "showInList": false, "filter": "simple" }
+	{ "label": "Taxonomic Group", "key": "TaxonomicGroup", "showInList": false, "filter": "simple" },
+	{ "label": "Image", "key": "Image", "showInList": false, "filter": "simple" }
 ]

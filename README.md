@@ -24,3 +24,38 @@ npm run build
 ```
 
 You can preview the production build with `npm run preview`.
+
+## Converting metadata
+
+Run `pnpm convert` to convert both `data-preparation/input.xlsx` (into `src/lib/data.json`) and
+the workbooks in `data-preparation/collections/` in one go. It loads the IIIF inventory only once
+and starts it while `input.xlsx` is still being read, so it is much faster than running the two
+steps separately. `pnpm convert-data` and `pnpm convert-collections` remain available for
+converting just one part. The main conversion also accepts `--input <path>` and `--output <path>`,
+the collections conversion `--collection <name>`; `pnpm convert` accepts all of them.
+
+All commands inventory the nested collections below the
+[IIIF herbarium collection](https://iiif.ub.unibe.ch/presentation/v3.0/boga/collection/herbarium)
+and write an `Image` field (`"available"` / `"not available"`). Specimen IDs come from manifest
+labels, so multi-image specimens are recognised without assuming a `<Catalog_Number>.tif`
+filename. Display herbarium panels are identified by their manifest label, the zero-padded panel
+number plus side (e.g. `009b`, manifest
+<https://iiif.ub.unibe.ch/presentation/v3.0/boga/manifest/009b>); `convert-collections` derives
+the same id from `Panel No` + `Panel side`. Main-herbarium manifests (labels starting with
+`BERN-`, `Sheet-` or `BOX-`) are not opened individually. This keeps the crawl to roughly 1,600
+requests.
+The inventory is loaded once per command, even when converting multiple collection workbooks.
+Up to 16 requests run concurrently; each completed request frees a slot immediately, so one
+slow response does not stall a whole batch. Progress is printed every 10 seconds, including
+completed, active and queued requests and the oldest active URLs. Failed requests are retried
+up to three attempts with a 60-second timeout per attempt; retries are logged.
+
+The main conversion warns about each `BERN-…` / `Sheet-…` / `BOX-…` ID present on IIIF but
+absent from the input workbook, followed by a total. Display identifiers are excluded from these
+warnings;
+collection workbooks have their own image-availability checks. Warnings do not add records to
+the generated data. An incomplete or failed IIIF inventory aborts conversion before writing
+image availability rather than guessing which records have images.
+
+Pass `--skip-images` to either command to avoid IIIF requests and inventory warnings. The
+`Image` field is then omitted, and the frontend treats every record as having an image.

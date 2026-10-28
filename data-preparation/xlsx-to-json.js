@@ -4,16 +4,23 @@
  * SvelteKit frontend (`src/lib/data.json`).
  *
  * Usage:
+ *   pnpm convert            (main data + all collections, one shared IIIF inventory)
  *   pnpm convert-data
  *   pnpm convert-data -- --input ./other.xlsx --output ./src/lib/data.json
  *   node data-preparation/xlsx-to-json.js --input ./other.xlsx
+ *
+ * Every record gets an `Image` field ("available" / "not available") from a check against the
+ * IIIF Presentation API inventory; `--skip-images` skips it (the field is then omitted
+ * and the frontend shows every item as having an image).
  */
 
 import { writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve, dirname } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import readXlsxFile from 'read-excel-file/node';
+import { parseArgs, rowToObject } from './xlsx-utils.js';
+import { checkImages, IMAGE_AVAILABLE, IMAGE_MISSING } from './iiif-utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -24,80 +31,15 @@ const DEFAULT_INPUT = resolve(ROOT, 'data-preparation/input.xlsx');
 const DEFAULT_OUTPUT = resolve(ROOT, 'src/lib/data.json');
 
 /**
- * Parse simple CLI flags of the form `--key value` or `--key=value`.
- * @returns {Record<string, string | boolean>}
+ * @param {Record<string, string | boolean>} flags
+ * @returns {Promise<Record<string, unknown>[]>} the written records
  */
-function parseArgs() {
-	const args = process.argv.slice(2);
-	const flags = {};
-	for (let i = 0; i < args.length; i++) {
-		const arg = args[i];
-		if (arg.startsWith('--')) {
-			const key = arg.replace(/^--/, '');
-			const next = args[i + 1];
-			if (next && !next.startsWith('--')) {
-				flags[key] = next;
-				i++;
-			} else if (arg.includes('=')) {
-				const [k, v] = arg.split('=');
-				flags[k.replace(/^--/, '')] = v;
-			} else {
-				flags[key] = true;
-			}
-		}
-	}
-	return flags;
-}
-
-/**
- * Normalize a raw read-excel-file cell value to a JSON-friendly primitive.
- * - Trims whitespace from strings.
- * - Converts empty strings to `null` so they can be omitted.
- * - Leaves numbers and booleans untouched.
- *
- * @param {unknown} value
- * @returns {unknown}
- */
-function normalizeValue(value) {
-	if (value === null || value === undefined) {
-		return null;
-	}
-
-	if (typeof value === 'string') {
-		const trimmed = value.trim();
-		return trimmed === '' ? null : trimmed;
-	}
-
-	return value;
-}
-
-/**
- * Convert a sheet row array into an object and drop empty/null fields.
- *
- * @param {string[]} headers
- * @param {(unknown | null)[]} row
- * @returns {Record<string, unknown>}
- */
-function rowToObject(headers, row) {
-	/** @type {Record<string, unknown>} */
-	const obj = {};
-	headers.forEach((header, index) => {
-		const cleaned = normalizeValue(row[index]);
-		if (cleaned !== null) {
-			obj[header] = cleaned;
-		}
-	});
-	return obj;
-}
-
-async function main() {
-	const flags = parseArgs();
+export async function convertMain(flags) {
 	const inputPath = resolve(flags.input ? String(flags.input) : DEFAULT_INPUT);
 	const outputPath = resolve(flags.output ? String(flags.output) : DEFAULT_OUTPUT);
 
 	if (!existsSync(inputPath)) {
-		console.error(`Input file not found: ${inputPath}`);
-		process.exit(1);
+		throw new Error(`Input file not found: ${inputPath}`);
 	}
 
 	console.log(`Reading ${inputPath} ...`);
@@ -109,8 +51,7 @@ async function main() {
 	const rows = sheet.data;
 
 	if (!Array.isArray(rows) || rows.length === 0) {
-		console.error('The workbook appears to be empty.');
-		process.exit(1);
+		throw new Error('The workbook appears to be empty.');
 	}
 
 	/** @type {string[]} */
@@ -127,11 +68,26 @@ async function main() {
 
 	console.log(`Parsed ${records.length} records from the first worksheet.`);
 
+	if (!flags['skip-images']) {
+		const withImage = await checkImages(
+			records.map((record) => record.Catalog_Number),
+			{ warnMissing: true, inputName: inputPath }
+		);
+		for (const record of records) {
+			record.Image = withImage.has(record.Catalog_Number) ? IMAGE_AVAILABLE : IMAGE_MISSING;
+		}
+		const count = records.filter((record) => record.Image === IMAGE_AVAILABLE).length;
+		console.log(`${count} of ${records.length} records have an image.`);
+	}
+
 	await writeFile(outputPath, JSON.stringify(records, null, '\t') + '\n', 'utf-8');
 	console.log(`Wrote ${outputPath}`);
+	return records;
 }
 
-main().catch((error) => {
-	console.error(error);
-	process.exit(1);
-});
+if (import.meta.url === pathToFileURL(process.argv[1]).href) {
+	convertMain(parseArgs()).catch((error) => {
+		console.error(error);
+		process.exit(1);
+	});
+}

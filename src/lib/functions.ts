@@ -10,6 +10,19 @@ export const setGenusAndSpeciesItalic = (input: string, genus: string, species: 
 	);
 };
 
+const IIIF_BASE = 'https://iiif.ub.unibe.ch';
+
+// value of the generated `Image` field for items without an image on the IIIF server;
+// must match `IMAGE_MISSING` in data-preparation/iiif-utils.js
+export const IMAGE_MISSING = 'not available';
+export const IMAGE_AVAILABLE = 'available';
+
+export const manifestUrl = (id: string) =>
+	`${IIIF_BASE}/presentation/v3.0/boga/manifest/${encodeURIComponent(id)}/`;
+
+export const thumbnailUrl = (id: string, size: 'small' | 'medium' = 'small') =>
+	`${IIIF_BASE}/image/boga/${encodeURIComponent(id)}.${id.startsWith('demo_') ? 'jpg' : 'tif'}/thumbnail/${size}.webp`;
+
 export const openLightbox = (src: string) => {
 	selectedImagePath.path = src;
 };

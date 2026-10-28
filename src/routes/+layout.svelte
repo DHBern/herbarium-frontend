@@ -27,14 +27,21 @@
 
 	let mobileMenuOpen = $state(false);
 
-	let classesActive = $derived((href: string) => (href === page.route.id ? 'bg-primary-500' : ''));
+	let classesActive = $derived((href: string) =>
+		href === page.url.pathname ? 'bg-primary-500' : ''
+	);
 
 	const pages = [
-		{ slug: 'home', path: '/' },
-		{ slug: 'illustrations', path: '/illustrations' },
-		{ slug: 'about us', path: '/about' },
-		{ slug: 'impressum', path: '/impressum' }
-	] as const;
+		{ slug: 'home', href: resolve('/') },
+		{
+			slug: 'display herbarium',
+			href: resolve('/collections/[collection]', { collection: 'display-herbarium' })
+		},
+		{ slug: 'collections', href: resolve('/collections') },
+		{ slug: 'illustrations', href: resolve('/illustrations') },
+		{ slug: 'about us', href: resolve('/about') },
+		{ slug: 'impressum', href: resolve('/impressum') }
+	];
 
 	let searchtext = $state('');
 	let otherSearchisVisible = $state(false);
@@ -102,8 +109,8 @@
 	{#each pages as page}
 		<li>
 			<a
-				href={resolve(page.path)}
-				class="{itemClass} hover:preset-tonal-primary {classesActive(page.path)}"
+				href={page.href}
+				class="{itemClass} hover:preset-tonal-primary {classesActive(page.href)}"
 				onclick={() => (mobileMenuOpen = false)}>{page.slug}</a
 			>
 		</li>

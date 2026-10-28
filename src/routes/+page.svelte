@@ -257,7 +257,8 @@
 		</div>
 	</div>
 	<div class="flex flex-wrap items-start gap-x-8 gap-y-4 mt-8">
-		{#each filterFields.filter((field) => field.filter === 'simple') as item (item.key)}
+		<!-- fields can be missing from the data (e.g. `Image` when converted with --skip-images) -->
+		{#each filterFields.filter((field) => field.filter === 'simple' && filterValues[field.key].length > 0) as item (item.key)}
 			<SearchFilter
 				{item}
 				values={filterValues[item.key]}
