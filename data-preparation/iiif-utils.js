@@ -85,9 +85,10 @@ async function loadInventory() {
 				} else if (child.type === 'Manifest') {
 					const names = labelIds(child);
 					for (const id of names) ids.add(id);
-					// Main-herbarium manifest labels already are the catalog number, including for
-					// multi-image specimens. Display panels are instead labelled "001a"; only
-					// their canvas filenames supply the spreadsheet alias "demo_1a".
+					// Manifest labels already are the catalog number (including for multi-image
+					// specimens) or, for display panels, the panel id "009b". Main-herbarium
+					// manifests are not opened; other manifests also contribute their canvas
+					// filenames (e.g. the image id "demo_9b").
 					if (![...names].every((id) => MAIN_ID.test(id))) enqueue(child);
 				} else {
 					throw new Error(`Unexpected IIIF child type "${child.type}" in ${resource.id}`);
@@ -133,7 +134,7 @@ async function loadInventory() {
 		controller.abort();
 		await Promise.allSettled(pending.values());
 	}
-	console.log(`Found ${ids.size} IIIF identifiers (including display aliases).`);
+	console.log(`Found ${ids.size} IIIF identifiers.`);
 	return ids;
 }
 

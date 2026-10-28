@@ -35,9 +35,12 @@ Both commands inventory the nested collections below the
 [IIIF herbarium collection](https://iiif.ub.unibe.ch/presentation/v3.0/boga/collection/herbarium)
 and write an `Image` field (`"available"` / `"not available"`). Specimen IDs come from manifest
 labels, so multi-image specimens are recognised without assuming a `<Catalog_Number>.tif`
-filename. Main-herbarium manifests (labels starting with `BERN-`, `Sheet-` or `BOX-`) are not
-opened individually; only display manifests (e.g. `001a`) are, because their canvas filenames
-provide the spreadsheet alias (`demo_1a`). This keeps the crawl to roughly 1,600 requests.
+filename. Display herbarium panels are identified by their manifest label, the zero-padded panel
+number plus side (e.g. `009b`, manifest
+<https://iiif.ub.unibe.ch/presentation/v3.0/boga/manifest/009b>); `convert-collections` derives
+the same id from `Panel No` + `Panel side`. Main-herbarium manifests (labels starting with
+`BERN-`, `Sheet-` or `BOX-`) are not opened individually. This keeps the crawl to roughly 1,600
+requests.
 The inventory is loaded once per command, even when converting multiple collection workbooks.
 Up to 16 requests run concurrently; each completed request frees a slot immediately, so one
 slow response does not stall a whole batch. Progress is printed every 10 seconds, including

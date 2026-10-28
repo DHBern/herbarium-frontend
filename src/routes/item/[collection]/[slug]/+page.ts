@@ -32,6 +32,7 @@ export const load: PageLoad = async ({ params, fetch }) => {
 		params.collection === 'main'
 			? await loadMainItem(params.slug)
 			: await loadCollectionItem(params.collection, params.slug);
+	if (!item.metadata) error(404, `No item "${params.slug}" found.`);
 
 	const manifestUrl = item.id ? buildManifestUrl(String(item.id)) : undefined;
 	// skip the request for items the build-time check found no image for

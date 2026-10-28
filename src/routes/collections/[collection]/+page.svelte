@@ -4,6 +4,7 @@
 	import { openLightbox } from '#lib/functions.js';
 	import { resultNavigation } from '#lib/stores.svelte.js';
 	import UnitThumbnail from '#lib/components/UnitThumbnail.svelte';
+	import { unitImageId } from '#lib/collection-data.js';
 
 	interface Props {
 		data: CollectionPageData;
@@ -44,6 +45,7 @@
 			<li>
 				<UnitThumbnail
 					id={unit.Catalog_Number}
+					imageId={unitImageId(unit)}
 					title={unit.Unit_Title}
 					sizes="auto, (min-width: 40rem) 12rem, calc(50vw - 2.25rem)"
 					href={resolve('/item/[collection]/[slug]', {

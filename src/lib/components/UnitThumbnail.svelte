@@ -3,13 +3,15 @@
 
 	interface Props {
 		id: string;
+		/** Image API id, if it differs from `id` (e.g. display herbarium panels) */
+		imageId?: string;
 		title: string;
 		href: string;
 		sizes: string;
 		onclick?: () => void;
 	}
 
-	let { id, title, href, sizes, onclick }: Props = $props();
+	let { id, imageId = id, title, href, sizes, onclick }: Props = $props();
 
 	let failedId = $state<string | null>(null);
 	let failed = $derived(failedId === id);
@@ -27,8 +29,8 @@
 			<i class="fa-solid fa-image fa-2xl text-primary-400" aria-hidden="true"></i>
 		{:else}
 			<img
-				src={thumbnailUrl(id, 'small')}
-				srcset={`${thumbnailUrl(id, 'small')} 300w, ${thumbnailUrl(id, 'medium')} 550w`}
+				src={thumbnailUrl(imageId, 'small')}
+				srcset={`${thumbnailUrl(imageId, 'small')} 300w, ${thumbnailUrl(imageId, 'medium')} 550w`}
 				{sizes}
 				alt={title}
 				loading="lazy"

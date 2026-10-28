@@ -16,7 +16,7 @@ function manifest(id, label) {
 	return { id, type: 'Manifest', label: { none: [label] } };
 }
 
-test('inventories nested collections, grouped specimens and display aliases once', async (t) => {
+test('inventories nested collections, grouped specimens and display panels once', async (t) => {
 	const requests = [];
 	const warnings = [];
 	const resources = {
@@ -41,13 +41,13 @@ test('inventories nested collections, grouped specimens and display aliases once
 			]),
 			partOf: [{ id: 'never-follow-parent', type: 'Collection' }]
 		},
-		display: collection('display', [manifest('panel', '/herbarium/herb-demo/001a')]),
+		display: collection('display', [manifest('panel', '/herbarium/herb-demo/009b')]),
 		panel: {
-			...manifest('panel', '/herbarium/herb-demo/001a'),
+			...manifest('panel', '/herbarium/herb-demo/009b'),
 			items: [
 				{
 					type: 'Canvas',
-					label: { none: ['/herbarium/herb-demo/001a/demo_1a.jpg'] }
+					label: { none: ['/herbarium/herb-demo/009b/demo_9b.jpg'] }
 				}
 			]
 		}
@@ -63,10 +63,10 @@ test('inventories nested collections, grouped specimens and display aliases once
 	const checkImages = await freshCheckImages();
 
 	const available = await checkImages(
-		['BERN-B-00001122', 'Sheet-0000005', 'missing', 'demo_1a', 'demo_1a'],
+		['BERN-B-00001122', 'Sheet-0000005', 'missing', '009b', '009b'],
 		{ warnMissing: true, inputName: 'specimens.xlsx' }
 	);
-	assert.deepEqual([...available], ['BERN-B-00001122', 'Sheet-0000005', 'demo_1a']);
+	assert.deepEqual([...available], ['BERN-B-00001122', 'Sheet-0000005', '009b']);
 	assert.deepEqual(warnings, [
 		'  warning: IIIF catalog number BERN-B-99999999 is not in specimens.xlsx',
 		'  warning: IIIF catalog number Sheet-9999999 is not in specimens.xlsx',
@@ -75,7 +75,7 @@ test('inventories nested collections, grouped specimens and display aliases once
 	assert.deepEqual(requests.sort(), [ROOT, 'wet', 'display', 'panel'].sort());
 
 	const requestCount = requests.length;
-	assert.deepEqual(await checkImages(['demo_1a']), new Set(['demo_1a']));
+	assert.deepEqual(await checkImages(['009b']), new Set(['009b']));
 	assert.equal(requests.length, requestCount);
 	assert.equal(warnings.length, 3);
 });

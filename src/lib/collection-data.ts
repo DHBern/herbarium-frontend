@@ -69,6 +69,17 @@ export async function loadCollection(slug: string) {
 	};
 }
 
+/**
+ * Image API id of a unit's thumbnail. Display herbarium panels have the manifest id `009b` but the
+ * image id `demo_9b`; all other units use their `Catalog_Number` for both.
+ */
+export function unitImageId(unit: CollectionUnit) {
+	const no = unit['Panel No'];
+	const side = unit['Panel side'];
+	if (no === undefined || side === undefined) return unit.Catalog_Number;
+	return `demo_${Number(no)}${String(side).trim()}`;
+}
+
 /** The items on one unit, in sheet order (empty if the collection has no contents). */
 export async function loadUnitContents(slug: string, unit: string) {
 	const contents = (await contentsFiles[path(slug, 'contents.json')]?.()) ?? [];

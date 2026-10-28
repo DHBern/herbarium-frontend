@@ -7,7 +7,7 @@
  * Workbook layout:
  *   - sheet `units` (required): one row per unit (panel, box, …). `Catalog_Number` is the IIIF id
  *     and URL slug, `Unit_Title` the caption. Units without `Catalog_Number` get one derived from
- *     `Panel No` + `Panel side`.
+ *     `Panel No` + `Panel side` (zero-padded, e.g. `009b`).
  *   - sheet `contents` (optional): one row per item on a unit. `Unit` references the unit's
  *     `Catalog_Number` (or is derived from `Panel No` + `Panel side`) and `Catalog_Number` links the
  *     item to the main herbarium.
@@ -41,7 +41,8 @@ const MAIN_DATA = resolve(ROOT, 'src/lib/data.json');
 const NO_CATALOG_NUMBER = new Set(['na', 'n/a', '-']);
 
 /**
- * IIIF id of a display herbarium panel, e.g. panel 10, side a → `demo_10a`.
+ * IIIF manifest id of a display herbarium panel: the zero-padded panel number plus side, e.g.
+ * panel 9, side b → `009b` (manifest `…/presentation/v3.0/boga/manifest/009b`).
  *
  * @param {unknown} no
  * @param {unknown} side
@@ -49,7 +50,7 @@ const NO_CATALOG_NUMBER = new Set(['na', 'n/a', '-']);
  */
 function derivePanelId(no, side) {
 	if (no === undefined || side === undefined) return undefined;
-	return `demo_${no}${side}`;
+	return `${String(no).trim().padStart(3, '0')}${String(side).trim()}`;
 }
 
 /**
