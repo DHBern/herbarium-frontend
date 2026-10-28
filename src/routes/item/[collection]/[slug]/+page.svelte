@@ -175,38 +175,37 @@
 			{@const d = data.metadata}
 			{@const isType = isMain && d.Type && d.Type !== 'no'}
 			<div class="md:col-span-2 lg:col-span-1 lg:col-start-2">
-				{#if !isMain}
-					<a
-						class="anchor mb-2 inline-flex items-center gap-2"
-						href={resolve('/collections/[collection]', { collection })}
-					>
-						<i class="fa-solid fa-arrow-left"></i>
-						{data.collectionTitle ?? collection}
-					</a>
-				{/if}
-				{#if navActive}
-					<div class="md:col-span-2 lg:col-span-1 lg:col-start-2 flex items-center gap-3">
-						<button
-							class="btn-icon preset-tonal-primary"
-							disabled={!prevSlug}
-							onclick={() => prevSlug && goToItem(prevSlug)}
-							aria-label="Previous result"
-						>
+				<div class="mb-2 flex items-center gap-2">
+					{#if !isMain}
+						<a class="anchor" href={resolve('/collections/[collection]', { collection })}>
 							<i class="fa-solid fa-arrow-left"></i>
-						</button>
-						<span class="text-sm font-medium"
-							>{currentIndex + 1} / {resultNavigation.ids.length}</span
-						>
-						<button
-							class="btn-icon preset-tonal-primary"
-							disabled={!nextSlug}
-							onclick={() => nextSlug && goToItem(nextSlug)}
-							aria-label="Next result"
-						>
-							<i class="fa-solid fa-arrow-right"></i>
-						</button>
-					</div>
-				{/if}
+							{data.collectionTitle ?? collection}
+						</a>
+					{/if}
+					{#if navActive}
+						<div class="md:col-span-2 lg:col-span-1 lg:col-start-2 flex items-center gap-3">
+							<button
+								class="btn-icon preset-tonal-primary"
+								disabled={!prevSlug}
+								onclick={() => prevSlug && goToItem(prevSlug)}
+								aria-label="Previous result"
+							>
+								<i class="fa-solid fa-arrow-left"></i>
+							</button>
+							<span class="text-sm font-medium"
+								>{currentIndex + 1} / {resultNavigation.ids.length}</span
+							>
+							<button
+								class="btn-icon preset-tonal-primary"
+								disabled={!nextSlug}
+								onclick={() => nextSlug && goToItem(nextSlug)}
+								aria-label="Next result"
+							>
+								<i class="fa-solid fa-arrow-right"></i>
+							</button>
+						</div>
+					{/if}
+				</div>
 				<h1 class={['h1 text-balance pb-2 md:pb-4 inline', isMain && 'italic']}>
 					{#if !isMain}
 						{d.Unit_Title}
