@@ -41,7 +41,7 @@ const MAIN_DATA = resolve(ROOT, 'src/lib/data.json');
 const NO_CATALOG_NUMBER = new Set(['na', 'n/a', '-']);
 
 /**
- * IIIF id of a display herbarium panel, e.g. panel 10, side a → `DEMO_10a`.
+ * IIIF id of a display herbarium panel, e.g. panel 10, side a → `demo_10a`.
  *
  * @param {unknown} no
  * @param {unknown} side
@@ -49,7 +49,7 @@ const NO_CATALOG_NUMBER = new Set(['na', 'n/a', '-']);
  */
 function derivePanelId(no, side) {
 	if (no === undefined || side === undefined) return undefined;
-	return `DEMO_${no}${side}`;
+	return `demo_${no}${side}`;
 }
 
 /**
